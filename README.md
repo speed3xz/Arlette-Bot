@@ -34,7 +34,7 @@
 > ✅ Recomendado para usuarios sin experiencia técnica.
 
 1. Descarga el instalador desde el siguiente enlace:  
-   [🔗 Descargar AlyaBot para Windows](https://github.com/speed3xz/Arlette-Bot/releases/download/v2.2.1/Alya-installer-x64-x86.exe)
+   [🔗 Descargar Arlette-Bot para Windows](https://github.com/speed3xz/Arlette-Bot/releases/download/v2.2.1/Alya-installer-x64-x86.exe)
 2. Ejecuta el archivo y sigue los pasos del asistente.
 3. El bot se iniciará automáticamente tras completar la instalación.
 

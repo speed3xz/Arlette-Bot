@@ -1,5 +1,5 @@
 {
-"name": "ruby-hoshino-md",
+"name": "Arlette-Bot MD",
 "version": "2.2.0",
 "description": "WhatsApp Bot Multi Device",
 "main": "index.js",
@@ -18,16 +18,16 @@
 "eslint": "eslint .",
 "eslintfix": "eslint --fix ."
 },
-"homepage": "https://github.com/Dioneibi-rip/Ruby-Hoshino-Bot",
+"homepage": "https://github.com/speed3xz/Arlette-Bot",
 "author": {
 "name": "Dioneibi-rip"
 },
 "repository": {
 "type": "git",
-"url": "git+https://github.com/Dioneibi-rip/Ruby-Hoshino-Bot.git"
+"url": "git+https://github.com/speed3xz/Arlette-Bot.git"
 },
 "bugs": {
-"url": "https://github.com/Dioneibi-rip/Ruby-Hoshino-Bot/issues"
+"url": "https://github.com/speed3xz/Arlette-Bot/issues"
 },
 "license": "MIT-License",
 "dependencies": {

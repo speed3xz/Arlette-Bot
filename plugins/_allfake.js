@@ -21,14 +21,14 @@ global.tiempo = d.toLocaleString('en-US', {hour: 'numeric', minute: 'numeric', s
 
 var canal = 's'  
 var comunidad = 'd'
-var git = 'https://github.com/speed3xz'
+var git = 'https://github.com/speed3xz/Arlette-Bot'
 var github = 'https://github.com/speed3xz' 
 var correo = ''
 global.redes = [canal, comunidad, git, github, correo].getRandom()
 
 global.nombre = m.pushName || 'Anónimo'
-global.packsticker = `┊ Speed3xz Team\n⤷ https://github.com/speed3xz\n\n┊INFO 🦈\n ⤷ speed3xz.bot.nu/discord`;
-global.packsticker2 = `┊Bot 💛\n┊⤷${botname} \n\n┊Usuario:\n┊⤷${nombre}`
+global.packsticker = `┊ Speed3xz Team\n⤷ https://github.com/speed3xz\n\n┊INFO 💗\n ⤷ speed3xz.bot.nu/discord`;
+global.packsticker2 = `┊Bot 🎀\n┊⤷${botname} \n\n┊Usuario:\n┊⤷${nombre}`
   
 global.fkontak = { key: { participants:"0@s.whatsapp.net", "remoteJid": "status@broadcast", "fromMe": false, "id": "Halo" }, "message": { "contactMessage": { "vcard": `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD` }}, "participant": "0@s.whatsapp.net" }
 global.rcanal = { contextInfo: { isForwarded: true, forwardedNewsletterMessageInfo: { newsletterJid: channelRD.id, serverMessageId: '', newsletterName: channelRD.name }, externalAdReply: { title: botname, body: dev, mediaUrl: null, description: null, previewType: "PHOTO", thumbnail: await (await fetch(icono)).buffer(), sourceUrl: redes, mediaType: 1, renderLargerThumbnail: false }, mentionedJid: null }}

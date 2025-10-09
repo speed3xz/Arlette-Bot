@@ -49,7 +49,7 @@ apt update && apt upgrade && pkg install -y git nodejs ffmpeg imagemagick yarn
 ```
 
 ```bash
-git clone https://github.com/Speed3xz && cd Arlette-Bot
+git clone https://github.com/Speed3xz/Arlette-Bot && cd Arlette-Bot
 ```
 
 ```bash

@@ -20,7 +20,7 @@
 },
 "homepage": "https://github.com/speed3xz/Arlette-Bot",
 "author": {
-"name": "Dioneibi-rip"
+"name": "speed3xz"
 },
 "repository": {
 "type": "git",
@@ -31,7 +31,7 @@
 },
 "license": "MIT-License",
 "dependencies": {
-"@whiskeysockets/baileys": "github:EdderBot02/bail",
+"@whiskeysockets/baileys": "github:gatanina-li/baileys",
 "@adiwajshing/keyed-db": "^0.2.4",
 "@bochilteam/scraper": "^4.2.4",
 "@bochilteam/scraper-sosmed": "^1.0.5",

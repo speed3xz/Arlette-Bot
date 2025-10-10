@@ -1,8 +1,8 @@
 # Código desarrollado por @gata_dios 
 
 #!/data/data/com.termux/files/usr/bin/bash 
-BOT_DIR="YukiBot-MD"  
-BOT_REPO="https://github.com/The-King-Destroy/$BOT_DIR"
+BOT_DIR="Arlette-Bot"  
+BOT_REPO="https://github.com/Speed3xz/$BOT_DIR"
 DB_FILE="database.json"
 
 GREEN='\033[32m'

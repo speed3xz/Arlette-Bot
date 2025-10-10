@@ -128,7 +128,7 @@ cd && cd Arlette-Bot-MD && nano settings.js
 > *Estos comandos solo funcionan para TERMUX, REPLIT, LINUX*.                > 💡 Puedes usar [Termux Widget](https://f-droid.org/packages/com.termux.widget/) para lanzar el bot más rápido desde la pantalla de inicio.
 </details>                                                                 
 
-### **Windows (Instalador .exe)**
+### **`🖥️ Windows (Instalador. exe)`**
 
 > ✅ Recomendado para usuarios sin experiencia técnica.
 

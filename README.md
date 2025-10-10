@@ -2,7 +2,7 @@
 <p align="center"><i>Bot de WhatsApp con temática de una waifu vampira</i></p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/speed3xz/Storage/main/Arlette-Bot/b859e5b0780d3eb3f3349f69ab524bcc.jpg" width="200"/>
+  <img src="https://files.catbox.moe/kh4fa7.mp4" width="200"/>
 </p>
 
 <details>

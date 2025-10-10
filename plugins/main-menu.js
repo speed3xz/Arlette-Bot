@@ -9,19 +9,17 @@ let totalCommands = Object.values(global.plugins).filter((v) => v.help && v.tags
 let txt = `
 「🎀」 ¡Hola! *@${userId.split('@')[0]}*, Soy *${botname}*, Aquí tienes la lista de comandos.\n> Para Ver Tu Perfil Usa */perfil* ❒
 
-𐔌 . ⋮ *I N F O* 💗 .ᐟ ֹ ₊ ꒱
-･ ⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⋆ ･ ⠄⠂⋆ ･
-❀ *Tipo* » ${(conn.user.jid == global.conn.user.jid ? 'Principal 🎀' : 'Sub-Bot 💗')}
-✦ *Modo* » Vip
-✰ *Usuarios* » ${totalreg.toLocaleString()}
-⚘ *Versión* » ${vs}
-ꕥ *Plugins* » ${totalCommands}
-🜸 *Librería* » ${libreria}
-･ ⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⋆ ･ ⠄⠂⋆ ･
+╭────── · · ୨୧ · · ──────╮
+│❀ *Modo* » Publico
+│ᰔ *Tipo* » ${(conn.user.jid == global.conn.user.jid ? 'Principal 🎀' : 'Sub-Bot 💗')}
+│✰ *Usuarios* » ${totalreg.toLocaleString()}
+│⚘ *Versión* » ${vs}
+│ꕥ *Comandos* » ${totalCommands}
+│🜸 Baileys » Multi Device
+╰────── · · ୨୧ · · ──────╯
 
-𐔌 . ⋮ *U T I L I T I E S* 🐇 .ᐟ ֹ ₊ ꒱
-･ ⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⋆ ･ ⠄⠂⋆ ･ 
-> Comandos de *Útilidades*.
+• :･ﾟ⊹˚• `『 I N F O — B O T 』` •˚⊹:･ﾟ•
+> Comandos de *Info-bot*.
  */help • /menu*
 > ⚘ Ver el menú de comandos.
  */sug • /suggest*
@@ -30,6 +28,19 @@ let txt = `
 > ⚘ Reportar fallas o problemas del bot.
  */owner • /creador*
 > ⚘ Contacto del creador del bot.
+ */p • /ping*
+> ⚘ Ver la velocidad de respuesta del Bot.
+ */sc • /script*
+> ⚘ Link del repositorio oficial de la Bot
+ */status • /system*
+> ⚘ Ver estado del sistema de alojamiento.
+ */stest • /speedtest*
+> ⚘ Ver las estadísticas de velocidad de la Bot.
+ */ds • /fixmsgespera*
+> ⚘ Eliminar archivos de sesión innecesarios.
+
+• :･ﾟ⊹˚• `『 U T I L I D A D E S 』` •˚⊹:･ﾟ•
+> Comandos de *Útilidades*.
  */calcular • /cal*
 > ⚘ Calcular tipos de ecuaciones.
  */delmeta*
@@ -66,10 +77,8 @@ let txt = `
 > ⚘ Crear imágenes con texto mediante IA.
  */google*
 > ⚘ Realizar búsquedas por Google.
-･ ⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⋆ ･ ⠄⠂⋆ ･ׅ
 
-𐔌 . ⋮ *D O W N L O A D S* 💗 .ᐟ ֹ ₊ ꒱
-･ ⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⋆ ･ ⠄⠂⋆ ･ 
+• :･ﾟ⊹˚• `『 D E S C A R G A S 』` •˚⊹:･ﾟ•
 > Comandos de *Descargas* para descargar archivos de varias fuentes.
  */tiktok • /tt* + [Link] / [busqueda]
 > ⚘ Descargar un video de TikTok.
@@ -93,10 +102,8 @@ let txt = `
 > ⚘ Descargar un apk de Aptoide.
  */ytsearch • /search* + [busqueda]
 > ⚘ Buscar videos de YouTube.
-･ ⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⋆ ･ ⠄⠂⋆ ･
 
-𐔌 . ⋮ *G A C H A* 🧸 .ᐟ ֹ ₊ ꒱
-･ ⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⋆ ･ ⠄⠂⋆ ･
+• :･ﾟ⊹˚• `『 G A C H A 』` •˚⊹:･ﾟ•
 > Comandos de *Gacha* para reclamar y colecciónar personajes.
  */buycharacter • /buychar • /buyc* + [nombre]
 > ⚘ Comprar un personaje en venta.
@@ -142,10 +149,8 @@ let txt = `
 > ⚘ Votar por un personaje para subir su valor.
  */waifusboard • /waifustop • /topwaifus • /wtop* + [número]
 > ⚘ Ver el top de personajes con mayor valor.
-･ ⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⋆ ･ ⠄⠂⋆ ･ׅ
 
-𐔌 . ⋮ *B O T S* 🍒 .ᐟ ֹ ₊ ꒱
-･ ⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⋆ ･ ⠄⠂⋆ ･ 
+• :･ﾟ⊹˚• `『 B O T S 』` •˚⊹:･ﾟ•
 > Comandos para registrar tu propio Bot.
  */qr • /code*
 > ⚘ Crear un Sub-Bot con un codigo QR/Code
@@ -167,10 +172,8 @@ let txt = `
 > ⚘ Cambiar el estado del bot
  */setusername* + [nombre]
 > ⚘ Cambiar el nombre de usuario
-･ ⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⋆ ･ ⠄⠂⋆ ･ׅ
 
-𐔌 . ⋮ *E C O N O M I A* 🍒 .ᐟ ֹ ₊ ꒱
-･ ⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⋆ ･ ⠄⠂⋆ ･
+• :･ﾟ⊹˚• `『 E C O N O M I A 』` •˚⊹:･ﾟ•
 > Comandos de *Economía* para ganar dinero.
  */w • /work • /trabajar*
 > ⚘ Ganar coins trabajando.
@@ -218,10 +221,8 @@ let txt = `
 > ⚘ Ganar coins y exp pescando.
  */mazmorra • /dungeon*
 > ⚘ Explorar mazmorras para ganar coins y exp.
-･ ⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⋆ ･ ⠄⠂⋆ ･
 
-𐔌 . ⋮ *P R O F I L E* 🦋 .ᐟ ֹ ₊ ꒱
-･ ⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⋆ ･ ⠄⠂⋆ ･ 
+• :･ﾟ⊹˚• `『 P E R F I L 』` •˚⊹:･ﾟ•
 > Comandos de *Perfil* para ver y configurar tu perfil.
  */leaderboard • /lboard • /top* + <Paginá>
 > ⚘ Top de usuarios con más experiencia.
@@ -249,10 +250,8 @@ let txt = `
 > ⚘ Eliminar tu descripción.
  */prem • /vip*
 > ⚘ Comprar membresía premium.
-･ ⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⋆ ･ ⠄⠂⋆ ･ׅ
 
-𐔌 . ⋮ *G R U P O* 💐 .ᐟ ֹ ₊ ꒱
-･ ⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⋆ ･ ⠄⠂⋆ ･ 
+• :･ﾟ⊹˚• `『 G R U P O S 』` •˚⊹:･ﾟ•
 > Comandos para *Administradores* de grupos.
  */tag • /hidetag • /invocar • /tagall* + [mensaje]
 > ⚘ Envía un mensaje mencionando a todos los usuarios del grupo.
@@ -318,10 +317,20 @@ let txt = `
 > ⚘ Ver la Informacion del grupo.
  */link*
 > ⚘ Ver enlace de invitación del grupo.
-･ ⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⋆ ･ ⠄⠂⋆ ･ׅׅ
 
-𐔌 . ⋮ *A N I M E* 🌸 .ᐟ ֹ ₊ ꒱
-･ ⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⋆ ･ ⠄⠂⋆ ･ 
+• :･ﾟ⊹˚• `『 N S F W 』` •˚⊹:･ﾟ•
+ */danbooru • /dbooru* + [Tags]
+> ⚘ Buscar imagenes en Danbooru
+ */gelbooru • /gbooru* + [Tags]
+> ⚘ Buscar imagenes en Gelbooru
+ */rule34 • /r34* + [Tags]
+> ⚘ Buscar imagenes en Rule34
+ */xvideos •/xvideosdl* + [Link]
+> ⚘ Descargar un video Xvideos. 
+ */xnxx •/xnxxdl* + [Link]
+> ⚘ Descargar un video Xnxx.
+
+• :･ﾟ⊹˚• `『 A N I M E 』` •˚⊹:･ﾟ•
 > Comandos de reacciones de anime.
  */angry • /enojado* + <mencion>
 > ⚘ Estar enojado
@@ -423,21 +432,7 @@ let txt = `
 > ⚘ Buscar una waifu aleatoria.
  */ppcouple • /ppcp*
 > ⚘ Genera imágenes para amistades o parejas.
-･ ⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⋆ ･ ⠄⠂⋆ ･
 
-𐔌 . ⋮ *N S F W* 🍓 .ᐟ ֹ ₊ ꒱
-･ ⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⋆ ･ ⠄⠂⋆ ･
- */danbooru • /dbooru* + [Tags]
-> ⚘ Buscar imagenes en Danbooru
- */gelbooru • /gbooru* + [Tags]
-> ⚘ Buscar imagenes en Gelbooru
- */rule34 • /r34* + [Tags]
-> ⚘ Buscar imagenes en Rule34
- */xvideos •/xvideosdl* + [Link]
-> ⚘ Descargar un video Xvideos. 
- */xnxx •/xnxxdl* + [Link]
-> ⚘ Descargar un video Xnxx.
-･ ⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⠄⠂⋆ ･ ⋆ ･ ⠄⠂⋆ ･ׅ
 > ✐ Powered By Speed3xz`.trim()
 await conn.sendMessage(m.chat, { 
 text: txt,

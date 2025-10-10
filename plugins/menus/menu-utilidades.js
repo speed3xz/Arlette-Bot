@@ -18,28 +18,44 @@ let txt = `
 │🜸 Baileys » Multi Device
 ╰────── · · ୨୧ · · ──────╯
 
-• :･ﾟ⊹˚• `『 B O T S 』` •˚⊹:･ﾟ•
-> Comandos para registrar tu propio Bot.
- */qr • /code*
-> ⚘ Crear un Sub-Bot con un codigo QR/Code
- */bots • /botlist*
-> ⚘ Ver el numero de bots activos.
- */status • /estado*
-> ⚘ Ver estado del bot.
- */p • /ping*
-> ⚘ Medir tiempo de respuesta.
- */join* + [Invitacion]
-> ⚘ Unir al bot a un grupo.
- */leave • /salir*
-> ⚘ Salir de un grupo.
- */logout*
-> ⚘ Cerrar sesion del bot.
- */setpfp • /setimage*
-> ⚘ Cambiar la imagen de perfil
- */setstatus* + [estado]
-> ⚘ Cambiar el estado del bot
- */setusername* + [nombre]
-> ⚘ Cambiar el nombre de usuario
+• :･ﾟ⊹˚• `『 U T I L I D A D E S 』` •˚⊹:･ﾟ•
+> Comandos de *Útilidades*.
+ */calcular • /cal*
+> ⚘ Calcular tipos de ecuaciones.
+ */delmeta*
+> ⚘ Restablecer el pack y autor por defecto para tus stickers.
+ */getpic • /pfp* + [@usuario]
+> ⚘ Ver la foto de perfil de un usuario.
+ */say* + [texto]
+> ⚘ Repetir un mensaje
+ */setmeta* + [autor] | [pack]
+> ⚘ Establecer el pack y autor por defecto para tus stickers.
+ */sticker • /s • /wm* + {citar una imagen/video}
+> ⚘ Convertir una imagen/video a sticker
+ */toimg • /img* + {citar sticker}
+> ⚘ Convertir un sticker/imagen de una vista a imagen.
+ */brat • /bratv • /qc • /emojimix*︎ 
+> ⚘ Crear stickers con texto.
+ */enhance • /remini • /hd*
+> ⚘ Mejorar calidad de una imagen.
+ */letra • /style* 
+> ⚘ Cambia la fuente de las letras.
+ */read • /readviewonce*
+> ⚘ Ver imágenes viewonce.
+ */ss • /ssweb*
+> ⚘ Ver el estado de una página web.
+ */translate • /traducir • /trad*
+> ⚘ Traducir palabras en otros idiomas.
+ */ia • /gemini*
+> ⚘ Preguntar a Chatgpt.
+ */tourl • /catbox*
+> ⚘ Convertidor de imágen/video en urls.
+ */wiki • /wikipedia*
+> ⚘ Investigar temas a través de Wikipedia.
+ */dalle • /flux*
+> ⚘ Crear imágenes con texto mediante IA.
+ */google*
+> ⚘ Realizar búsquedas por Google.
 
 > ✐ Powered By Speed3xz`.trim()
 await conn.sendMessage(m.chat, { 
@@ -67,6 +83,6 @@ renderLargerThumbnail: true
 
 handler.help = ['menu']
 handler.tags = ['main']
-handler.command = ['menu bots', 'menu bots', 'help bots']
+handler.command = ['menu utilidades', 'menú utilidades', 'help utilidades', 'menu utilities']
 
 export default handler

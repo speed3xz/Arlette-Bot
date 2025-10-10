@@ -18,28 +18,17 @@ let txt = `
 │🜸 Baileys » Multi Device
 ╰────── · · ୨୧ · · ──────╯
 
-• :･ﾟ⊹˚• `『 B O T S 』` •˚⊹:･ﾟ•
-> Comandos para registrar tu propio Bot.
- */qr • /code*
-> ⚘ Crear un Sub-Bot con un codigo QR/Code
- */bots • /botlist*
-> ⚘ Ver el numero de bots activos.
- */status • /estado*
-> ⚘ Ver estado del bot.
- */p • /ping*
-> ⚘ Medir tiempo de respuesta.
- */join* + [Invitacion]
-> ⚘ Unir al bot a un grupo.
- */leave • /salir*
-> ⚘ Salir de un grupo.
- */logout*
-> ⚘ Cerrar sesion del bot.
- */setpfp • /setimage*
-> ⚘ Cambiar la imagen de perfil
- */setstatus* + [estado]
-> ⚘ Cambiar el estado del bot
- */setusername* + [nombre]
-> ⚘ Cambiar el nombre de usuario
+• :･ﾟ⊹˚• `『 N S F W 』` •˚⊹:･ﾟ•
+ */danbooru • /dbooru* + [Tags]
+> ⚘ Buscar imagenes en Danbooru
+ */gelbooru • /gbooru* + [Tags]
+> ⚘ Buscar imagenes en Gelbooru
+ */rule34 • /r34* + [Tags]
+> ⚘ Buscar imagenes en Rule34
+ */xvideos •/xvideosdl* + [Link]
+> ⚘ Descargar un video Xvideos. 
+ */xnxx •/xnxxdl* + [Link]
+> ⚘ Descargar un video Xnxx.
 
 > ✐ Powered By Speed3xz`.trim()
 await conn.sendMessage(m.chat, { 
@@ -67,6 +56,6 @@ renderLargerThumbnail: true
 
 handler.help = ['menu']
 handler.tags = ['main']
-handler.command = ['menu bots', 'menu bots', 'help bots']
+handler.command = ['menu nsfw', 'menú nsfw', 'help nsfw']
 
 export default handler

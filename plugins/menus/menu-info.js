@@ -18,28 +18,26 @@ let txt = `
 │🜸 Baileys » Multi Device
 ╰────── · · ୨୧ · · ──────╯
 
-• :･ﾟ⊹˚• `『 B O T S 』` •˚⊹:･ﾟ•
-> Comandos para registrar tu propio Bot.
- */qr • /code*
-> ⚘ Crear un Sub-Bot con un codigo QR/Code
- */bots • /botlist*
-> ⚘ Ver el numero de bots activos.
- */status • /estado*
-> ⚘ Ver estado del bot.
+• :･ﾟ⊹˚• `『 I N F O — B O T 』` •˚⊹:･ﾟ•
+> Comandos de *Info-bot*.
+ */help • /menu*
+> ⚘ Ver el menú de comandos.
+ */sug • /suggest*
+> ⚘ Sugerir nuevas funciones al desarrollador.
+ */reporte • /reportar*
+> ⚘ Reportar fallas o problemas del bot.
+ */owner • /creador*
+> ⚘ Contacto del creador del bot.
  */p • /ping*
-> ⚘ Medir tiempo de respuesta.
- */join* + [Invitacion]
-> ⚘ Unir al bot a un grupo.
- */leave • /salir*
-> ⚘ Salir de un grupo.
- */logout*
-> ⚘ Cerrar sesion del bot.
- */setpfp • /setimage*
-> ⚘ Cambiar la imagen de perfil
- */setstatus* + [estado]
-> ⚘ Cambiar el estado del bot
- */setusername* + [nombre]
-> ⚘ Cambiar el nombre de usuario
+> ⚘ Ver la velocidad de respuesta del Bot.
+ */sc • /script*
+> ⚘ Link del repositorio oficial de la Bot
+ */status • /system*
+> ⚘ Ver estado del sistema de alojamiento.
+ */stest • /speedtest*
+> ⚘ Ver las estadísticas de velocidad de la Bot.
+ */ds • /fixmsgespera*
+> ⚘ Eliminar archivos de sesión innecesarios.
 
 > ✐ Powered By Speed3xz`.trim()
 await conn.sendMessage(m.chat, { 
@@ -65,8 +63,8 @@ renderLargerThumbnail: true
 }}}, { quoted: m })
 }
 
-handler.help = ['menu']
+handler.help = ['menu info']
 handler.tags = ['main']
-handler.command = ['menu bots', 'menu bots', 'help bots']
+handler.command = ['menu info', 'menú info', 'help info', 'menu informacion', 'menu informacion', 'menu information']
 
 export default handler

@@ -18,28 +18,34 @@ let txt = `
 │🜸 Baileys » Multi Device
 ╰────── · · ୨୧ · · ──────╯
 
-• :･ﾟ⊹˚• `『 B O T S 』` •˚⊹:･ﾟ•
-> Comandos para registrar tu propio Bot.
- */qr • /code*
-> ⚘ Crear un Sub-Bot con un codigo QR/Code
- */bots • /botlist*
-> ⚘ Ver el numero de bots activos.
- */status • /estado*
-> ⚘ Ver estado del bot.
- */p • /ping*
-> ⚘ Medir tiempo de respuesta.
- */join* + [Invitacion]
-> ⚘ Unir al bot a un grupo.
- */leave • /salir*
-> ⚘ Salir de un grupo.
- */logout*
-> ⚘ Cerrar sesion del bot.
- */setpfp • /setimage*
-> ⚘ Cambiar la imagen de perfil
- */setstatus* + [estado]
-> ⚘ Cambiar el estado del bot
- */setusername* + [nombre]
-> ⚘ Cambiar el nombre de usuario
+• :･ﾟ⊹˚• `『 P E R F I L 』` •˚⊹:･ﾟ•
+> Comandos de *Perfil* para ver y configurar tu perfil.
+ */leaderboard • /lboard • /top* + <Paginá>
+> ⚘ Top de usuarios con más experiencia.
+ */level • /lvl* + <@Mencion>
+> ⚘ Ver tu nivel y experiencia actual.
+ */marry • /casarse* + <@Mencion>
+> ⚘ Casarte con alguien.
+ */profile* + <@Mencion>
+> ⚘ Ver tu perfil.
+ */setbirth* + [fecha]
+> ⚘ Establecer tu fecha de cumpleaños.
+ */setdescription • /setdesc* + [Descripcion]
+> ⚘ Establecer tu descripcion.
+ */setgenre* + Hombre | Mujer
+> ⚘ Establecer tu genero.
+ */delgenre • /delgenero*
+> ⚘ Eliminar tu género.
+ */delbirth* + [fecha]
+> ⚘ Borrar tu fecha de cumpleaños.
+ */divorce*
+> ⚘ Divorciarte de tu pareja.
+ */setfavourite • /setfav* + [Personaje]
+> ⚘ Establecer tu claim favorito.
+ */deldescription • /deldesc*
+> ⚘ Eliminar tu descripción.
+ */prem • /vip*
+> ⚘ Comprar membresía premium.
 
 > ✐ Powered By Speed3xz`.trim()
 await conn.sendMessage(m.chat, { 
@@ -67,6 +73,6 @@ renderLargerThumbnail: true
 
 handler.help = ['menu']
 handler.tags = ['main']
-handler.command = ['menu bots', 'menu bots', 'help bots']
+handler.command = ['menu perfil', 'menu profile', 'help profile']
 
 export default handler

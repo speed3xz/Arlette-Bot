@@ -18,28 +18,30 @@ let txt = `
 │🜸 Baileys » Multi Device
 ╰────── · · ୨୧ · · ──────╯
 
-• :･ﾟ⊹˚• `『 B O T S 』` •˚⊹:･ﾟ•
-> Comandos para registrar tu propio Bot.
- */qr • /code*
-> ⚘ Crear un Sub-Bot con un codigo QR/Code
- */bots • /botlist*
-> ⚘ Ver el numero de bots activos.
- */status • /estado*
-> ⚘ Ver estado del bot.
- */p • /ping*
-> ⚘ Medir tiempo de respuesta.
- */join* + [Invitacion]
-> ⚘ Unir al bot a un grupo.
- */leave • /salir*
-> ⚘ Salir de un grupo.
- */logout*
-> ⚘ Cerrar sesion del bot.
- */setpfp • /setimage*
-> ⚘ Cambiar la imagen de perfil
- */setstatus* + [estado]
-> ⚘ Cambiar el estado del bot
- */setusername* + [nombre]
-> ⚘ Cambiar el nombre de usuario
+• :･ﾟ⊹˚• `『 D E S C A R G A S 』` •˚⊹:･ﾟ•
+> Comandos de *Descargas* para descargar archivos de varias fuentes.
+ */tiktok • /tt* + [Link] / [busqueda]
+> ⚘ Descargar un video de TikTok.
+ */mediafire • /mf* + [Link]
+> ⚘ Descargar un archivo de MediaFire.
+ */mega • /mg* + [Link]
+> ⚘ Descargar un archivo de MEGA.
+ */play • /play2 • /ytmp3 • /ytmp4* + [Cancion] / [Link]
+> ⚘ Descargar una cancion o vídeo de YouTube.
+ */facebook • /fb* + [Link]
+> ⚘ Descargar un video de Facebook.
+ */twitter • /x* + [Link]
+> ⚘ Descargar un video de Twitter/X.
+ */ig • /instagram* + [Link]
+> ⚘ Descargar un reel de Instagram.
+ */pinterest • /pin* + [busqueda] / [Link]
+> ⚘ Buscar y descargar imagenes de Pinterest.
+ */image • /imagen* + [busqueda]
+> ⚘ Buscar y descargar imagenes de Google.
+ */apk • /modapk* + [busqueda]
+> ⚘ Descargar un apk de Aptoide.
+ */ytsearch • /search* + [busqueda]
+> ⚘ Buscar videos de YouTube.
 
 > ✐ Powered By Speed3xz`.trim()
 await conn.sendMessage(m.chat, { 
@@ -67,6 +69,6 @@ renderLargerThumbnail: true
 
 handler.help = ['menu']
 handler.tags = ['main']
-handler.command = ['menu bots', 'menu bots', 'help bots']
+handler.command = ['menu descargas', 'menú descargas', 'help descargas', 'menu downloads', 'menu download']
 
 export default handler

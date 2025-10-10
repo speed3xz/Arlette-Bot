@@ -101,6 +101,6 @@ conn.reply(m.chat, `⚠︎ Se ha producido un problema.\n> Usa *${usedPrefix}rep
 
 handler.help = ['suggest', 'reporte', 'invite', 'speedtest', 'fixmsg', 'script']
 handler.tags = ['main']
-handler.command = ['suggest', 'sug', 'report', 'reportar', 'invite', 'speedtest', 'stest', 'fixmsg', 'ds']
+handler.command = ['suggest', 'sug', 'report', 'reportar', 'invite', 'speedtest', 'stest', 'fixmsg', 'ds', 'sc', 'script']
 
 export default handler

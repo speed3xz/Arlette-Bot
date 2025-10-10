@@ -5,6 +5,14 @@
   <img src="https://raw.githubusercontent.com/speed3xz/Storage/main/Arlette-Bot/b859e5b0780d3eb3f3349f69ab524bcc.jpg" width="220"/>
 </p>
 
+### **`❕️ Información importante 🎀`**
+
+**Arlette-Bot** es un bot de WhatsApp basado en Node.js que utiliza la librería **@whiskeysockets/Baileys**
+
+🚫 Este proyecto NO está afiliado a WhatsApp ni WhatsApp LLC.
+un bot hecho 100% independiente, la base del bot es de **Yuki Suou. bot** personalizado por **Speed3xz**.
+
+
 <details>
  <summary><b> ➮ Funciones</b></summary>
 

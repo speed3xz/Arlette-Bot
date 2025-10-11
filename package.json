@@ -54,6 +54,7 @@
 "qrcode": "^1.5.1",
 "syntax-error": "^1.4.0",
 "terminal-image": "^2.0.0",
+"imagemaker.js": "^2.0.4",
 "url-regex-safe": "^3.0.0",
 "ws": "^8.18.3",
 "yargs": "^17.3.1",

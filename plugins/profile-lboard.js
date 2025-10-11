@@ -15,7 +15,7 @@ text += `✰ ${startIndex + i + 1} » *${name}*\n`
 text += `\t\t❖ XP » *${exp.toLocaleString()}*  ❖ LVL » *${level}*\n`
 }
 text += `\n> • Página *${page}* de *${Math.ceil(sorted.length / 10)}*`
-if (page < Math.ceil(sorted.length / 10)) text += `\n> Para ver la siguiente página » *#leaderboard ${page + 1}*`
+if (page < Math.ceil(sorted.length / 10)) text += `\n> Para ver la siguiente página » */leaderboard ${page + 1}*`
 await conn.reply(m.chat, text.trim(), m, { mentions: conn.parseMention(text) })
 }
 

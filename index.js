@@ -33,7 +33,7 @@ const PORT = process.env.PORT || process.env.SERVER_PORT || 3000
 
 let { say } = cfonts
 console.log(chalk.magentaBright('\n❀ Iniciando...'))
-say('Arlette Bot', {
+say('Arlette-Bot', {
 font: 'simple',
 align: 'left',
 gradient: ['#ff4fcb', '#ff77ff']

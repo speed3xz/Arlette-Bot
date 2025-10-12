@@ -48,7 +48,6 @@ ${description}
 ❖ Nivel » *${nivel}*
 # Puesto » *#${rank}*
 ➨ Progreso » *${progreso}*
-⸙ Premium » ${premium ? `✔️ (*${isLeft}*)` : '✖️'}
 
 ꕥ Harem » *${haremCount}*
 ♤ Valor total » *${haremValue.toLocaleString()}*${favLine}

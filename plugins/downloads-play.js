@@ -4,7 +4,7 @@ import yts from 'yt-search'
 const handler = async (m, { conn, text, usedPrefix, command }) => {
 try {
 if (!text.trim()) return conn.reply(m.chat, `❀ Por favor, ingresa el nombre de la música a descargar.`, m)
-await m.react('🕒')
+await m.react('🎀')
 const videoMatch = text.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/|v\/))([a-zA-Z0-9_-]{11})/)
 const query = videoMatch ? 'https://youtu.be/' + videoMatch[1] : text
 const search = await yts(query)
@@ -16,7 +16,7 @@ const vistas = formatViews(views)
 const info = `「✦」Descargando *<${title}>*\n\n> ❑ Canal » *${author.name}*\n> ♡ Vistas » *${vistas}*\n> ✧︎ Duración » *${timestamp}*\n> ☁︎ Publicado » *${ago}*\n> ➪ Link » ${url}`
 const thumb = (await conn.getFile(thumbnail)).data
 await conn.sendMessage(m.chat, { image: thumb, caption: info }, { quoted: m })
-if (['play', 'yta', 'ytmp3', 'playaudio', 'ytaudio'].includes(command)) {
+if (['play', 'yta', 'ytmp3', 'playaudio'].includes(command)) {
 const audio = await getAud(url)
 if (!audio?.url) throw '⚠ No se pudo obtener el audio.'
 m.reply(`> ❀ *Audio procesado. Servidor:* \`${audio.api}\``)
@@ -33,7 +33,7 @@ await m.react('✖️')
 return conn.reply(m.chat, typeof e === 'string' ? e : '⚠︎ Se ha producido un problema.\n> Usa *' + usedPrefix + 'report* para informarlo.\n\n' + e.message, m)
 }}
 
-handler.command = handler.help = ['play', 'yta', 'ytmp3', 'play2', 'ytv', 'ytmp4', 'playaudio', 'mp4', 'ytaudio']
+handler.command = handler.help = ['play', 'yta', 'ytmp3', 'play2', 'ytv', 'ytmp4', 'playaudio', 'mp4']
 handler.tags = ['descargas']
 handler.group = true
 
@@ -41,23 +41,19 @@ export default handler
 
 async function getAud(url) {
 const apis = [
-{ api: 'Arlette V1', endpoint: `${global.APIs.xyro.url}/download/youtubemp3?url=${encodeURIComponent(url)}`, extractor: res => res.result?.dl },
-{ api: 'Arlette V2', endpoint: `${global.APIs.yupra.url}/api/downloader/ytmp3?url=${encodeURIComponent(url)}`, extractor: res => res.resultado?.enlace },
-{ api: 'Arlette V3', endpoint: `${global.APIs.vreden.url}/api/ytmp3?url=${encodeURIComponent(url)}`, extractor: res => res.result?.download?.url },
-{ api: 'Arlette V4', endpoint: `${global.APIs.delirius.url}/download/ymp3?url=${encodeURIComponent(url)}`, extractor: res => res.data?.download?.url },
-{ api: 'Arlette V5', endpoint: `${global.APIs.zenzxz.url}/downloader/ytmp3?url=${encodeURIComponent(url)}`, extractor: res => res.download_url },
-{ api: 'Arlette V7', endpoint: `${global.APIs.zenzxz.url}/downloader/ytmp3v2?url=${encodeURIComponent(url)}`, extractor: res => res.download_url }
+{ api: 'Arlette', endpoint: `${global.APIs.zenzxz.url}/downloader/ytmp3?url=${encodeURIComponent(url)}`, extractor: res => res.download_url },
+{ api: 'Arlette v2', endpoint: `${global.APIs.zenzxz.url}/downloader/ytmp3v2?url=${encodeURIComponent(url)}`, extractor: res => res.download_url },
+{ api: 'Speed3xz', endpoint: `${global.APIs.yupra.url}/api/downloader/ytmp3?url=${encodeURIComponent(url)}`, extractor: res => res.resultado?.enlace },
+{ api: 'Speed3xz v2''', endpoint: `${global.APIs.vreden.url}/api/ytmp3?url=${encodeURIComponent(url)}`, extractor: res => res.result?.download?.url }
 ]
 return await fetchFromApis(apis)
 }
 async function getVid(url) {
 const apis = [
-{ api: 'Arlette V1', endpoint: `${global.APIs.xyro.url}/download/youtubemp4?url=${encodeURIComponent(url)}&quality=360`, extractor: res => res.result?.dl },
-{ api: 'Arlette  V2', endpoint: `${global.APIs.yupra.url}/api/downloader/ytmp4?url=${encodeURIComponent(url)}`, extractor: res => res.resultado?.formatos?.[0]?.url },
-{ api: 'Arlette V3', endpoint: `${global.APIs.vreden.url}/api/ytmp4?url=${encodeURIComponent(url)}`, extractor: res => res.result?.download?.url },
-{ api: 'Arleste V4', endpoint: `${global.APIs.delirius.url}/download/ytmp4?url=${encodeURIComponent(url)}`, extractor: res => res.data?.download?.url },
-{ api: 'Arlette V5', endpoint: `${global.APIs.zenzxz.url}/downloader/ytmp4?url=${encodeURIComponent(url)}`, extractor: res => res.download_url },
-{ api: 'Arlette V6', endpoint: `${global.APIs.zenzxz.url}/downloader/ytmp4v2?url=${encodeURIComponent(url)}`, extractor: res => res.download_url }
+{ api:  'Arlette', endpointnt: `${global.APIs.zenzxz.url}/downloader/ytmp4?url=${encodeURIComponent(url)}`, extractor: res => res.download_url },
+{ api: 'Arlette v2', endpoint: `${global.APIs.zenzxz.url}/downloader/ytmp4v2?url=${encodeURIComponent(url)}`, extractor: res => res.download_url },
+{ api: 'Speed3xz', endpoint: `${global.APIs.yupra.url}/api/downloader/ytmp4?url=${encodeURIComponent(url)}`, extractor: res => res.resultado?.formatos?.[0]?.url },
+{ api: 'Speed3xz v2', endpoint: `${global.APIs.vreden.url}/api/ytmp4?url=${encodeURIComponent(url)}`, extractor: res => res.result?.download?.url }
 ]
 return await fetchFromApis(apis)
 }
@@ -81,4 +77,4 @@ if (views >= 1_000_000_000) return `${(views / 1_000_000_000).toFixed(1)}B (${vi
 if (views >= 1_000_000) return `${(views / 1_000_000).toFixed(1)}M (${views.toLocaleString()})`
 if (views >= 1_000) return `${(views / 1_000).toFixed(1)}k (${views.toLocaleString()})`
 return views.toString()
-}
+  }

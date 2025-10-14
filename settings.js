@@ -14,6 +14,8 @@ global.botNumber = "" //Ejemplo: 573218138672
 global.owner = [
 "573114910796",
 "556796601394",
+"5215665619261",
+"19106335998",
 ]
 
 global.suittag = ["573114910796"] 
@@ -31,7 +33,7 @@ global.yukiJadibts = true
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
 global.botname = "𝐀𝐫𝐥𝐞𝐭𝐭𝐞-𝐁𝐨𝐭"
-global.textbot = "Arlette, made with by speed3xz"
+global.textbot = "Arlette-Bot, made with by speed3xz"
 global.dev = "© powered by speed3xz"
 global.author = "© made with by speed3xz"
 global.etiqueta = "speed3xz"

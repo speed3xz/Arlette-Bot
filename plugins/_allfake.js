@@ -8,7 +8,7 @@ const { generateWAMessageFromContent, prepareWAMessageMedia, proto } = pkg
 var handler = m => m
 handler.all = async function (m) { 
 global.canalIdM = ["120363402095978084@newsletter"]
-global.canalNombreM = ["𝗦𝗽𝗲𝗲𝗱𝟯𝘅𝘇 𝗧𝗲𝗮𝗺"]
+global.canalNombreM = ["【 ✰ 】𝗦𝗽𝗲𝗲𝗱𝟯𝘅𝘇 𝗧𝗲𝗮𝗺 - 𝗢𝗳𝗶𝗰𝗶𝗮𝗹 𝗖𝗵𝗮𝗻𝗲𝗹"]
 global.channelRD = await getRandomChannel()
 
 global.d = new Date(new Date + 3600000)
@@ -26,7 +26,7 @@ var github = 'https://github.com/speed3xz'
 var correo = ''
 global.redes = [canal, comunidad, git, github, correo].getRandom()
 
-global.nombre = m.pushName || 'Anónimo'
+global.nombre = m.pushName || 'Arlette-User'
 global.packsticker = `┊ Speed3xz Team\n⤷ https://github.com/speed3xz\n\n┊INFO 💗\n ⤷ speed3xz.bot.nu/discord`;
 global.packsticker2 = `┊Bot 🎀\n┊⤷${botname} \n\n┊Usuario:\n┊⤷${nombre}`
   

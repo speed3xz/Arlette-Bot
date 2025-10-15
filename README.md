@@ -8,10 +8,20 @@
 ### **`❕️ Información importante 🎀`**
 
 **Arlette-Bot** es un bot de WhatsApp basado en Node.js que utiliza la librería **@whiskeysockets/Baileys**
+Este bot ofrece una variedad de características para mejorar tu experiencia en WhatsApp.
 
 🚫 Este proyecto NO está afiliado a WhatsApp ni WhatsApp LLC.
-un bot hecho 100% independiente, la base del bot es de **Yuki Suou. bot** personalizado por **Speed3xz**.
+un bot hecho 100% independiente, la base del bot es de **Yuki bot** personalizado por **Speed3xz**.
 
+#### Características
+Configuración avanzada de grupos 
+Bienvenidas personalizadas  
+Herramientas útiles  
+Juegos RPG (Gacha y Economía)  
+Funciones de Inteligencia Artificial  
+Descargas y búsquedas multi-plataforma  
+Sub-Bots (JadiBot)  
+Extensiones adicionales
 
 <details>
  <summary><b> ➮ Funciones</b></summary>
@@ -91,19 +101,19 @@ pm2 start index
 ### En caso de detenerse
 > _Si despues que ya instalastes el bot y termux te salta en blanco, se fue tu internet o reiniciaste tu celular, solo realizaras estos pasos:_
 ```bash
-cd && cd Arlette-Bot-MD && npm start
+cd && cd Arlette-Bot && npm start
 ```
 ----
 ### Obtener nuevo código QR 
-> *Detén el bot, haz click en el símbolo (ctrl) [default=z] usar la letra "z" + "ENTER" hasta que salga algo verdes similar a: `Arlette-Bot-MD $`*
+> *Detén el bot, haz click en el símbolo (ctrl) [default=z] usar la letra "z" + "ENTER" hasta que salga algo verdes similar a: `Arlette-Bot $`*
 > **Escribe los siguientes comandos uno x uno :**
 ```bash 
-cd && cd Arlette-Bot-MD && rm -rf sessions/Principal && npm run qr
+cd && cd Arlette-Bot && rm -rf sessions/Principal && npm run qr
 ```
 ----
 ### Obtener nuevo código de teléfono 
 ```bash 
-cd && cd Arlette-Bot-MD && rm -rf sessions/Principal && npm run code
+cd && cd Arlette-Bot && rm -rf sessions/Principal && npm run code
 ```
 </details>
 
@@ -115,14 +125,14 @@ cd && cd Arlette-Bot-MD && rm -rf sessions/Principal && npm run code
 **Comandos para actualizar Arlette-Bot-MD de forma automática**
 
 ```bash
-grep -q 'bash\|wget' <(dpkg -l) || apt install -y bash wget && wget -O - https://raw.githubusercontent.com/Speed3xz/Arlette-Bot/mian/termux.sh | bash 
+grep -q 'bash\|wget' <(dpkg -l) || apt install -y bash wget && wget -O - https://raw.githubusercontent.com/Speed3xz/Arlette-Bot/main/termux.sh | bash 
 ```
 **✰ Volverte owner del Bot**
 
 *Si después de instalar el bot e iniciar la sesión (deseas poner tu número es la lista de owner pon este comando:*
 
 ```bash
-cd && cd Arlette-Bot-MD && nano settings.js
+cd && cd Arlette-Bot && nano settings.js
 ```
 #### Para que no pierda su progreso en Arlette-Bot, estos comandos realizarán un respaldo de su `database.json` y se agregará a la versión más reciente.
 > *Estos comandos solo funcionan para TERMUX, REPLIT, LINUX*.                > 💡 Puedes usar [Termux Widget](https://f-droid.org/packages/com.termux.widget/) para lanzar el bot más rápido desde la pantalla de inicio.

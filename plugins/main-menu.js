@@ -7,6 +7,7 @@ let handler = async (m, { conn, args }) => {
   let totalCommands = Object.values(global.plugins).filter((v) => v.help && v.tags).length
 
   const menuHeader = (userId) => `
+︶⊹︶︶୨୧︶︶⊹︶︶⊹︶︶୨୧︶︶⊹︶︶⊹︶
 「🎀」 ¡Hola! *@${userId.split('@')[0]}*, Soy *${botname}*, Aquí tienes la lista de comandos.
 > Para Ver Tu Perfil Usa */perfil* ❒
 
@@ -22,7 +23,7 @@ let handler = async (m, { conn, args }) => {
 
   const menus = {
     info: `
-• :･ﾟ⊹˚• \`『 I N F O — B O T 』\` •˚⊹:･ﾟ•
+˚ ₊ ‧  ₍ 🎀 ₎  — \`『 INFO — BOT 』\` 
 > Comandos de *Info-bot*.
  */help • /menu*
 > ⚘ Ver el menú de comandos.
@@ -44,7 +45,7 @@ let handler = async (m, { conn, args }) => {
 > ⚘ Eliminar archivos de sesión innecesarios.`,
 
     utilidades: `
-• :･ﾟ⊹˚• \`『 U T I L I D A D E S 』\` •˚⊹:･ﾟ•
+₊ ‧  ₍ 🍨 ₎  — \`『 UTILIDADES 』\` 
 > Comandos de *Útilidades*.
  */calcular • /cal*
 > ⚘ Calcular tipos de ecuaciones.
@@ -84,7 +85,7 @@ let handler = async (m, { conn, args }) => {
 > ⚘ Realizar búsquedas por Google.`,
 
     descargas: `
-• :･ﾟ⊹˚• \`『 D E S C A R G A S 』\` •˚⊹:･ﾟ•
+₊ ‧  ₍ 🌷 ₎  — \`『 DESCARGAS 』\` 
 > Comandos de *Descargas* para descargar archivos de varias fuentes.
  */tiktok • /tt* + [Link] / [busqueda]
 > ⚘ Descargar un video de TikTok.
@@ -110,7 +111,7 @@ let handler = async (m, { conn, args }) => {
 > ⚘ Buscar videos de YouTube.`,
 
     gacha: `
-• :･ﾟ⊹˚• \`『 G A C H A 』\` •˚⊹:･ﾟ•
+₊ ‧  ₍ 🍡 ₎  — \`『 GACHA 』\` 
 > Comandos de *Gacha* para reclamar y colecciónar personajes.
  */buycharacter • /buychar • /buyc* + [nombre]
 > ⚘ Comprar un personaje en venta.
@@ -158,7 +159,7 @@ let handler = async (m, { conn, args }) => {
 > ⚘ Ver el top de personajes con mayor valor.`,
 
     bots: `
-• :･ﾟ⊹˚• \`『 B O T S 』\` •˚⊹:･ﾟ•
+₊ ‧  ₍ 🍓 ₎  — \`『 BOTS 』\` 
 > Comandos para registrar tu propio Bot.
  */qr • /code*
 > ⚘ Crear un Sub-Bot con un codigo QR/Code
@@ -182,7 +183,7 @@ let handler = async (m, { conn, args }) => {
 > ⚘ Cambiar el nombre de usuario`,
 
     economia: `
-• :･ﾟ⊹˚• \`『 E C O N O M I A 』\` •˚⊹:･ﾟ•
+₊ ‧  ₍ 💸 ₎  — \`『 ECONOMIA 』\` 
 > Comandos de *Economía* para ganar dinero.
  */w • /work • /trabajar*
 > ⚘ Ganar coins trabajando.
@@ -232,7 +233,7 @@ let handler = async (m, { conn, args }) => {
 > ⚘ Explorar mazmorras para ganar coins y exp.`,
 
     perfil: `
-• :･ﾟ⊹˚• \`『 P E R F I L 』\` •˚⊹:･ﾟ•
+₊ ‧  ₍ 🍓 ₎  — \`『 PERFIL 』\` 
 > Comandos de *Perfil* para ver y configurar tu perfil.
  */leaderboard • /lboard • /top* + <Paginá>
 > ⚘ Top de usuarios con más experiencia.
@@ -262,7 +263,7 @@ let handler = async (m, { conn, args }) => {
 > ⚘ Comprar membresía premium.`,
 
     grupos: `
-• :･ﾟ⊹˚• \`『 G R U P O S 』\` •˚⊹:･ﾟ•
+₊ ‧  ₍ 🦋 ₎  — \`『 GRUPOS 』\` 
 > Comandos para *Administradores* de grupos.
  */tag • /hidetag • /invocar • /tagall* + [mensaje]
 > ⚘ Envía un mensaje mencionando a todos los usuarios del grupo.
@@ -330,7 +331,7 @@ let handler = async (m, { conn, args }) => {
 > ⚘ Ver enlace de invitación del grupo.`,
 
     nsfw: `
-• :･ﾟ⊹˚• \`『 N S F W 』\` •˚⊹:･ﾟ•
+₊ ‧  ₍ 🍒 ₎  — \`『 NSFW 』\` 
  */danbooru • /dbooru* + [Tags]
 > ⚘ Buscar imagenes en Danbooru
  */gelbooru • /gbooru* + [Tags]
@@ -363,7 +364,7 @@ let handler = async (m, { conn, args }) => {
 > ⚘ Follarte a alguien
  */cafe • /coffe*
 > ⚘ Tomate un cafecito con alguien
- */violar • /perra* + <mencion>
+ */violar • /perra + <mencion>
 > ⚘ Viola a alguien
  */grabboobs* + <mencion>
 > ⚘ Agarrrar tetas
@@ -385,7 +386,7 @@ let handler = async (m, { conn, args }) => {
 > ⚘ Hacer tijeras.`,
 
     anime: `
-• :･ﾟ⊹˚• \`『 A N I M E 』\` •˚⊹:･ﾟ•
+₊ ‧  ₍ 🌸 ₎  — \`『 ANIME 』\` 
 > Comandos de reacciones de anime.
  */angry • /enojado* + <mencion>
 > ⚘ Estar enojado

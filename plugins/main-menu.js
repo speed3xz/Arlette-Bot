@@ -1,23 +1,27 @@
 import fetch from 'node-fetch'
 
 let handler = async (m, { conn, args }) => {
-let mentionedJid = await m.mentionedJid
-let userId = mentionedJid && mentionedJid[0] ? mentionedJid[0] : m.sender
-let totalreg = Object.keys(global.db.data.users).length
-let totalCommands = Object.values(global.plugins).filter((v) => v.help && v.tags).length
-    
-let txt = `
-「🎀」 ¡Hola! *@${userId.split('@')[0]}*, Soy *${botname}*, Aquí tienes la lista de comandos.\n> Para Ver Tu Perfil Usa */perfil* ❒
+  let mentionedJid = await m.mentionedJid
+  let userId = mentionedJid && mentionedJid[0] ? mentionedJid[0] : m.sender
+  let totalreg = Object.keys(global.db.data.users).length
+  let totalCommands = Object.values(global.plugins).filter((v) => v.help && v.tags).length
 
-╭────── · · ୨୧ · · ──────╮
-│❀ *Modo* » Publico
+  const menuHeader = (userId) => `
+「🎀」 ¡Hola! *@${userId.split('@')[0]}*, Soy *${botname}*, Aquí tienes la lista de comandos.
+> Para Ver Tu Perfil Usa */perfil* ❒
+
+╭┈ ↷
+│❀ *Modo* » Público
 │ᰔ *Tipo* » ${(conn.user.jid == global.conn.user.jid ? 'Principal 🎀' : 'Sub-Bot 💗')}
 │✰ *Usuarios* » ${totalreg.toLocaleString()}
 │⚘ *Versión* » ${vs}
 │ꕥ *Comandos* » ${totalCommands}
 │🜸 Baileys » Multi Device
-╰────── · · ୨୧ · · ──────╯
+╰─────────────────
+`.trim()
 
+  const menus = {
+    info: `
 • :･ﾟ⊹˚• \`『 I N F O — B O T 』\` •˚⊹:･ﾟ•
 > Comandos de *Info-bot*.
  */help • /menu*
@@ -36,9 +40,10 @@ let txt = `
 > ⚘ Ver estado del sistema de alojamiento.
  */stest • /speedtest*
 > ⚘ Ver las estadísticas de velocidad de la Bot.
- */ds • /fixmsgespera*
-> ⚘ Eliminar archivos de sesión innecesarios.
+ */ds • /fixmsg*
+> ⚘ Eliminar archivos de sesión innecesarios.`,
 
+    utilidades: `
 • :･ﾟ⊹˚• \`『 U T I L I D A D E S 』\` •˚⊹:･ﾟ•
 > Comandos de *Útilidades*.
  */calcular • /cal*
@@ -76,8 +81,9 @@ let txt = `
  */dalle • /flux*
 > ⚘ Crear imágenes con texto mediante IA.
  */google*
-> ⚘ Realizar búsquedas por Google.
+> ⚘ Realizar búsquedas por Google.`,
 
+    descargas: `
 • :･ﾟ⊹˚• \`『 D E S C A R G A S 』\` •˚⊹:･ﾟ•
 > Comandos de *Descargas* para descargar archivos de varias fuentes.
  */tiktok • /tt* + [Link] / [busqueda]
@@ -101,8 +107,9 @@ let txt = `
  */apk • /modapk* + [busqueda]
 > ⚘ Descargar un apk de Aptoide.
  */ytsearch • /search* + [busqueda]
-> ⚘ Buscar videos de YouTube.
+> ⚘ Buscar videos de YouTube.`,
 
+    gacha: `
 • :･ﾟ⊹˚• \`『 G A C H A 』\` •˚⊹:･ﾟ•
 > Comandos de *Gacha* para reclamar y colecciónar personajes.
  */buycharacter • /buychar • /buyc* + [nombre]
@@ -148,8 +155,9 @@ let txt = `
  */vote • /votar* + [nombre]
 > ⚘ Votar por un personaje para subir su valor.
  */waifusboard • /waifustop • /topwaifus • /wtop* + [número]
-> ⚘ Ver el top de personajes con mayor valor.
+> ⚘ Ver el top de personajes con mayor valor.`,
 
+    bots: `
 • :･ﾟ⊹˚• \`『 B O T S 』\` •˚⊹:･ﾟ•
 > Comandos para registrar tu propio Bot.
  */qr • /code*
@@ -171,8 +179,9 @@ let txt = `
  */setstatus* + [estado]
 > ⚘ Cambiar el estado del bot
  */setusername* + [nombre]
-> ⚘ Cambiar el nombre de usuario
+> ⚘ Cambiar el nombre de usuario`,
 
+    economia: `
 • :･ﾟ⊹˚• \`『 E C O N O M I A 』\` •˚⊹:･ﾟ•
 > Comandos de *Economía* para ganar dinero.
  */w • /work • /trabajar*
@@ -220,8 +229,9 @@ let txt = `
  */fish • /pescar*
 > ⚘ Ganar coins y exp pescando.
  */mazmorra • /dungeon*
-> ⚘ Explorar mazmorras para ganar coins y exp.
+> ⚘ Explorar mazmorras para ganar coins y exp.`,
 
+    perfil: `
 • :･ﾟ⊹˚• \`『 P E R F I L 』\` •˚⊹:･ﾟ•
 > Comandos de *Perfil* para ver y configurar tu perfil.
  */leaderboard • /lboard • /top* + <Paginá>
@@ -249,8 +259,9 @@ let txt = `
  */deldescription • /deldesc*
 > ⚘ Eliminar tu descripción.
  */prem • /vip*
-> ⚘ Comprar membresía premium.
+> ⚘ Comprar membresía premium.`,
 
+    grupos: `
 • :･ﾟ⊹˚• \`『 G R U P O S 』\` •˚⊹:･ﾟ•
 > Comandos para *Administradores* de grupos.
  */tag • /hidetag • /invocar • /tagall* + [mensaje]
@@ -316,8 +327,9 @@ let txt = `
  */gp • /infogrupo*
 > ⚘ Ver la Informacion del grupo.
  */link*
-> ⚘ Ver enlace de invitación del grupo.
+> ⚘ Ver enlace de invitación del grupo.`,
 
+    nsfw: `
 • :･ﾟ⊹˚• \`『 N S F W 』\` •˚⊹:･ﾟ•
  */danbooru • /dbooru* + [Tags]
 > ⚘ Buscar imagenes en Danbooru
@@ -328,8 +340,9 @@ let txt = `
  */xvideos •/xvideosdl* + [Link]
 > ⚘ Descargar un video Xvideos. 
  */xnxx •/xnxxdl* + [Link]
-> ⚘ Descargar un video Xnxx.
+> ⚘ Descargar un video Xnxx.`,
 
+    anime: `
 • :･ﾟ⊹˚• \`『 A N I M E 』\` •˚⊹:･ﾟ•
 > Comandos de reacciones de anime.
  */angry • /enojado* + <mencion>
@@ -426,38 +439,41 @@ let txt = `
 > ⚘ Molestar a alguien
  */handhold • /mano* + <mencion>
 > ⚘ Tomarse de la mano
- */wave • /ola • /hola* + <mencion>
+ */wave • /hola* + <mencion>
 > ⚘ Saludar con la mano
  */waifu*
 > ⚘ Buscar una waifu aleatoria.
  */ppcouple • /ppcp*
-> ⚘ Genera imágenes para amistades o parejas.
+> ⚘ Genera imágenes para amistades o parejas.` 
+  }
 
-> ✐ Powered By Speed3xz`.trim()
-await conn.sendMessage(m.chat, { 
-text: txt,
-contextInfo: {
-mentionedJid: [userId],
-isForwarded: true,
-forwardedNewsletterMessageInfo: {
-newsletterJid: channelRD.id,
-serverMessageId: '',
-newsletterName: channelRD.name
-},
-externalAdReply: {
-title: botname,
-body: textbot,
-mediaType: 1,
-mediaUrl: redes,
-sourceUrl: redes,
-thumbnail: await (await fetch(banner)).buffer(),
-showAdAttribution: false,
-containsAutoReply: true,
-renderLargerThumbnail: true
-}}}, { quoted: m })
+  const category = args[0]?.toLowerCase()
+  let selectedMenu = menus[category]
+
+  if (!selectedMenu) {
+    selectedMenu = Object.values(menus).join('\n\n')
+  }
+
+  const txt = `${menuHeader(userId)}\n${selectedMenu}\n\n> ✐ Powered By Speed3xz`
+
+  await conn.sendMessage(m.chat, {
+    text: txt,
+    contextInfo: {
+      mentionedJid: [userId],
+      externalAdReply: {
+        title: botname,
+        body: textbot,
+        mediaType: 1,
+        mediaUrl: redes,
+        sourceUrl: redes,
+        thumbnail: await (await fetch(banner)).buffer(),
+        renderLargerThumbnail: true
+      }
+    }
+  }, { quoted: m })
 }
 
-handler.help = ['menu']
+handler.help = ['menu', 'help']
 handler.tags = ['main']
 handler.command = ['menu', 'menú', 'help']
 

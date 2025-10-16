@@ -18,7 +18,7 @@ let txt = `
 │🜸 Baileys » Multi Device
 ╰────── · · ୨୧ · · ──────╯
 
-• :･ﾟ⊹˚• `『 I N F O — B O T 』` •˚⊹:･ﾟ•
+• :･ﾟ⊹˚• \`『 I N F O — B O T 』\` •˚⊹:･ﾟ•
 > Comandos de *Info-bot*.
  */help • /menu*
 > ⚘ Ver el menú de comandos.
@@ -39,7 +39,7 @@ let txt = `
  */ds • /fixmsgespera*
 > ⚘ Eliminar archivos de sesión innecesarios.
 
-• :･ﾟ⊹˚• `『 U T I L I D A D E S 』` •˚⊹:･ﾟ•
+• :･ﾟ⊹˚• \`『 U T I L I D A D E S 』\` •˚⊹:･ﾟ•
 > Comandos de *Útilidades*.
  */calcular • /cal*
 > ⚘ Calcular tipos de ecuaciones.
@@ -78,7 +78,7 @@ let txt = `
  */google*
 > ⚘ Realizar búsquedas por Google.
 
-• :･ﾟ⊹˚• `『 D E S C A R G A S 』` •˚⊹:･ﾟ•
+• :･ﾟ⊹˚• \`『 D E S C A R G A S 』\` •˚⊹:･ﾟ•
 > Comandos de *Descargas* para descargar archivos de varias fuentes.
  */tiktok • /tt* + [Link] / [busqueda]
 > ⚘ Descargar un video de TikTok.
@@ -103,7 +103,7 @@ let txt = `
  */ytsearch • /search* + [busqueda]
 > ⚘ Buscar videos de YouTube.
 
-• :･ﾟ⊹˚• `『 G A C H A 』` •˚⊹:･ﾟ•
+• :･ﾟ⊹˚• \`『 G A C H A 』\` •˚⊹:･ﾟ•
 > Comandos de *Gacha* para reclamar y colecciónar personajes.
  */buycharacter • /buychar • /buyc* + [nombre]
 > ⚘ Comprar un personaje en venta.
@@ -150,7 +150,7 @@ let txt = `
  */waifusboard • /waifustop • /topwaifus • /wtop* + [número]
 > ⚘ Ver el top de personajes con mayor valor.
 
-• :･ﾟ⊹˚• `『 B O T S 』` •˚⊹:･ﾟ•
+• :･ﾟ⊹˚• \`『 B O T S 』\` •˚⊹:･ﾟ•
 > Comandos para registrar tu propio Bot.
  */qr • /code*
 > ⚘ Crear un Sub-Bot con un codigo QR/Code
@@ -173,7 +173,7 @@ let txt = `
  */setusername* + [nombre]
 > ⚘ Cambiar el nombre de usuario
 
-• :･ﾟ⊹˚• `『 E C O N O M I A 』` •˚⊹:･ﾟ•
+• :･ﾟ⊹˚• \`『 E C O N O M I A 』\` •˚⊹:･ﾟ•
 > Comandos de *Economía* para ganar dinero.
  */w • /work • /trabajar*
 > ⚘ Ganar coins trabajando.
@@ -222,7 +222,7 @@ let txt = `
  */mazmorra • /dungeon*
 > ⚘ Explorar mazmorras para ganar coins y exp.
 
-• :･ﾟ⊹˚• `『 P E R F I L 』` •˚⊹:･ﾟ•
+• :･ﾟ⊹˚• \`『 P E R F I L 』\` •˚⊹:･ﾟ•
 > Comandos de *Perfil* para ver y configurar tu perfil.
  */leaderboard • /lboard • /top* + <Paginá>
 > ⚘ Top de usuarios con más experiencia.
@@ -251,7 +251,7 @@ let txt = `
  */prem • /vip*
 > ⚘ Comprar membresía premium.
 
-• :･ﾟ⊹˚• `『 G R U P O S 』` •˚⊹:･ﾟ•
+• :･ﾟ⊹˚• \`『 G R U P O S 』\` •˚⊹:･ﾟ•
 > Comandos para *Administradores* de grupos.
  */tag • /hidetag • /invocar • /tagall* + [mensaje]
 > ⚘ Envía un mensaje mencionando a todos los usuarios del grupo.
@@ -318,7 +318,7 @@ let txt = `
  */link*
 > ⚘ Ver enlace de invitación del grupo.
 
-• :･ﾟ⊹˚• `『 N S F W 』` •˚⊹:･ﾟ•
+• :･ﾟ⊹˚• \`『 N S F W 』\` •˚⊹:･ﾟ•
  */danbooru • /dbooru* + [Tags]
 > ⚘ Buscar imagenes en Danbooru
  */gelbooru • /gbooru* + [Tags]
@@ -330,7 +330,7 @@ let txt = `
  */xnxx •/xnxxdl* + [Link]
 > ⚘ Descargar un video Xnxx.
 
-• :･ﾟ⊹˚• `『 A N I M E 』` •˚⊹:･ﾟ•
+• :･ﾟ⊹˚• \`『 A N I M E 』\` •˚⊹:･ﾟ•
 > Comandos de reacciones de anime.
  */angry • /enojado* + <mencion>
 > ⚘ Estar enojado

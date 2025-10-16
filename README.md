@@ -7,11 +7,11 @@
 
 ### **`❕️ Información importante 🎀`**
 
-**Arlette-Bot** es un bot de WhatsApp basado en Node.js que utiliza la librería **@whiskeysockets/Baileys**
+**`Arlette-Bot`** es un bot de WhatsApp basado en Node.js que utiliza la librería **@whiskeysockets/Baileys**
 Este bot ofrece una variedad de características para mejorar tu experiencia en WhatsApp.
 
 🚫 Este proyecto NO está afiliado a WhatsApp ni WhatsApp LLC.
-un bot hecho 100% independiente, la base del bot es de **Yuki bot** personalizado por **Speed3xz**.
+un bot hecho 100% independiente, la base del bot es de **Yuki bot** personalizado por **[Speed3xz](https://github.com/speed3xz)**.
 
 #### Características
 Configuración avanzada de grupos 
@@ -24,7 +24,7 @@ Sub-Bots (JadiBot)
 Extensiones adicionales
 
 <details>
- <summary><b> ➮ Funciones</b></summary>
+ <summary><b>FUNCIONES 🎀</b></summary>
 
 > Bot en desarrollo si presenta alguna falla reportar al creador para darle una solución óptima.
 
@@ -45,9 +45,15 @@ Extensiones adicionales
 
 </details>
 
-### 💻 Instalación por plataforma
+### 📥 NECESITAS INSTALAR UNAS DE ESTAS HERRAMIENTAS
 
-### **`➮ Instalación por termux`**
+
+<p align="center">
+  <a href="https://www.mediafire.com/file/llugt4zgj7g3n3u/com.termux_1020.apk/file"><img src="https://img.shields.io/badge/Descargar-Termux-26C6DA?style=for-the-badge&logo=android" alt="Download Termux"></a>
+  <a href="https://www.mediafire.com/file/bp2l6cci2p30hjv/Cloud+Shell_1.apk/file"><img src="https://img.shields.io/badge/Descargar-Cloud%20Shell-FF7043?style=for-the-badge&logo=google-cloud" alt="Download Cloud Shell"></a>
+</p>
+
+## INSTALA DESDE [TERMUX](https://f-droid.org/repo/com.termux_118.apk)
 <details>
 <summary><b>✰ Instalación Manual</b></summary>
 
@@ -138,15 +144,40 @@ cd && cd Arlette-Bot && nano settings.js
 > *Estos comandos solo funcionan para TERMUX, REPLIT, LINUX*.                > 💡 Puedes usar [Termux Widget](https://f-droid.org/packages/com.termux.widget/) para lanzar el bot más rápido desde la pantalla de inicio.
 </details>                                                                 
 
-### **`🖥️ Windows (Instalador. exe)`**
+## INSTALA DESDE [CLOUD SHELL](https://www.mediafire.com/file/bp2l6cci2p30hjv/Cloud+Shell_1.apk/file)
 
-> ✅ Recomendado para usuarios sin experiencia técnica.
+<details>
+  <summary><b>🚀 VER PASOS PARA CLOUD SHELL</b></summary>
 
-1. Descarga el instalador desde el siguiente enlace:  
-   [🔗 Descargar Arlette-Bot para Windows](https://github.com/speed3xz/Arlette-Bot/releases/download/v2.2.1/Alya-installer-x64-x86.exe)
-2. Ejecuta el archivo y sigue los pasos del asistente.
-3. El bot se iniciará automáticamente tras completar la instalación.
----
+```bash
+git clone https://github.com/speed3xz/Arlette-Bot && cd Arlette-Bot
+```
+
+```bash
+yarn install && npm install
+```
+
+```bash
+npm start
+```
+
+> ✔️ Asegúrate de que tu Cloud Shell tenga Node.js instalado.
+
+> Creditos a **[Dioneibi-rip](https://github.com/Dioneibi-rip)**
+</details>
+
+## 💬 **`COMUNIDAD Y CANALES OFICIALES`**
+
+¿Tienes dudas o quieres estar al día con las novedades? ¡Únete a nuestros canales oficiales! 💫
+
+<p align="center">
+  <a href="https://whatsapp.com/channel/0029VbAmwbQBqbr587Zkni1a">
+    <img src="https://img.shields.io/badge/Canal%20Oficial-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" alt="Canal Oficial">
+  </a>
+  <a href="https://api.whatsapp.com/send/?phone=573114910796&text==phone_number&app_absent=0">
+    <img src="https://img.shields.io/badge/Contacto%20de%20Soporte-FF5722?style=for-the-badge&logo=whatsapp&logoColor=white" alt="Support Contact">
+  </a>
+</p>
 
 ## 🧑‍💻 Desarrollador Principal
 

@@ -8,7 +8,7 @@ const fecha = new Date().toLocaleDateString("es-ES", { timeZone: "America/Mexico
 const groupSize = groupMetadata.participants.length + 1
 const desc = groupMetadata.desc?.toString() || 'Sin descripción'
 const mensaje = (chat.sWelcome || '૮꒰ ˶• ᴗ •˶꒱ა Disfruta tu estadía en el grupo!').replace(/{usuario}/g, `${username}`).replace(/{grupo}/g, `*${groupMetadata.subject}*`).replace(/{desc}/g, `${desc}`)
-const caption = `❀ Bienvenido a *"_${groupMetadata.subject}_"*\n✰ ${username}\n\n${mensaje}\n\n\n> *➮ Puedes usar _/help_ para ver la lista de comandos.*`
+const caption = `❀ Bienvenido a *"${groupMetadata.subject}"*\n✰ ${username}\n\n${mensaje}\n\n> ➮ Puedes usar */help* para ver la lista de comandos.`
 return { pp, caption, mentions: [userId] }
 }
 async function generarDespedida({ conn, userId, groupMetadata, chat }) {
@@ -18,7 +18,7 @@ const fecha = new Date().toLocaleDateString("es-ES", { timeZone: "America/Mexico
 const groupSize = groupMetadata.participants.length - 1
 const desc = groupMetadata.desc?.toString() || 'Sin descripción'
 const mensaje = (chat.sBye || '-1 homosexual 🥺').replace(/{usuario}/g, `${username}`).replace(/{grupo}/g, `${groupMetadata.subject}`).replace(/{desc}/g, `*${desc}*`)
-const caption = `❀ Adiós de *"_${groupMetadata.subject}_"*\n✰ ${username}\n\n${mensaje}\n\n> *➮ Puedes usar _/help_ para ver la lista de comandos.*`
+const caption = `❀ Adiós de *"${groupMetadata.subject}"*\n✰ ${username}\n\n${mensaje}\n\n> ➮ Puedes usar */help* para ver la lista de comandos.`
 return { pp, caption, mentions: [userId] }
 }
 let handler = m => m

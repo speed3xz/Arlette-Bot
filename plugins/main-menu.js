@@ -363,7 +363,7 @@ let handler = async (m, { conn, args }) => {
 > ⚘ Follarte a alguien
  */cafe • /coffe*
 > ⚘ Tomate un cafecito con alguien
- */violar • /perra + <mencion>
+ */violar • /perra* + <mencion>
 > ⚘ Viola a alguien
  */grabboobs* + <mencion>
 > ⚘ Agarrrar tetas

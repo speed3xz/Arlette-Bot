@@ -6,19 +6,19 @@ let handler = async (m, { conn, args }) => {
   let totalreg = Object.keys(global.db.data.users).length
   let totalCommands = Object.values(global.plugins).filter((v) => v.help && v.tags).length
 
-  const header = `
+  const menuHeader = (userId) => `
 ︶⊹︶︶୨୧︶︶⊹︶︶⊹︶︶୨୧︶︶⊹︶︶⊹︶
 「🎀」 ¡Hola! *@${userId.split('@')[0]}*, Soy *${botname}*, Aquí tienes la lista de comandos.
 > Para Ver Tu Perfil Usa */perfil* ❒
 
-╭────── · · ୨୧ · · ──────╮
+╭┈ ↷
 │❀ *Modo* » Público
 │ᰔ *Tipo* » ${(conn.user.jid == global.conn.user.jid ? 'Principal 🎀' : 'Sub-Bot 💗')}
 │✰ *Usuarios* » ${totalreg.toLocaleString()}
 │⚘ *Versión* » ${vs}
 │ꕥ *Comandos* » ${totalCommands}
 │🜸 Baileys » Multi Device
-╰────── · · ୨୧ · · ──────╯
+╰─────────────────
 `.trim()
 
   const menus = {
@@ -158,6 +158,30 @@ let handler = async (m, { conn, args }) => {
  */waifusboard • /waifustop • /topwaifus • /wtop* + [número]
 > ⚘ Ver el top de personajes con mayor valor.`,
 
+    bots: `
+₊ ‧  ꒰🍓꒱  — \`『 B O T S 』\` 
+> Comandos para registrar tu propio Bot.
+ */qr • /code*
+> ⚘ Crear un Sub-Bot con un codigo QR/Code
+ */bots • /botlist*
+> ⚘ Ver el numero de bots activos.
+ */status • /estado*
+> ⚘ Ver estado del bot.
+ */p • /ping*
+> ⚘ Medir tiempo de respuesta.
+ */join* + [Invitacion]
+> ⚘ Unir al bot a un grupo.
+ */leave • /salir*
+> ⚘ Salir de un grupo.
+ */logout*
+> ⚘ Cerrar sesion del bot.
+ */setpfp • /setimage*
+> ⚘ Cambiar la imagen de perfil
+ */setstatus* + [estado]
+> ⚘ Cambiar el estado del bot
+ */setusername* + [nombre]
+> ⚘ Cambiar el nombre de usuario`,
+
     economia: `
 ₊ ‧  ꒰💸꒱  — \`『 E C O N O M I A 』\` 
 > Comandos de *Economía* para ganar dinero.
@@ -207,30 +231,6 @@ let handler = async (m, { conn, args }) => {
 > ⚘ Ganar coins y exp pescando.
  */mazmorra • /dungeon*
 > ⚘ Explorar mazmorras para ganar coins y exp.`,
-
-    bots: `
-₊ ‧  ꒰🍓꒱  — \`『 B O T S 』\` 
-> Comandos para registrar tu propio Bot.
- */qr • /code*
-> ⚘ Crear un Sub-Bot con un codigo QR/Code
- */bots • /botlist*
-> ⚘ Ver el numero de bots activos.
- */status • /estado*
-> ⚘ Ver estado del bot.
- */p • /ping*
-> ⚘ Medir tiempo de respuesta.
- */join* + [Invitacion]
-> ⚘ Unir al bot a un grupo.
- */leave • /salir*
-> ⚘ Salir de un grupo.
- */logout*
-> ⚘ Cerrar sesion del bot.
- */setpfp • /setimage*
-> ⚘ Cambiar la imagen de perfil
- */setstatus* + [estado]
-> ⚘ Cambiar el estado del bot
- */setusername* + [nombre]
-> ⚘ Cambiar el nombre de usuario`,
 
     perfil: `
 ₊ ‧  ꒰🍓꒱  — \`『 P E R F I L 』\` 
@@ -487,41 +487,18 @@ let handler = async (m, { conn, args }) => {
  */waifu*
 > ⚘ Buscar una waifu aleatoria.
  */ppcouple • /ppcp*
-> ⚘ Genera imágenes para amistades o parejas.`
+> ⚘ Genera imágenes para amistades o parejas.` 
   }
 
-  const equivalencias = {
-    info: ['info', 'info-bot', 'información', 'botinfo'],
-    utilidades: ['utilidad', 'utilidades', 'tools', 'herramientas'],
-    descargas: ['descargas', 'descargar', 'dl', 'download', 'videos', 'media'],
-    anime: ['anime', 'reaccion', 'reacciones', 'reactions', 'manga'],
-    economia: ['economia', 'economy', 'money', 'dinero', 'work'],
-    perfil: ['perfil', 'user', 'usuario', 'profile'],
-    grupos: ['grupo', 'grupos', 'admin', 'administración'],
-    nsfw: ['nsfw', 'hentai', 'porno', 'r34', '18', '+18']
-    gacha: ['gacha']
-    bots: ['bots', 'bot', 'subbots', 'jadibot']
+  const category = args[0]?.toLowerCase()
+  let selectedMenu = menus[category]
 
+  if (!selectedMenu) {
+    selectedMenu = Object.values(menus).join('\n\n')
   }
 
-  let cat = args[0]?.toLowerCase() || ''
-  let categoria = null
+  const txt = `${menuHeader(userId)}\n${selectedMenu}\n\n> ✐ Powered By Speed3xz`
 
-  for (let key in equivalencias) {
-    if (equivalencias[key].includes(cat)) {
-      categoria = key
-      break
-    }
-  }
-
-  let txt = ''
-  if (!categoria) {
-    txt = `${header}\n\n${Object.values(menus).join('\n\n')}\n\n> ✐ Powered By Speed3xz`
-  } else {
-    txt = `${header}\n\n${menus[categoria]}\n\n> ✐ Powered By Speed3xz`
-  }
-
-  // Enviar mensaje
   await conn.sendMessage(m.chat, {
     text: txt,
     contextInfo: {

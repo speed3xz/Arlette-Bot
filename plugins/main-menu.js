@@ -6,24 +6,24 @@ let handler = async (m, { conn, args }) => {
   let totalreg = Object.keys(global.db.data.users).length
   let totalCommands = Object.values(global.plugins).filter((v) => v.help && v.tags).length
 
-  const menuHeader = (userId) => `
+  const header = `
 ︶⊹︶︶୨୧︶︶⊹︶︶⊹︶︶୨୧︶︶⊹︶︶⊹︶
 「🎀」 ¡Hola! *@${userId.split('@')[0]}*, Soy *${botname}*, Aquí tienes la lista de comandos.
 > Para Ver Tu Perfil Usa */perfil* ❒
 
-╭┈ ↷
+╭────── · · ୨୧ · · ──────╮
 │❀ *Modo* » Público
 │ᰔ *Tipo* » ${(conn.user.jid == global.conn.user.jid ? 'Principal 🎀' : 'Sub-Bot 💗')}
 │✰ *Usuarios* » ${totalreg.toLocaleString()}
 │⚘ *Versión* » ${vs}
 │ꕥ *Comandos* » ${totalCommands}
 │🜸 Baileys » Multi Device
-╰─────────────────
+╰────── · · ୨୧ · · ──────╯
 `.trim()
 
   const menus = {
     info: `
-˚ ₊ ‧  ₍ 🎀 ₎  — \`『 INFO — BOT 』\` 
+˚ ₊ ‧  ꒰🎀꒱  — \`『 I N F O — B O T 』\` 
 > Comandos de *Info-bot*.
  */help • /menu*
 > ⚘ Ver el menú de comandos.
@@ -45,7 +45,7 @@ let handler = async (m, { conn, args }) => {
 > ⚘ Eliminar archivos de sesión innecesarios.`,
 
     utilidades: `
-₊ ‧  ₍ 🍨 ₎  — \`『 UTILIDADES 』\` 
+₊ ‧  ꒰🍨꒱  — \`『 U T I L I D A D E S 』\` 
 > Comandos de *Útilidades*.
  */calcular • /cal*
 > ⚘ Calcular tipos de ecuaciones.
@@ -85,7 +85,7 @@ let handler = async (m, { conn, args }) => {
 > ⚘ Realizar búsquedas por Google.`,
 
     descargas: `
-₊ ‧  ₍ 🌷 ₎  — \`『 DESCARGAS 』\` 
+₊ ‧  ꒰🌷꒱  — \`『 D E S C A R G A S 』\` 
 > Comandos de *Descargas* para descargar archivos de varias fuentes.
  */tiktok • /tt* + [Link] / [busqueda]
 > ⚘ Descargar un video de TikTok.
@@ -111,7 +111,7 @@ let handler = async (m, { conn, args }) => {
 > ⚘ Buscar videos de YouTube.`,
 
     gacha: `
-₊ ‧  ₍ 🍡 ₎  — \`『 GACHA 』\` 
+₊ ‧  ꒰🍡꒱  — \`『 G A C H A 』\` 
 > Comandos de *Gacha* para reclamar y colecciónar personajes.
  */buycharacter • /buychar • /buyc* + [nombre]
 > ⚘ Comprar un personaje en venta.
@@ -158,32 +158,8 @@ let handler = async (m, { conn, args }) => {
  */waifusboard • /waifustop • /topwaifus • /wtop* + [número]
 > ⚘ Ver el top de personajes con mayor valor.`,
 
-    bots: `
-₊ ‧  ₍ 🍓 ₎  — \`『 BOTS 』\` 
-> Comandos para registrar tu propio Bot.
- */qr • /code*
-> ⚘ Crear un Sub-Bot con un codigo QR/Code
- */bots • /botlist*
-> ⚘ Ver el numero de bots activos.
- */status • /estado*
-> ⚘ Ver estado del bot.
- */p • /ping*
-> ⚘ Medir tiempo de respuesta.
- */join* + [Invitacion]
-> ⚘ Unir al bot a un grupo.
- */leave • /salir*
-> ⚘ Salir de un grupo.
- */logout*
-> ⚘ Cerrar sesion del bot.
- */setpfp • /setimage*
-> ⚘ Cambiar la imagen de perfil
- */setstatus* + [estado]
-> ⚘ Cambiar el estado del bot
- */setusername* + [nombre]
-> ⚘ Cambiar el nombre de usuario`,
-
     economia: `
-₊ ‧  ₍ 💸 ₎  — \`『 ECONOMIA 』\` 
+₊ ‧  ꒰💸꒱  — \`『 E C O N O M I A 』\` 
 > Comandos de *Economía* para ganar dinero.
  */w • /work • /trabajar*
 > ⚘ Ganar coins trabajando.
@@ -232,8 +208,32 @@ let handler = async (m, { conn, args }) => {
  */mazmorra • /dungeon*
 > ⚘ Explorar mazmorras para ganar coins y exp.`,
 
+    bots: `
+₊ ‧  ꒰🍓꒱  — \`『 B O T S 』\` 
+> Comandos para registrar tu propio Bot.
+ */qr • /code*
+> ⚘ Crear un Sub-Bot con un codigo QR/Code
+ */bots • /botlist*
+> ⚘ Ver el numero de bots activos.
+ */status • /estado*
+> ⚘ Ver estado del bot.
+ */p • /ping*
+> ⚘ Medir tiempo de respuesta.
+ */join* + [Invitacion]
+> ⚘ Unir al bot a un grupo.
+ */leave • /salir*
+> ⚘ Salir de un grupo.
+ */logout*
+> ⚘ Cerrar sesion del bot.
+ */setpfp • /setimage*
+> ⚘ Cambiar la imagen de perfil
+ */setstatus* + [estado]
+> ⚘ Cambiar el estado del bot
+ */setusername* + [nombre]
+> ⚘ Cambiar el nombre de usuario`,
+
     perfil: `
-₊ ‧  ₍ 🍓 ₎  — \`『 PERFIL 』\` 
+₊ ‧  ꒰🍓꒱  — \`『 P E R F I L 』\` 
 > Comandos de *Perfil* para ver y configurar tu perfil.
  */leaderboard • /lboard • /top* + <Paginá>
 > ⚘ Top de usuarios con más experiencia.
@@ -263,7 +263,7 @@ let handler = async (m, { conn, args }) => {
 > ⚘ Comprar membresía premium.`,
 
     grupos: `
-₊ ‧  ₍ 🦋 ₎  — \`『 GRUPOS 』\` 
+₊ ‧  ꒰🦋꒱  — \`『 G R U P O S 』\` 
 > Comandos para *Administradores* de grupos.
  */tag • /hidetag • /invocar • /tagall* + [mensaje]
 > ⚘ Envía un mensaje mencionando a todos los usuarios del grupo.
@@ -331,7 +331,7 @@ let handler = async (m, { conn, args }) => {
 > ⚘ Ver enlace de invitación del grupo.`,
 
     nsfw: `
-₊ ‧  ₍ 🍒 ₎  — \`『 NSFW 』\` 
+₊ ‧  ꒰🍒꒱  — \`『 N S F W 』\` 
  */danbooru • /dbooru* + [Tags]
 > ⚘ Buscar imagenes en Danbooru
  */gelbooru • /gbooru* + [Tags]
@@ -386,7 +386,7 @@ let handler = async (m, { conn, args }) => {
 > ⚘ Hacer tijeras.`,
 
     anime: `
-₊ ‧  ₍ 🌸 ₎  — \`『 ANIME 』\` 
+₊ ‧  ꒰🌸꒱  — \`『 A N I M E 』\` 
 > Comandos de reacciones de anime.
  */angry • /enojado* + <mencion>
 > ⚘ Estar enojado
@@ -487,18 +487,41 @@ let handler = async (m, { conn, args }) => {
  */waifu*
 > ⚘ Buscar una waifu aleatoria.
  */ppcouple • /ppcp*
-> ⚘ Genera imágenes para amistades o parejas.` 
+> ⚘ Genera imágenes para amistades o parejas.`
   }
 
-  const category = args[0]?.toLowerCase()
-  let selectedMenu = menus[category]
+  const equivalencias = {
+    info: ['info', 'info-bot', 'información', 'botinfo'],
+    utilidades: ['utilidad', 'utilidades', 'tools', 'herramientas'],
+    descargas: ['descargas', 'descargar', 'dl', 'download', 'videos', 'media'],
+    anime: ['anime', 'reaccion', 'reacciones', 'reactions', 'manga'],
+    economia: ['economia', 'economy', 'money', 'dinero', 'work'],
+    perfil: ['perfil', 'user', 'usuario', 'profile'],
+    grupos: ['grupo', 'grupos', 'admin', 'administración'],
+    nsfw: ['nsfw', 'hentai', 'porno', 'r34', '18', '+18']
+    gacha: ['gacha']
+    bots: ['bots', 'bot', 'subbots', 'jadibot']
 
-  if (!selectedMenu) {
-    selectedMenu = Object.values(menus).join('\n\n')
   }
 
-  const txt = `${menuHeader(userId)}\n${selectedMenu}\n\n> ✐ Powered By Speed3xz`
+  let cat = args[0]?.toLowerCase() || ''
+  let categoria = null
 
+  for (let key in equivalencias) {
+    if (equivalencias[key].includes(cat)) {
+      categoria = key
+      break
+    }
+  }
+
+  let txt = ''
+  if (!categoria) {
+    txt = `${header}\n\n${Object.values(menus).join('\n\n')}\n\n> ✐ Powered By Speed3xz`
+  } else {
+    txt = `${header}\n\n${menus[categoria]}\n\n> ✐ Powered By Speed3xz`
+  }
+
+  // Enviar mensaje
   await conn.sendMessage(m.chat, {
     text: txt,
     contextInfo: {

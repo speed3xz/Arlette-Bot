@@ -499,24 +499,30 @@ let handler = async (m, { conn, args }) => {
 
   const txt = `${menuHeader(userId)}\n${selectedMenu}\n\n> ✐ Powered By Speed3xz`
 
-  await conn.sendMessage(m.chat, {
-    text: txt,
-    contextInfo: {
-      mentionedJid: [userId],
-      externalAdReply: {
-        title: botname,
-        body: textbot,
-        mediaType: 1,
-        mediaUrl: redes,
-        sourceUrl: redes,
-        thumbnail: await (await fetch(banner)).buffer(),
-        renderLargerThumbnail: true
-      }
-    }
-  }, { quoted: m })
+await conn.sendMessage(m.chat, { 
+text: txt,
+contextInfo: {
+mentionedJid: [userId],
+isForwarded: true,
+forwardedNewsletterMessageInfo: {
+newsletterJid: channelRD.id,
+serverMessageId: '',
+newsletterName: channelRD.name
+},
+externalAdReply: {
+title: botname,
+body: textbot,
+mediaType: 1,
+mediaUrl: redes,
+sourceUrl: redes,
+thumbnail: await (await fetch(banner)).buffer(),
+showAdAttribution: false,
+containsAutoReply: true,
+renderLargerThumbnail: true
+}}}, { quoted: m })
 }
 
-handler.help = ['menu', 'help']
+handler.help = ['menu']
 handler.tags = ['main']
 handler.command = ['menu', 'menú', 'help']
 

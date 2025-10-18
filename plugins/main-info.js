@@ -17,7 +17,7 @@ const horario = `${moment.tz('America/Caracas').format('DD/MM/YYYY hh:mm:ss A')}
 switch (command) {
 case 'suggest': case 'sug': {
 if (!text) return conn.reply(m.chat, '❀ Escribe la sugerencia que quieres enviar al propietario de la Bot.', m)
-if (text.length < 10) return conn.reply(m.chat, 'ꕥ La sugerencia debe tener más de 10 caracteres.', m)
+if (text.length < 10) return conn.reply(m.chat, '🎀 La sugerencia debe tener más de 10 caracteres.', m)
 await m.react('🕒')
 const sug = `❀ 𝗦𝗨𝗚𝗘𝗥𝗘𝗡𝗖𝗜𝗔 𝗥𝗘𝗖𝗜𝗕𝗜𝗗𝗔\n\nꕥ *Usuario* » ${nombre}\n✩ *Tag* » ${tag}\n✿ *Sugerencia* » ${text}\n✦ *Chat* » ${chatLabel}\n✰ *Fecha* » ${horario}\n♤ *InfoBot* » ${botname} / ${vs}`
 await conn.sendMessage(`${suittag}@s.whatsapp.net`, { text: sug, mentions: [m.sender, ...usertag] }, { quoted: m })
@@ -27,7 +27,7 @@ break
 }
 case 'report': case 'reportar': {
 if (!text) return conn.reply(m.chat, '❀ Por favor, ingresa el error que deseas reportar.', m)
-if (text.length < 10) return conn.reply(m.chat, 'ꕥ Especifique mejor el error, mínimo 10 caracteres.', m)
+if (text.length < 10) return conn.reply(m.chat, '🎀 Especifique mejor el error, mínimo 10 caracteres.', m)
 await m.react('🕒')
 const rep = `❀ 𝗥𝗘𝗣𝗢𝗥𝗧𝗘 𝗥𝗘𝗖𝗜𝗕𝗜𝗗𝗢\n\nꕥ *Usuario* » ${nombre}\n✩ *Tag* » ${tag}\n✿ *Reporte* » ${text}\n✦ *Chat* » ${chatLabel}\n✰ *Fecha* » ${horario}\n♤ *InfoBot* » ${botname} / ${vs}`
 await conn.sendMessage(`${suittag}@s.whatsapp.net`, { text: rep, mentions: [m.sender, ...usertag] }, { quoted: m })
@@ -38,7 +38,7 @@ break
 case 'invite': {
 if (!text) return m.reply(`❀ Debes enviar un enlace para invitar el Bot a tu grupo.`)
 let [_, code] = text.match(linkRegex) || []
-if (!code) return m.reply('ꕥ El enlace de invitación no es válido.')
+if (!code) return m.reply('🎀 El enlace de invitación no es válido.')
 await m.react('🕒')
 const invite = `❀ 𝗜𝗡𝗩𝗜𝗧𝗔𝗖𝗜𝗢𝗡 𝗔 𝗨𝗡 𝗚𝗥𝗨𝗣𝗢\n\nꕥ *Usuario* » ${nombre}\n✩ *Tag* » ${tag}\n✿ *Chat* » ${chatLabel}\n✰ *Fecha* » ${horario}\n♤ *InfoBot* » ${botname} / ${vs}\n✦ *Link* » ${text}`
 const mainBotNumber = global.conn.user.jid.split('@')[0]
@@ -82,7 +82,7 @@ count++
 break
 }}}
 await m.react(count === 0 ? '✖️' : '✔️')
-conn.reply(m.chat, count === 0 ? 'ꕥ No se encontraron archivos relacionados con tu ID.' : `ꕥ Se eliminaron ${count} archivos de sesión.`, m)
+conn.reply(m.chat, count === 0 ? '🎀 No se encontraron archivos relacionados con tu ID.' : `🎀 Se eliminaron ${count} archivos de sesión.`, m)
 break
 }
 case 'script': case 'sc': {

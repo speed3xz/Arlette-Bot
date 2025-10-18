@@ -15,7 +15,7 @@ const cumpleanos = user.birth || 'Sin especificar :< (/setbirth)'
 const genero = user.genre || 'Sin especificar'
 const pareja = user.marry
 const casado = await (async () => pareja ? (global.db.data.users[pareja]?.name?.trim() || await conn.getName(pareja).then(n => typeof n === 'string' && n.trim() ? n : pareja.split('@')[0]).catch(() => pareja.split('@')[0])) : 'Nadie')()
-const description = user.description || 'Sin descripción :v'
+const description = user.description || ''
 const exp = user.exp || 0
 const nivel = user.level || 0
 const coin = user.coin || 0
@@ -52,7 +52,9 @@ ${description}
 ꕥ Harem » *${haremCount}*
 ♤ Valor total » *${haremValue.toLocaleString()}*${favLine}
 ⛁ Coins totales » *${total.toLocaleString()} ${currency}*
-❒ Comandos totales » *${user.commands || 0}*`
+❒ Comandos totales » *${user.commands || 0}*
+
+> Escribe */profile* para ver tu perfil.`
 await conn.sendMessage(m.chat, { image: { url: pp }, caption: text, mentions: [userId] }, { quoted: fkontak })
 } catch (error) {
 await m.reply(`⚠︎ Se ha producido un problema.\n> Usa *${usedPrefix}report* para informarlo.\n\n${error.message}`, m)

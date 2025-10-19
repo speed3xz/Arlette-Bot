@@ -2,7 +2,7 @@
 <p align="center"><i>Bot de WhatsApp con temática de una waifu vampira llamada Terakomari Gandesblood</i></p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/speed3xz/Storage/main/Arlette-Bot/b859e5b0780d3eb3f3349f69ab524bcc.jpg" width="220"/>
+  <img src="https://raw.githubusercontent.com/speed3xz/Storage/main/Arlette-Bot/b859e5b0780d3eb3f3349f69ab524bcc.jpg" width="100%"/>
 </p>
 
 ### **`❕️ Información importante 🎀`**

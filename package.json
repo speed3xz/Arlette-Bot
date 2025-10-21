@@ -24,11 +24,12 @@
 "dependencies": {
 "@hapi/boom": "^10.0.1",
 "@vitalets/google-translate-api": "^8.0.0",
-"@whiskeysockets/baileys": "github:ds6/bails",
+"@whiskeysockets/baileys": "github:EdderBot02/bail",
 "acrcloud": "^1.4.0",
 "aptoide-scraper": "github:DIEGO-OFC/dv-aptoide-scraper",
 "awesome-phonenumber": "^3.4.0",
 "axios": "^1.1.2",
+"hispamemes": "^1.0.7",
 "cfonts": "^3.3.0",
 "chalk": "^5.1.0",
 "cheerio": "npm:cheerio@1.0.0-rc.12",

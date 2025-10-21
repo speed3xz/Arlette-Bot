@@ -51,15 +51,7 @@ Soy *${botname}*, aquí tienes la lista de comandos.
         // Convertir video a GIF
         const gifBuffer = await convertVideoToGif(randomVideo)
         
-        // Reaccionar al mensaje
-        await conn.sendMessage(m.chat, { 
-            react: { 
-                text: '⭐', 
-                key: m.key 
-            }
-        })
-        
-        // Enviar mensaje con GIF y texto con formato de reenvío del canal
+        // Enviar mensaje con GIF y texto con formato de reenvío del canal específico
         await conn.sendMessage(m.chat, {
             video: gifBuffer,
             gifPlayback: true,
@@ -68,9 +60,9 @@ Soy *${botname}*, aquí tienes la lista de comandos.
                 mentionedJid: [userId],
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363000000000000@newsletter',
+                    newsletterJid: '120363402095978084@newsletter',
                     serverMessageId: '-1',
-                    newsletterName: 'Canal Oficial'
+                    newsletterName: '【 ✰ 】𝗦𝗽𝗲𝗲𝗱𝟯𝘅𝘇 𝗧𝗲𝗮𝗺 - 𝗢𝗳𝗶𝗰𝗶𝗮𝗹 𝗖𝗵𝗮𝗻𝗲𝗹'
                 },
                 externalAdReply: {
                     title: botname,
@@ -88,16 +80,16 @@ Soy *${botname}*, aquí tienes la lista de comandos.
         
     } catch (error) {
         console.error('Error al procesar GIF:', error)
-        // Enviar solo texto si falla el GIF con formato de reenvío
+        // Enviar solo texto si falla el GIF con formato de reenvío del canal específico
         await conn.sendMessage(m.chat, { 
             text: txt,
             contextInfo: {
                 mentionedJid: [userId],
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363000000000000@newsletter',
-                    serverMessageId: '-1',
-                    newsletterName: 'Canal Oficial'
+                    newsletterJid: '120363402095978084@newsletter',
+                    serverMessageId: '-1', 
+                    newsletterName: '【 ✰ 】𝗦𝗽𝗲𝗲𝗱𝟯𝘅𝘇 𝗧𝗲𝗮𝗺 - 𝗢𝗳𝗶𝗰𝗶𝗮𝗹 𝗖𝗵𝗮𝗻𝗲𝗹'
                 },
                 externalAdReply: {
                     title: botname,

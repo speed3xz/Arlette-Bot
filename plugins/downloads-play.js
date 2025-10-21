@@ -1,80 +1,127 @@
+// creado por speed3xz
+
 import fetch from "node-fetch"
-import yts from 'yt-search'
+import yts from "yt-search"
 
-const handler = async (m, { conn, text, usedPrefix, command }) => {
-try {
-if (!text.trim()) return conn.reply(m.chat, `❀ Por favor, ingresa el nombre de la música a descargar.`, m)
-await m.react('🎀')
-const videoMatch = text.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/|v\/))([a-zA-Z0-9_-]{11})/)
-const query = videoMatch ? 'https://youtu.be/' + videoMatch[1] : text
-const search = await yts(query)
-const result = videoMatch ? search.videos.find(v => v.videoId === videoMatch[1]) || search.all[0] : search.all[0]
-if (!result) throw '🎀 No se encontraron resultados.'
-const { title, thumbnail, timestamp, views, ago, url, author, seconds } = result
-if (seconds > 1800) throw '⚠ El video supera el límite de duración (10 minutos).'
-const vistas = formatViews(views)
-const info = `[ ✰ ] ꒰ *Preparando tu descarga* ꒱\n> ✐︎ *Título* ˚ ${title}\n> ⁠ꕤ *Canal* ˚ ${author.name}\n> ⁠✰ *Vistas* ˚ ${vistas}\n> ⴵ *Duración* ˚ ${timestamp}\n> ⁠❒ *Publicado* ˚ ${ago}\n> 🜸 *Link* ˚ ${url}`
-const thumb = (await conn.getFile(thumbnail)).data
-await conn.sendMessage(m.chat, { image: thumb, caption: info }, { quoted: m })
-if (['play', 'yta', 'ytmp3', 'playaudio', 'ytaudio'].includes(command)) {
-const audio = await getAud(url)
-if (!audio?.url) throw '⚠ No se pudo obtener el audio.'
-m.reply(`> ❀ *Audio procesado. Servidor:* \`${audio.api}\``)
-await conn.sendMessage(m.chat, { audio: { url: audio.url }, fileName: `${title}.mp3`, mimetype: 'audio/mpeg' }, { quoted: m })
-await m.react('✔️')
-} else if (['play2', 'ytv', 'ytmp4', 'mp4'].includes(command)) {
-const video = await getVid(url)
-if (!video?.url) throw '⚠ No se pudo obtener el video.'
-m.reply(`> ❀ *Vídeo procesado. Servidor:* \`${video.api}\``)
-await conn.sendFile(m.chat, video.url, `${title}.mp4`, `> ❀ ${title}`, m)
-await m.react('✔️')
-}} catch (e) {
-await m.react('✖️')
-return conn.reply(m.chat, typeof e === 'string' ? e : '⚠︎ Se ha producido un problema.\n> Usa *' + usedPrefix + 'report* para informarlo.\n\n' + e.message, m)
-}}
+const youtubeRegexID = /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([a-zA-Z0-9_-]{11})/
 
-handler.command = handler.help = ['play', 'yta', 'ytmp3', 'play2', 'ytv', 'ytmp4', 'playaudio', 'mp4', 'ytaudio']
-handler.tags = ['descargas']
-handler.group = true
+const API_BASE = "https://api-sky.ultraplus.click"
+const API_KEY = "Russellxz"
+
+async function skyYT(url, format) {
+  const response = await fetch(`${API_BASE}/api/download/yt.php?url=${encodeURIComponent(url)}&format=${format}`, {
+    headers: { 
+      Authorization: `Bearer ${API_KEY}`,
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+    },
+    timeout: 60000
+  })
+  
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`)
+  }
+  
+  const data = await response.json()
+  
+  if (!data || data.status !== "true" || !data.data) {
+    throw new Error(data?.error || "Error en la API Sky")
+  }
+  
+  return data.data
+}
+
+const handler = async (m, { conn, text, command }) => {
+  try {
+    if (!text.trim()) {
+      return conn.reply(m.chat, `Debes escribir *el nombre o link* del audio para descargar.`, m)
+    }
+
+    await conn.sendMessage(m.chat, { react: { text: "⏳", key: m.key }})
+
+    let videoIdToFind = text.match(youtubeRegexID) || null
+    let ytplay2 = await yts(videoIdToFind ? "https://youtu.be/" + videoIdToFind[1] : text)
+
+    if (videoIdToFind) {
+      const videoId = videoIdToFind[1]
+      ytplay2 = ytplay2.all.find(item => item.videoId === videoId) || ytplay2.videos.find(item => item.videoId === videoId)
+    }
+
+    ytplay2 = ytplay2.all?.[0] || ytplay2.videos?.[0] || ytplay2
+    if (!ytplay2) {
+      await conn.sendMessage(m.chat, { react: { text: "❌", key: m.key }})
+      return m.reply("⚠︎ No encontré resultados, intenta con otro nombre o link.")
+    }
+
+    let { title, thumbnail, timestamp, views, ago, url, author } = ytplay2
+    const vistas = formatViews(views)
+    const canal = author?.name || "Desconocido"
+
+    const infoMessage = `
+[ ✰ ] ꒰ *Preparando tu descarga* ꒱
+> ✐︎ *Título* ˚ ${title}
+> ⁠ꕤ *Canal* ˚ ${canal}
+> ⁠✰ *Vistas* ˚ ${vistas}
+> ⴵ *Duración* ˚ ${timestamp}
+> ⁠❒ *Publicado* ˚ ${ago}
+> 🜸 *Link* ˚ ${url} 
+
+> 𐙚 🎀 ｡ enviando audio... ˙𐙚
+    `.trim()
+
+    const thumb = (await conn.getFile(thumbnail))?.data
+    await conn.reply(m.chat, infoMessage, m, {
+      contextInfo: {
+        externalAdReply: {
+          title: botname,
+          body: dev,
+          mediaType: 1,
+          thumbnail: thumb,
+          renderLargerThumbnail: true,
+          mediaUrl: url,
+          sourceUrl: url
+        }
+      }
+    })
+
+    let audioData = null
+    try {
+      const d = await skyYT(url, "audio")
+      const mediaUrl = d.audio || d.video
+      if (mediaUrl) {
+        audioData = { link: mediaUrl, title: d.title || title }
+      }
+    } catch {}
+
+    if (!audioData) {
+      await conn.sendMessage(m.chat, { react: { text: "❌", key: m.key }})
+      return conn.reply(m.chat, "✦ No se pudo descargar el audio. Intenta más tarde.", m)
+    }
+
+    await conn.sendMessage(m.chat, {
+      audio: { url: audioData.link },
+      fileName: `${audioData.title || "music"}.mp3`,
+      mimetype: "audio/mpeg",
+      ptt: false
+    }, { quoted: m })
+
+    await conn.sendMessage(m.chat, { react: { text: "✅", key: m.key }})
+
+  } catch (error) {
+    await conn.sendMessage(m.chat, { react: { text: "❌", key: m.key }})
+    return m.reply(`⚠︎ Error inesperado:\n\n${error}`)
+  }
+}
+
+handler.help = ["play"]
+handler.tags = ["descargas"]
+handler.command = ["play", "ytaudio", "ytmp3"]
 
 export default handler
 
-async function getAud(url) {
-const apis = [
-{ api: 'ZenzzXD', endpoint: `${global.APIs.zenzxz.url}/downloader/ytmp3?url=${encodeURIComponent(url)}`, extractor: res => res.download_url },
-{ api: 'ZenzzXD v2', endpoint: `${global.APIs.zenzxz.url}/downloader/ytmp3v2?url=${encodeURIComponent(url)}`, extractor: res => res.download_url },
-{ api: 'Yupra', endpoint: `${global.APIs.yupra.url}/api/downloader/ytmp3?url=${encodeURIComponent(url)}`, extractor: res => res.resultado?.enlace },
-{ api: 'Vreden', endpoint: `${global.APIs.vreden.url}/api/ytmp3?url=${encodeURIComponent(url)}`, extractor: res => res.result?.download?.url }
-]
-return await fetchFromApis(apis)
-}
-async function getVid(url) {
-const apis = [
-{ api: 'ZenzzXD', endpoint: `${global.APIs.zenzxz.url}/downloader/ytmp4?url=${encodeURIComponent(url)}`, extractor: res => res.download_url },
-{ api: 'ZenzzXD v2', endpoint: `${global.APIs.zenzxz.url}/downloader/ytmp4v2?url=${encodeURIComponent(url)}`, extractor: res => res.download_url },
-{ api: 'Yupra', endpoint: `${global.APIs.yupra.url}/api/downloader/ytmp4?url=${encodeURIComponent(url)}`, extractor: res => res.resultado?.formatos?.[0]?.url },
-{ api: 'Vreden', endpoint: `${global.APIs.vreden.url}/api/ytmp4?url=${encodeURIComponent(url)}`, extractor: res => res.result?.download?.url }
-]
-return await fetchFromApis(apis)
-}
-async function fetchFromApis(apis) {
-for (const { api, endpoint, extractor } of apis) {
-try {
-const controller = new AbortController()
-const timeout = setTimeout(() => controller.abort(), 10000)
-const res = await fetch(endpoint, { signal: controller.signal }).then(r => r.json())
-clearTimeout(timeout)
-const link = extractor(res)
-if (link) return { url: link, api }
-} catch (e) {}
-await new Promise(resolve => setTimeout(resolve, 500))
-}
-return null
-}
 function formatViews(views) {
-if (views === undefined) return "No disponible"
-if (views >= 1_000_000_000) return `${(views / 1_000_000_000).toFixed(1)}B (${views.toLocaleString()})`
-if (views >= 1_000_000) return `${(views / 1_000_000).toFixed(1)}M (${views.toLocaleString()})`
-if (views >= 1_000) return `${(views / 1_000).toFixed(1)}k (${views.toLocaleString()})`
-return views.toString()
-}
+  if (!views) return "No disponible"
+  if (views >= 1_000_000_000) return `${(views / 1_000_000_000).toFixed(1)}B`
+  if (views >= 1_000_000) return `${(views / 1_000_000).toFixed(1)}M`
+  if (views >= 1_000) return `${(views / 1_000).toFixed(1)}k`
+  return views.toString()
+    }

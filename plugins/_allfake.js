@@ -19,10 +19,10 @@ global.mes = d.toLocaleDateString('es', {month: 'long'})
 global.año = d.toLocaleDateString('es', {year: 'numeric'})
 global.tiempo = d.toLocaleString('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true})
 
-var canal = 's'  
+var canal = 'https://whatsapp.com/channel/0029VbAmwbQBqbr587Zkni1a'  
 var comunidad = 'd'
-var git = 'https://github.com/speed3xz/Arlette-Bot'
-var github = 'https://github.com/speed3xz' 
+var git = 'https://github.com/speed3xz/'
+var github = 'https://github.com/speed3xz/Arlette-Bot' 
 var correo = ''
 global.redes = [canal, comunidad, git, github, correo].getRandom()
 

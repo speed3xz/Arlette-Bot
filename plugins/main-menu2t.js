@@ -530,6 +530,21 @@ Soy *Arlette-Bot*, Aquí tienes la lista de comandos.
 
 > Powored by speed3xz
   `.trim();
+  
+    await conn.reply(m.chat, '🎀 *Enviando el menu espere... *', m, { 
+        contextInfo: { 
+            forwardingScore: 2022, 
+            isForwarded: true, 
+            externalAdReply: {
+                title: packname,
+                body: '¡𝙚𝙭𝙥𝙡𝙤𝙧𝙖 𝙡𝙖 𝙜𝙧𝙖𝙣 𝙫𝙖𝙧𝙞𝙚𝙙𝙖𝙙 𝙙𝙚 𝙘𝙤𝙢𝙖𝙣𝙙𝙤𝙨! (˵•̀ᴗ - ˵ )',
+                sourceUrl: redes,
+                thumbnail: icons, 
+            }
+        }
+    });
+
+    await m.react('💛');
 
     await conn.sendMessage(m.chat, { 
         video: { url: randomGif },

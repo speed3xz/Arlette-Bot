@@ -2,13 +2,11 @@ import fetch from 'node-fetch'
 
 let handler = async (m, { conn, args }) => {
     let mentionedJid = await m.mentionedJid
-    let userId = mentionedJid && mentionedJid[0] ? mentionedJid[0] : m.Sender
-    let _uptime = process.uptime() * 1000;
-    let uptime = clockString(_uptime);
+    let userId = mentionedJid && mentionedJid[0] ? mentionedJid[0] : m.sender
     let totalreg = Object.keys(global.db.data.users).length
     let totalCommands = Object.values(global.plugins).filter((v) => v.help && v.tags).length
     
-
+    // Array de videos para convertir a GIF
     const videoUrls = [
         'https://files.catbox.moe/60kkig.mp4',
         'https://files.catbox.moe/w0y62q.mp4', 
@@ -17,7 +15,7 @@ let handler = async (m, { conn, args }) => {
         'https://files.catbox.moe/m7xgkn.mp4'
     ]
     
-
+    // Seleccionar video aleatorio
     const randomVideo = videoUrls[Math.floor(Math.random() * videoUrls.length)]
     
     let txt = `
@@ -517,9 +515,10 @@ Soy *${botname}*, Aquí tienes la lista de comandos.
 > Powored by speed3xz`.trim()
 
     try {
-
+        // Convertir video a GIF
         const gifBuffer = await convertVideoToGif(randomVideo)
         
+        // Reaccionar al mensaje
         await conn.sendMessage(m.chat, { 
             react: { 
                 text: '🎀', 
@@ -527,7 +526,7 @@ Soy *${botname}*, Aquí tienes la lista de comandos.
             }
         })
         
-       
+        // Enviar mensaje con GIF y texto con formato de canal
         await conn.sendMessage(m.chat, {
             video: gifBuffer,
             gifPlayback: true,
@@ -552,7 +551,7 @@ Soy *${botname}*, Aquí tienes la lista de comandos.
         
     } catch (error) {
         console.error('Error al procesar GIF:', error)
-       
+        // Enviar solo texto si falla el GIF con formato de canal
         await conn.sendMessage(m.chat, { 
             text: txt,
             contextInfo: {
@@ -575,14 +574,15 @@ Soy *${botname}*, Aquí tienes la lista de comandos.
     }
 }
 
-
+// Función para convertir video a GIF
 async function convertVideoToGif(videoUrl) {
     try {
-
+        // Descargar el video
         const videoResponse = await fetch(videoUrl)
         const videoBuffer = await videoResponse.buffer()
         
-
+        // Aquí iría la lógica para convertir el video a GIF
+        // Por ahora devolvemos el buffer del video como GIF
         return videoBuffer
         
     } catch (error) {

@@ -47,7 +47,7 @@ global.catalogo = fs.readFileSync('./menu/banner.jpg')
 
 global.group = "https://chat.whatsapp.com/CN8JtNy0BTCHb2v5009AL5"
 global.channel = "https://whatsapp.com/channel/0029VbAmwbQBqbr587Zkni1a"
-global.github = "https://github.com/speed3xz"
+global.github = "https://github.com/speed3xz/Arlette-Bot"
 global.gmail = "211885527+speed3xz@users.noreply.github.com"
 global.ch = {
 ch1: "120363402095978084@newsletter"

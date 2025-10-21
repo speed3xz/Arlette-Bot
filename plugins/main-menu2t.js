@@ -8,10 +8,11 @@ let handler = async (m, { conn, args }) => {
     
     // Array de videos para convertir a GIF
     const videoUrls = [
-        'https://example.com/video1.mp4',
-        'https://example.com/video2.mp4', 
-        'https://example.com/video3.mp4',
-        'https://example.com/video4.mp4'
+        'https://files.catbox.moe/60kkig.mp4',
+        'https://files.catbox.moe/w0y62q.mp4', 
+        'https://files.catbox.moe/ow33ku.mp4',
+        'https://files.catbox.moe/ow33ku.mp4',
+        'https://files.catbox.moe/m7xgkn.mp4'
     ]
     
     // Seleccionar video aleatorio

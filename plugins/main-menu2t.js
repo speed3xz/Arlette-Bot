@@ -12,12 +12,7 @@ let handler = async (m, { conn, args }) => {
         'https://files.catbox.moe/w0y62q.mp4', 
         'https://files.catbox.moe/ow33ku.mp4',
         'https://files.catbox.moe/ow33ku.mp4',
-        'https://files.catbox.moe/m7xgkn.mp4',
-        'https://files.catbox.moe/60kkig.mp4',
-        'https://files.catbox.moe/w0y62q.mp4',
-        'https://files.catbox.moe/ow33ku.mp4',
-        'https://files.catbox.moe/m7xgkn.mp4',
-        'https://files.catbox.moe/60kkig.mp4'
+        'https://files.catbox.moe/m7xgkn.mp4'
     ]
     
     // Seleccionar video aleatorio
@@ -520,44 +515,67 @@ Soy *${botname}*, Aquí tienes la lista de comandos.
 > Powored by speed3xz`.trim()
 
     try {
-        // Descargar video directamente (sin conversión)
-        const videoResponse = await fetch(randomVideo)
-        const videoBuffer = await videoResponse.buffer()
+        // Convertir video a GIF
+        const gifBuffer = await convertVideoToGif(randomVideo)
         
         // Reaccionar al mensaje
         await conn.sendMessage(m.chat, { 
             react: { 
-                text: '🎀', 
+                text: '⭐', 
                 key: m.key 
             }
         })
         
-        // Enviar mensaje con video como GIF
+        // Enviar mensaje con GIF y texto
         await conn.sendMessage(m.chat, {
-            video: videoBuffer,
+            video: gifBuffer,
             gifPlayback: true,
             caption: txt,
             contextInfo: {
                 mentionedJid: [userId],
                 externalAdReply: {
-                    title: conn.getName(conn.user.jid),
+                    title: botname,
                     body: 'Menu de comandos',
                     mediaType: 1,
-                    thumbnail: videoBuffer.slice(0, 1000), // Miniatura del video
+                    thumbnail: await (await fetch(banner)).buffer(),
                     showAdAttribution: false
                 }
             }
         }, { quoted: m })
         
     } catch (error) {
-        console.error('Error:', error)
-        // Enviar solo texto si falla
+        console.error('Error al procesar GIF:', error)
+        // Enviar solo texto si falla el GIF
         await conn.sendMessage(m.chat, { 
             text: txt,
             contextInfo: {
-                mentionedJid: [userId]
+                mentionedJid: [userId],
+                externalAdReply: {
+                    title: botname,
+                    body: 'Menu de comandos',
+                    mediaType: 1,
+                    thumbnail: await (await fetch(banner)).buffer(),
+                    showAdAttribution: false
+                }
             }
         }, { quoted: m })
+    }
+}
+
+// Función para convertir video a GIF
+async function convertVideoToGif(videoUrl) {
+    try {
+        // Descargar el video
+        const videoResponse = await fetch(videoUrl)
+        const videoBuffer = await videoResponse.buffer()
+        
+        // Aquí iría la lógica para convertir el video a GIF
+        // Por ahora devolvemos el buffer del video como GIF
+        return videoBuffer
+        
+    } catch (error) {
+        console.error('Error al convertir video a GIF:', error)
+        throw error
     }
 }
 

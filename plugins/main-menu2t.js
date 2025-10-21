@@ -42,10 +42,7 @@ Soy *${botname}*, aquí tienes la lista de comandos.
 💸 *ECONOMÍA* - !help economy
 🧩 *GRUPO* - !help group
 💗 *ANIME* - !help anime
-⭐ *NSFW* - !help nsfw
-
-> Escribe !help [categoría] para ver los comandos específicos
-> Powered by speed3xz`.trim()
+⭐ *NSFW* - !help nsfw`.trim()
 
     try {
         // Convertir video a GIF
@@ -59,11 +56,28 @@ Soy *${botname}*, aquí tienes la lista de comandos.
             }
         })
         
-        // Enviar mensaje con GIF y texto
+        // Botones interactivos
+        const buttons = [
+            {
+                buttonId: '/code',
+                buttonText: { displayText: 'SERBOT CODE' },
+                type: 1
+            },
+            {
+                buttonId: '/qr',
+                buttonText: { displayText: 'SERBOT QR' },
+                type: 1
+            }
+        ]
+        
+        // Enviar mensaje con GIF, texto y botones
         await conn.sendMessage(m.chat, {
             video: gifBuffer,
             gifPlayback: true,
             caption: txt,
+            footer: 'Selecciona una opción:',
+            buttons: buttons,
+            headerType: 4,
             contextInfo: {
                 mentionedJid: [userId],
                 externalAdReply: {
@@ -78,9 +92,27 @@ Soy *${botname}*, aquí tienes la lista de comandos.
         
     } catch (error) {
         console.error('Error al procesar GIF:', error)
-        // Enviar solo texto si falla el GIF
+        
+        // Botones para el fallback
+        const buttons = [
+            {
+                buttonId: '/code',
+                buttonText: { displayText: 'SERBOT CODE' },
+                type: 1
+            },
+            {
+                buttonId: '/qr',
+                buttonText: { displayText: 'SERBOT QR' },
+                type: 1
+            }
+        ]
+        
+        // Enviar solo texto con botones si falla el GIF
         await conn.sendMessage(m.chat, { 
             text: txt,
+            footer: 'Selecciona una opción:',
+            buttons: buttons,
+            headerType: 1,
             contextInfo: {
                 mentionedJid: [userId],
                 externalAdReply: {
@@ -95,20 +127,38 @@ Soy *${botname}*, aquí tienes la lista de comandos.
     }
 }
 
-// Función para convertir video a GIF
+// Función para convertir video a GIF (simplificada)
 async function convertVideoToGif(videoUrl) {
     try {
-        // Descargar el video
+        // Simular conversión - en producción usarías ffmpeg
         const videoResponse = await fetch(videoUrl)
-        const videoBuffer = await videoResponse.buffer()
-        
-        // Aquí iría la lógica para convertir el video a GIF
-        // Por ahora devolvemos el buffer del video como GIF
-        return videoBuffer
-        
+        return await videoResponse.buffer()
     } catch (error) {
         console.error('Error al convertir video a GIF:', error)
         throw error
+    }
+}
+
+// Manejar los botones
+handler.before = async (m, { conn }) => {
+    if (m.type === 'buttonsResponse') {
+        const buttonId = m.text
+        const sender = m.sender
+        
+        if (buttonId === '/code') {
+            await conn.sendMessage(m.chat, {
+                text: 'Ejecutando comando /code...'
+            }, { quoted: m })
+            // Aquí ejecutarías la lógica del comando !code
+            conn.sendMessage(m.chat, { text: '/code' })
+            
+        } else if (buttonId === '/qr') {
+            await conn.sendMessage(m.chat, {
+                text: 'Ejecutando comando /qr...'
+            }, { quoted: m })
+            // Aquí ejecutarías la lógica del comando !qr
+            conn.sendMessage(m.chat, { text: '/qr' })
+        }
     }
 }
 

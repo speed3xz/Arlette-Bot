@@ -6,12 +6,13 @@ let handler = async (m, { conn, args }) => {
     let totalreg = Object.keys(global.db.data.users).length
     let totalCommands = Object.values(global.plugins).filter((v) => v.help && v.tags).length
     
-    // Array de videos para convertir a GIF
+    // Array de videos optimizados (más ligeros)
     const videoUrls = [
-        'https://example.com/video1.mp4',
-        'https://example.com/video2.mp4', 
-        'https://example.com/video3.mp4',
-        'https://example.com/video4.mp4'
+        'speed3xz.bot.nu/Arlette/video/o4EBAjtzqIEqKkyBgAR7QlvYrAyA8hDRfQCYEw.mp4',
+        'speed3xz.bot.nu/Arlette/video/oIjloDezA7yE3QIM3CgiiBZfIC3fzCT8QABJIK.mp4', 
+        'speed3xz.bot.nu/Arlette/video/oQBQJI1EDwqj0BSzQEfbAnQXiFyTBlBEHfgRlD.mp4',
+        'speed3xz.bot.nu/Arlette/video/oggIoEg0wA9OAjAaKftvryzAkBksShBhD8XGQl.mp4',
+        'speed3xz.bot.nu/Arlette/video/owm0pIvEBPNQSAStwifaAQQUWiloCzBC313Iii.mp4'
     ]
     
     // Seleccionar video aleatorio
@@ -48,10 +49,7 @@ Soy *${botname}*, aquí tienes la lista de comandos.
 > Powered by speed3xz`.trim()
 
     try {
-        // Convertir video a GIF
-        const gifBuffer = await convertVideoToGif(randomVideo)
-        
-        // Reaccionar al mensaje
+        // Primero reaccionar al mensaje
         await conn.sendMessage(m.chat, { 
             react: { 
                 text: '⭐', 
@@ -59,9 +57,9 @@ Soy *${botname}*, aquí tienes la lista de comandos.
             }
         })
         
-        // Enviar mensaje con GIF y texto con formato de canal
+        // Enviar el video directamente sin conversión a GIF
         await conn.sendMessage(m.chat, {
-            video: gifBuffer,
+            video: { url: randomVideo },
             gifPlayback: true,
             caption: txt,
             contextInfo: {
@@ -83,8 +81,8 @@ Soy *${botname}*, aquí tienes la lista de comandos.
         }, { quoted: m })
         
     } catch (error) {
-        console.error('Error al procesar GIF:', error)
-        // Enviar solo texto si falla el GIF con formato de canal
+        console.error('Error al enviar video:', error)
+        // Enviar solo texto si falla el video
         await conn.sendMessage(m.chat, { 
             text: txt,
             contextInfo: {
@@ -104,23 +102,6 @@ Soy *${botname}*, aquí tienes la lista de comandos.
                 }
             }
         }, { quoted: m })
-    }
-}
-
-// Función para convertir video a GIF
-async function convertVideoToGif(videoUrl) {
-    try {
-        // Descargar el video
-        const videoResponse = await fetch(videoUrl)
-        const videoBuffer = await videoResponse.buffer()
-        
-        // Aquí iría la lógica para convertir el video a GIF
-        // Por ahora devolvemos el buffer del video como GIF
-        return videoBuffer
-        
-    } catch (error) {
-        console.error('Error al convertir video a GIF:', error)
-        throw error
     }
 }
 

@@ -1,39 +1,31 @@
-import { execSync } from 'child_process'
+import { exec } from 'child_process';
 
-var handler = async (m, { conn, text, isROwner }) => {
-if (!isROwner) return
-await m.react('🕒')
-try {
-const stdout = execSync('git pull' + (m.fromMe && text ? ' ' + text : ''));
-let messager = stdout.toString()
-if (messager.includes('🎀 Ya está cargada la actualización.')) messager = '💗 Los datos ya están actualizados a la última versión.'
-if (messager.includes('🌷 Actualizando.')) messager = '🎀 Procesando, espere un momento mientras me actualizo.\n\n' + stdout.toString()
-await m.react('✔️')
-conn.reply(m.chat, messager, m)
-} catch { 
-try {
-const status = execSync('git status --porcelain')
-if (status.length > 0) {
-const conflictedFiles = status.toString().split('\n').filter(line => line.trim() !== '').map(line => {
-if (line.includes('.npm/') || line.includes('.cache/') || line.includes('tmp/') || line.includes('database.json') || line.includes('sessions/Principal/') || line.includes('npm-debug.log')) {
-return null
-}
-return '*→ ' + line.slice(3) + '*'}).filter(Boolean)
-if (conflictedFiles.length > 0) {
-const errorMessage = `\`⚠︎ No se pudo realizar la actualización:\`\n\n> *Se han encontrado cambios locales en los archivos del bot que entran en conflicto con las nuevas actualizaciones del repositorio.*\n\n${conflictedFiles.join('\n')}.`
-await conn.reply(m.chat, errorMessage, m)
-await m.react('✖️')
-}}} catch (error) {
-console.error(error)
-let errorMessage2 = '⚠︎ Ocurrió un error inesperado.'
-if (error.message) {
-errorMessage2 += '\n⚠︎ Mensaje de error: ' + error.message
-}
-await conn.reply(m.chat, errorMessage2, m)
-}}}
+let handler = async (m, { conn }) => {
+  m.reply(`🌷 Actualizando la bot...`);
 
-handler.help = ['update']
-handler.tags = ['owner']
-handler.command = ['update', 'fix', 'actualizar']
+  const comando = 'find menu -type f | xargs git update-index --assume-unchanged && git pull';
 
-export default handler
+  exec(comando, (err, stdout, stderr) => {
+    if (err) {
+      conn.reply(m.chat, `🍭 Error: No se pudo realizar la actualización.\nRazón: ${err.message}`, m);
+      return;
+    }
+
+    if (stderr) {
+      console.warn('Advertencia durante la actualización:', stderr);
+    }
+
+    if (stdout.includes('Already up to date.')) {
+      conn.reply(m.chat, `🌷 La bot ya está actualizada.`, m);
+    } else {
+      conn.reply(m.chat, `🍭 Actualización realizada con éxito.\n\n${stdout}`, m);
+    }
+  });
+};
+
+handler.help = ['update'];
+handler.tags = ['owner'];
+handler.command = ['update'];
+handler.rowner = true;
+
+export default handler;

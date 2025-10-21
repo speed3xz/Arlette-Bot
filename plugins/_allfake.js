@@ -8,7 +8,7 @@ const { generateWAMessageFromContent, prepareWAMessageMedia, proto } = pkg
 var handler = m => m
 handler.all = async function (m) { 
 global.canalIdM = ["120363402095978084@newsletter"]
-global.canalNombreM = ["【 ✰ 】𝗦𝗽𝗲𝗲𝗱𝟯𝘅𝘇 𝗧𝗲𝗮𝗺 - 𝗢𝗳𝗶𝗰𝗶𝗮𝗹 𝗖𝗵𝗮𝗻𝗲𝗹"]
+global.canalNombreM = ["【 ✰ 】𝗦𝗽𝗲𝗲𝗱𝟯𝘅𝘇 𝗖𝗹𝘂𝗯 - 𝗢𝗳𝗶𝗰𝗶𝗮𝗹 𝗖𝗵𝗮𝗻𝗲𝗹"]
 global.channelRD = await getRandomChannel()
 
 global.d = new Date(new Date + 3600000)
@@ -20,7 +20,7 @@ global.año = d.toLocaleDateString('es', {year: 'numeric'})
 global.tiempo = d.toLocaleString('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true})
 
 var canal = 'https://whatsapp.com/channel/0029VbAmwbQBqbr587Zkni1a'  
-var comunidad = 'd'
+var comunidad = 'https://chat.whatsapp.com/Ei08xSmFnWJBS8rcrcYvP4'
 var git = 'https://github.com/speed3xz/'
 var github = 'https://github.com/speed3xz/Arlette-Bot' 
 var correo = ''

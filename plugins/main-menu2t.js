@@ -51,7 +51,15 @@ Soy *${botname}*, aquí tienes la lista de comandos.
         // Convertir video a GIF
         const gifBuffer = await convertVideoToGif(randomVideo)
         
-        // Enviar mensaje con GIF y texto con formato de reenvío del canal específico
+        // Reaccionar al mensaje
+        await conn.sendMessage(m.chat, { 
+            react: { 
+                text: '⭐', 
+                key: m.key 
+            }
+        })
+        
+        // Enviar mensaje con GIF y texto con formato de canal
         await conn.sendMessage(m.chat, {
             video: gifBuffer,
             gifPlayback: true,
@@ -60,47 +68,39 @@ Soy *${botname}*, aquí tienes la lista de comandos.
                 mentionedJid: [userId],
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363402095978084@newsletter',
-                    serverMessageId: '-1',
-                    newsletterName: '【 ✰ 】𝗦𝗽𝗲𝗲𝗱𝟯𝘅𝘇 𝗧𝗲𝗮𝗺 - 𝗢𝗳𝗶𝗰𝗶𝗮𝗹 𝗖𝗵𝗮𝗻𝗲𝗹'
+                    newsletterJid: channelRD.id,
+                    serverMessageId: '',
+                    newsletterName: channelRD.name
                 },
                 externalAdReply: {
                     title: botname,
                     body: 'Menu de comandos',
                     mediaType: 1,
-                    mediaUrl: redes || 'https://whatsapp.com',
-                    sourceUrl: redes || 'https://whatsapp.com',
                     thumbnail: await (await fetch(banner)).buffer(),
-                    showAdAttribution: false,
-                    containsAutoReply: true,
-                    renderLargerThumbnail: true
+                    showAdAttribution: false
                 }
             }
         }, { quoted: m })
         
     } catch (error) {
         console.error('Error al procesar GIF:', error)
-        // Enviar solo texto si falla el GIF con formato de reenvío del canal específico
+        // Enviar solo texto si falla el GIF con formato de canal
         await conn.sendMessage(m.chat, { 
             text: txt,
             contextInfo: {
                 mentionedJid: [userId],
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363402095978084@newsletter',
-                    serverMessageId: '-1', 
-                    newsletterName: '【 ✰ 】𝗦𝗽𝗲𝗲𝗱𝟯𝘅𝘇 𝗧𝗲𝗮𝗺 - 𝗢𝗳𝗶𝗰𝗶𝗮𝗹 𝗖𝗵𝗮𝗻𝗲𝗹'
+                    newsletterJid: channelRD.id,
+                    serverMessageId: '',
+                    newsletterName: channelRD.name
                 },
                 externalAdReply: {
                     title: botname,
                     body: 'Menu de comandos',
                     mediaType: 1,
-                    mediaUrl: redes || 'https://whatsapp.com',
-                    sourceUrl: redes || 'https://whatsapp.com',
                     thumbnail: await (await fetch(banner)).buffer(),
-                    showAdAttribution: false,
-                    containsAutoReply: true,
-                    renderLargerThumbnail: true
+                    showAdAttribution: false
                 }
             }
         }, { quoted: m })

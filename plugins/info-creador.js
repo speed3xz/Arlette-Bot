@@ -6,7 +6,7 @@ async function handler(m, { conn }) {
   const contactos = [
     {
       numero: '573114910796',
-      nombre: 'Milanesa con traumas 🎀',
+      nombre: 'Arlette 🦇',
       cargo: 'Dueño Principal',
       nota: 'Creador del Bot',
       region: '🇨🇴 Colombia',
@@ -30,7 +30,7 @@ async function handler(m, { conn }) {
 
 handler.help = ['owner', 'creador', 'creator']
 handler.tags = ['info']
-handler.command = ['owner', 'creator', 'creador', 'dueño']
+handler.command = ['owner', 'creator', 'creador', 'dueño', 'creadora', 'dueña']
 
 export default handler
 

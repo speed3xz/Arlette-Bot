@@ -1,16 +1,16 @@
-// Código Creado Por Sisked 
+// Código Creado Por Speed3xz
 
 import {Maker} from 'imagemaker.js';
 const handler = async (m, {conn, args, command, usedPrefix}) => {
   const response = args.join(' ').split('|');
-  if (!args[0]) throw '*[❗] 𝙄𝙉𝙂𝙍𝙀𝙎𝙀 𝙐𝙉 𝙏𝙀𝙓𝙏𝙊*';
+  if (!args[0]) throw '*[ 🎀 ] Ingrese un texto.*';
   if (command == 'logocorazon') {
     try {
       await conn.reply(m.chat, '*CREANDO LOGO, ESPERE UN MOMENTO... 🎀*', m);
       const res = await new Maker().Ephoto360('https://en.ephoto360.com/text-heart-flashlight-188.html', [response[0]]);
       await conn.sendFile(m.chat, res.imageUrl, 'error.jpg', null, m);
     } catch {
-      await conn.reply(m.chat, '*[❗𝐈𝐍𝐅𝐎❗] 𝙀𝙍𝙍𝙊𝙍. 𝙋𝙊𝙍 𝙁𝘼𝙑𝙊𝙍, 𝙑𝙐𝙀𝙇𝙑𝘼 𝘼 𝙄𝙉𝙏𝙀𝙉𝙏𝘼𝙍𝙇𝙊*', m);
+      await conn.reply(m.chat, '*ERROR, POR FAVOR INTENTE DE NUEVO 💗*', m);
     }
   }
   if (command == 'logochristmas') {

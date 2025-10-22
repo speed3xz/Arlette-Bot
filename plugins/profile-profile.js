@@ -37,24 +37,31 @@ const char = global.db.data.characters[id] || {}
 const value = typeof char.value === 'number' ? char.value : 0
 return acc + value }, 0)
 const pp = await conn.profilePictureUrl(userId, 'image').catch(_ => 'https://raw.githubusercontent.com/speed3xz/Storage/refs/heads/main/Arlette-Bot/b75b29441bbd967deda4365441497221.jpg')
-const text = `*「✦」 Perfil ◢ ${name} ◤*
+const text = `
+╭─⊱ 🌸『 PERFIL DE ✦ ${name} ✦ 』🌸⊰─╮
 ${description}
 
-❀ Cumpleaños » *${cumpleanos}*
-⚥ Género » *${genero}*
-♡ Casado con » *${casado}*
+╭──❀ *DETALLES PERSONALES* ❀──╮
+꒰🎂꒱ ᴄᴜᴍᴘʟᴇᴀɴ̃ᴏꜱ » *${cumpleanos}*  
+꒰⚥꒱ ɢᴇ́ɴᴇʀᴏ » *${genero}*  
+꒰💞꒱ ᴄᴀꜱᴀᴅᴏ ᴄᴏɴ » *${casado}*  
+╰──────────────────────────╯
 
-☆ Experiencia » *${exp.toLocaleString()}*
-❖ Nivel » *${nivel}*
-# Puesto » *#${rank}*
-➨ Progreso » *${progreso}*
+╭──❀ *NIVEL Y PROGRESO* ❀──╮
+꒰⭐꒱ ᴇxᴘᴇʀɪᴇɴᴄɪᴀ » *${exp.toLocaleString()}*  
+꒰🎀꒱ ɴɪᴠᴇʟ » *${nivel}*  
+꒰🏅꒱ ᴘᴜᴇꜱᴛᴏ » *#${rank}*  
+꒰🌷꒱ ᴘʀᴏɢʀᴇꜱᴏ » *${progreso}*  
+╰───────────────────────╯
 
-ꕥ Harem » *${haremCount}*
-♤ Valor total » *${haremValue.toLocaleString()}*${favLine}
-⛁ Coins totales » *${total.toLocaleString()} ${currency}*
-❒ Comandos totales » *${user.commands || 0}*
+╭──❀ *ECONOMIA Y HEREM* ❀──╮
+꒰💐꒱ ʜᴀʀᴇᴍ » *${haremCount}*  
+꒰💎꒱ ᴠᴀʟᴏʀ ᴛᴏᴛᴀʟ » *${haremValue.toLocaleString()}*${favLine}  
+꒰🪙꒱ ᴄᴏɪɴꜱ ᴛᴏᴛᴀʟᴇꜱ » *${total.toLocaleString()} ${currency}*  
+꒰📜꒱ ᴄᴏᴍᴀɴᴅᴏꜱ ᴜꜱᴀᴅᴏꜱ » *${user.commands || 0}*  
+╰────────────────────────╯
 
-> Escribe */profile* para ver tu perfil.`
+⟢₊˚✧ Use */profile* para ver su perfil  🌙₊˚⟣`
 await conn.sendMessage(m.chat, { image: { url: pp }, caption: text, mentions: [userId] }, { quoted: fkontak })
 } catch (error) {
 await m.reply(`⚠︎ Se ha producido un problema.\n> Usa *${usedPrefix}report* para informarlo.\n\n${error.message}`, m)

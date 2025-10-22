@@ -17,13 +17,26 @@ const usuario = await resolveLidToRealJid(m?.sender, conn, m?.chat)
 const groupAdmins = participants.filter(p => p.admin)
 const rcanal = { contextInfo: { isForwarded: true, forwardedNewsletterMessageInfo: { newsletterJid: channelRD.id, serverMessageId: '', newsletterName: channelRD.name }, externalAdReply: { title: "⸝⸝　 ꒰　A V I S O　꒱  ⁞　ˎˊ˗", body: textbot, mediaUrl: null, description: null, previewType: "PHOTO", thumbnail: await (await fetch(icono)).buffer(), sourceUrl: redes, mediaType: 1, renderLargerThumbnail: false }, mentionedJid: null }}
 const pp = await conn.profilePictureUrl(m.chat, 'image').catch(_ => null) || 'https://files.catbox.moe/xr2m6u.jpg'
-const nombre = `> ❀ @${usuario.split('@')[0]} Ha cambiado el nombre del grupo.\n> ✦ Ahora el grupo se llama:\n> *${m.messageStubParameters[0]}*.`
-const foto = `> ❀ Se ha cambiado la imagen del grupo.\n> ✦ Acción hecha por:\n> » @${usuario.split('@')[0]}`
-const edit = `> ❀ @${usuario.split('@')[0]} Ha permitido que ${m.messageStubParameters[0] == 'on' ? 'solo admins' : 'todos'} puedan configurar el grupo.`
-const newlink = `> ❀ El enlace del grupo ha sido restablecido.\n> ✦ Acción hecha por:\n> » @${usuario.split('@')[0]}`
-const status = `> ❀ El grupo ha sido ${m.messageStubParameters[0] == 'on' ? '*cerrado*' : '*abierto*'} Por @${usuario.split('@')[0]}\n> ✦ Ahora ${m.messageStubParameters[0] == 'on' ? '*solo admins*' : '*todos*'} pueden enviar mensaje.`
-const admingp = `> ❀ @${users.split('@')[0]} Ahora es admin del grupo.\n> ✦ Acción hecha por:\n> » @${usuario.split('@')[0]}`
-const noadmingp = `> ❀ @${users.split('@')[0]} Deja de ser admin del grupo.\n> ✦ Acción hecha por:\n> » @${usuario.split('@')[0]}`
+const nombre = `🌸✨ ¡NUEVO NOMBRE! ✨🌸\n\n
+@${usuario.split('@')[0]} decidió darle un nuevo nombre\n.
+💌 Ahora se llama: *${m.messageStubParameters[0]}*`;
+const foto = `🖼️🌷 ¡Foto renovada! 🌷🖼️\n\n
+👀 Acción hecha por: @${usuario.split('@')[0]}`
+const edit = `🔧✨ Configuración del grupo ✨🔧\n\n
+@${usuario.split('@')[0]} ha decidido que ${m.messageStubParameters[0] == 'on' ? 'solo los admins 🌟' : 'todos los miembros 🌼'} puedan modificar el grupo.`
+const newlink = `🔗💫 ¡Enlace del grupo actualizado! 💫🔗\n\n
+✦ Gracias a: @${usuario.split('@')[0]}\n
+Ahora todos pueden unirse de nuevo 🌸`
+const status = `🚦🌸 Estado del grupo 🌸🚦\n\n
+El grupo ha sido ${m.messageStubParameters[0] == 'on' ? '*cerrado* 🔒' : '*abierto* 🔓'}.\n
+✦ Por: @${usuario.split('@')[0]}\n
+🌿 ${m.messageStubParameters[0] == 'on' ? 'Solo admins pueden enviar mensajes' : 'Todos pueden enviar mensajes'}`
+const admingp = `🌟✨ ¡Admin nuevo! ✨🌟\n\n
+@${users.split('@')[0]} ahora es admin del grupo.\n
+🖇️ Acción realizada por: @${usuario.split('@')[0]} 💖`
+const noadmingp = `🌸⚡ ¡Admin removido! ⚡🌸\n\n
+@${users.split('@')[0]} ya no tiene permisos de admin.\n
+🖇️ Acción realizada por: @${usuario.split('@')[0]} 💌`
 if (chat.detect && m.messageStubType == 2) {
 const uniqid = (m.isGroup ? m.chat : m.sender).split('@')[0]
 const sessionPath = `./${sessions}/`

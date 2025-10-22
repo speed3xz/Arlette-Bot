@@ -57,16 +57,20 @@ const handler = async (m, { conn, text, command }) => {
     const canal = author?.name || "Desconocido"
 
     const infoMessage = `
-[ ✰ ] ꒰ *Preparando tu descarga* ꒱
-> ✐︎ *Título* ˚ ${title}
-> ⁠ꕤ *Canal* ˚ ${canal}
-> ⁠✰ *Vistas* ˚ ${vistas}
-> ⴵ *Duración* ˚ ${timestamp}
-> ⁠❒ *Publicado* ˚ ${ago}
-> 🜸 *Link* ˚ ${url} 
+╭─⊱ 🌸『 Preparando tu descarga 』🌸⊰─╮
+[ ✰ ] ꒰ *Tu archivo está siendo procesado...* ꒱  
+╰───────────────────────────╯
 
-> 𐙚 🎀 ｡ enviando audio... ˙𐙚
-    `.trim()
+╭──❀ Detalles del contenido ❀──╮
+🎀 Título » *${title}*  
+🌸 Canal » *${canal}*  
+🍃 Vistas » *${vistas}*  
+⏳ Duración » *${timestamp}*  
+🗓️ Publicado » *${ago}*  
+🔗 Link » *${url}*  
+╰──────────────────────╯
+
+𐙚🌷 ｡･ﾟ✧ Enviando audio espere un momento... ˙𐙚🌸`.trim()
 
     const thumb = (await conn.getFile(thumbnail))?.data
     await conn.reply(m.chat, infoMessage, m, {

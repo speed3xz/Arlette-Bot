@@ -3,7 +3,7 @@ const userId = m.sender
 if (command === 'setmeta') {
 const packParts = text.split(/[\u2022|]/).map(part => part.trim())
 if (packParts.length < 2) {
-return m.reply(`❀ Por favor, escribe el pack y el autor que deseas usar por defecto para tus stickers.\n> Ejemplo: *${usedPrefix + command} Mizuki  • Bot*`)
+return m.reply(`❀ Por favor, escribe el pack y el autor que deseas usar por defecto para tus stickers.\n> Ejemplo: *${usedPrefix + command} Arlette  • Bot*`)
 }
 const packText1 = packParts[0]
 const packText2 = packParts[1]

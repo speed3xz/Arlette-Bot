@@ -25,7 +25,7 @@ global.prems = []
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
 global.libreria = "Baileys Multi Device"
-global.vs = "1.8.3 VIP"
+global.vs = "1.9.3 VIP"
 global.nameqr = "Arlette-Bot"
 global.sessions = "Sessions/Principal"
 global.jadi = "Sessions/SubBot"

@@ -1,3 +1,5 @@
+// Creado por Speed3xz
+// Api by russellxz
 import fetch from "node-fetch"
 import yts from "yt-search"
 

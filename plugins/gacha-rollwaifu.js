@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url'
 import path from 'path'
 
 const charactersFilePath = './menu/characters.json'
-const haremFilePath = './menu/database/harem.json'
+const haremFilePath = './menu/harem.json'
 
 const cooldowns = {}
 

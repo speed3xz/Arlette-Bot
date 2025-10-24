@@ -166,6 +166,19 @@ npm start
 > Creditos a **[Dioneibi-rip](https://github.com/Dioneibi-rip)**
 </details>
 
+## **`MAKI HOSTING`**
+<a href="https://dash.makihost.tuwebsite.site"><img src="https://qu.ax/gekUC.jpg" height="100px"></a>
+</details>
+</details>
+ <summary><b>:paperclip: Enlaces Importantes</b></summary>
+
+
+- **Dashboard:** [Aquí](https://dash.makihost.tuwebsite.site)
+- **Panel de Servicios:** [Aquí](https://panel.makihost.tuwebsite.site) 
+- **Grupo de soporte:** [entrar](https://chat.whatsapp.com/Kjb0w8bpgTx4LMsBcEjReZ?mode=wwt)
+- **Contacto de soporte:** [Contactar](https://wa.me/573235915041) 
+- **Canal de actualizaciones:** [Aquí](https://whatsapp.com/channel/0029VbBkjlfLSmbWl3SH6737)
+
 ## 💬 **`COMUNIDAD Y CANALES OFICIALES`**
 
 ¿Tienes dudas o quieres estar al día con las novedades? ¡Únete a nuestros canales oficiales! 💫

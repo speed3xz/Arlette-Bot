@@ -1,16 +1,25 @@
 import { promises as fs } from 'fs'
+import { fileURLToPath } from 'url'
+import path from 'path'
 
-const charactersFilePath = './lib/characters.json'
-const haremFilePath = './lib/harem.json'
+const charactersFilePath = './menu/characters.json'
+const haremFilePath = './menu/database/harem.json'
 
 const cooldowns = {}
 
 async function loadCharacters() {
     try {
         const data = await fs.readFile(charactersFilePath, 'utf-8')
-        return JSON.parse(data)
+        const characters = JSON.parse(data)
+        
+        if (!Array.isArray(characters) || characters.length === 0) {
+            throw new Error('El archivo characters.json está vacío o no es un array válido')
+        }
+        
+        return characters
     } catch (error) {
-        throw new Error('❀ No se pudo cargar el archivo characters.json.')
+        console.error('Error loading characters:', error)
+        throw new Error('❀ No se pudo cargar el archivo characters.json o está vacío.')
     }
 }
 
@@ -47,13 +56,28 @@ let handler = async (m, { conn }) => {
         const remainingTime = Math.ceil((cooldowns[userId] - now) / 1000)
         const minutes = Math.floor(remainingTime / 60)
         const seconds = remainingTime % 60
-        return await conn.reply(m.chat, `《✧》Debes esperar *${minutes} minutos y ${seconds} segundos* para usar *#rw* de nuevo.`, m)
+        return await conn.reply(m.chat, `《✧》Debes esperar *${minutes} minutos y ${seconds} segundos* para usar */rw* de nuevo.`, m)
     }
 
     try {
         const characters = await loadCharacters()
+        
+        if (!characters || characters.length === 0) {
+            return await conn.reply(m.chat, '❀ No hay personajes disponibles en la base de datos.', m)
+        }
+
         const randomCharacter = characters[Math.floor(Math.random() * characters.length)]
+        
+        if (!randomCharacter || !randomCharacter.img || !Array.isArray(randomCharacter.img)) {
+            console.error('Personaje inválido:', randomCharacter)
+            return await conn.reply(m.chat, '❀ Error: Personaje con datos incompletos.', m)
+        }
+
         const randomImage = randomCharacter.img[Math.floor(Math.random() * randomCharacter.img.length)]
+        
+        if (!randomImage) {
+            return await conn.reply(m.chat, '❀ Error: No se encontró imagen para este personaje.', m)
+        }
 
         const harem = await loadHarem()
         const userEntry = harem.find(entry => entry.characterId === randomCharacter.id)
@@ -61,15 +85,21 @@ let handler = async (m, { conn }) => {
             ? `Reclamado por @${randomCharacter.user.split('@')[0]}` 
             : 'Libre'
 
-        const message = `❀ Nombre » *${randomCharacter.name}*
-⚥ Género » *${randomCharacter.gender}*
-✰ Valor » *${randomCharacter.value}*
+        const message = `❀ Nombre » *${randomCharacter.name || 'Desconocido'}*
+⚥ Género » *${randomCharacter.gender || 'No especificado'}*
+✰ Valor » *${randomCharacter.value || 'N/A'}*
 ♡ Estado » ${statusMessage}
-❖ Fuente » *${randomCharacter.source}*
-✦ ID: *${randomCharacter.id}*`
+❖ Fuente » *${randomCharacter.source || 'Desconocida'}*
+✦ ID: *${randomCharacter.id || 'N/A'}*`
 
         const mentions = userEntry ? [userEntry.userId] : []
-        await conn.sendFile(m.chat, randomImage, `${randomCharacter.name}.jpg`, message, m, { mentions })
+        
+        // SOLUCIÓN: Enviar la imagen directamente desde la URL sin descargar
+        await conn.sendMessage(m.chat, {
+            image: { url: randomImage },
+            caption: message,
+            mentions: mentions
+        }, { quoted: m })
 
         if (!randomCharacter.user) {
             await saveCharacters(characters)
@@ -78,7 +108,15 @@ let handler = async (m, { conn }) => {
         cooldowns[userId] = now + 15 * 60 * 1000
 
     } catch (error) {
-        await conn.reply(m.chat, `✘ Error al cargar el personaje: ${error.message}`, m)
+        console.error('Error en el handler:', error)
+        
+        // Mensaje de error más específico
+        let errorMessage = `✘ Error al cargar el personaje: ${error.message}`
+        if (error.message.includes('ENOENT')) {
+            errorMessage = '✘ Error: Problema con el acceso a archivos temporales. Contacta al administrador.'
+        }
+        
+        await conn.reply(m.chat, errorMessage, m)
     }
 }
 

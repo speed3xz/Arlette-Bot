@@ -1,1 +1,212 @@
-const _0x405a08=_0x30f9;(function(_0x33d57d,_0x380505){const _0x146c0b=_0x30f9,_0x29463b=_0x33d57d();while(!![]){try{const _0x5b69be=-parseInt(_0x146c0b(0x19c))/0x1*(parseInt(_0x146c0b(0x1a8))/0x2)+parseInt(_0x146c0b(0x1cc))/0x3*(parseInt(_0x146c0b(0x1a2))/0x4)+-parseInt(_0x146c0b(0x1c6))/0x5*(-parseInt(_0x146c0b(0x1b9))/0x6)+-parseInt(_0x146c0b(0x1c3))/0x7+parseInt(_0x146c0b(0x1d6))/0x8*(parseInt(_0x146c0b(0x1ab))/0x9)+-parseInt(_0x146c0b(0x1bd))/0xa+-parseInt(_0x146c0b(0x1b4))/0xb;if(_0x5b69be===_0x380505)break;else _0x29463b['push'](_0x29463b['shift']());}catch(_0x827d62){_0x29463b['push'](_0x29463b['shift']());}}}(_0x11a4,0xb2803));function _0x30f9(_0x136998,_0x4fc6ed){const _0x11a446=_0x11a4();return _0x30f9=function(_0x30f94d,_0x162462){_0x30f94d=_0x30f94d-0x195;let _0x2d3171=_0x11a446[_0x30f94d];return _0x2d3171;},_0x30f9(_0x136998,_0x4fc6ed);}import{promises as _0x157ffe}from'fs';const file='./lib/characters.json';async function load(){const _0x2b2fd9=_0x30f9,_0x470dee=await _0x157ffe[_0x2b2fd9(0x1b3)](file,'utf-8');return JSON[_0x2b2fd9(0x1d2)](_0x470dee);}function _0x11a4(){const _0x5dfbec=['797734QyrgGq','includes','map','2830ZKQsoL','trim','chat','*\x0a\x0a✐\x20Para\x20confirmar\x20responde\x20a\x20este\x20mensaje\x20con\x20\x22Aceptar\x22.\x0a>\x20Esta\x20acción\x20no\x20se\x20puede\x20deshacer,\x20revisa\x20bien\x20los\x20datos\x20antes\x20de\x20confirmar.','reply','reduce','3537sDAaaK','*!\x0a\x0a>\x20❏\x20Personajes\x20regalados:\x20*','toLowerCase','length','❀\x20El\x20comando\x20*<','repository','parse','ꕥ\x20Los\x20comandos\x20de\x20*Gacha*\x20están\x20desactivados\x20en\x20este\x20grupo.\x0a\x0aUn\x20*administrador*\x20puede\x20activarlos\x20con\x20el\x20comando:\x0a»\x20*','timeout','url','12496XRiSeX','favorite','⚠︎\x20Se\x20ha\x20producido\x20un\x20problema.\x0a>\x20Usa\x20*','count','gacha','message','*,\x20¿confirmas\x20regalar\x20todo\x20tu\x20harem\x20a\x20*','aceptar','catch','text','getName','*\x0a>\x20ⴵ\x20Valor\x20total:\x20*','isGroup','「✿」\x20*','report*\x20para\x20informarlo.\x0a\x0a','782351PXsfaK','values','then','chats','./package.json','characters','4024iiaaZe','user','*?\x0a\x0a❏\x20Personajes\x20a\x20transferir:\x20*','value','❀\x20Debes\x20mencionar\x20a\x20quien\x20quieras\x20regalarle\x20tus\x20personajes.','gacha\x20on*','2mUPUwd','utf-8','giveallharem','1287MIaecE','toLocaleString','tags','ID:','string','data','quoted','ꕥ\x20No\x20tienes\x20personajes\x20para\x20regalar.','readFile','6714598ZvIKVE','split','git+https://github.com/speed3xz/Arlette-Bot.git','users','sender','11856vTDHeu','name','sales','>*\x20solo\x20está\x20disponible\x20para\x20Yuki\x20Suou.\x0a>\x20https://github.com/speed3xz/Arlette-Bot','2899860ORBYYN','flatMap','isArray','before','*\x0a❏\x20Valor\x20total:\x20*','ꕥ\x20El\x20usuario\x20mencionado\x20no\x20está\x20registrado.'];_0x11a4=function(){return _0x5dfbec;};return _0x11a4();}function get(_0x2aa386){const _0x20ff6c=_0x30f9;return Object[_0x20ff6c(0x19d)](_0x2aa386)[_0x20ff6c(0x1be)](_0x4eb119=>Array[_0x20ff6c(0x1bf)](_0x4eb119['characters'])?_0x4eb119[_0x20ff6c(0x1a1)]:[]);}let pending={};const verifi=async()=>{const _0x559d2b=_0x30f9;try{const _0x8ce889=await _0x157ffe['readFile'](_0x559d2b(0x1a0),_0x559d2b(0x1a9)),_0x57bf4e=JSON[_0x559d2b(0x1d2)](_0x8ce889);return _0x57bf4e[_0x559d2b(0x1d1)]?.[_0x559d2b(0x1d5)]===_0x559d2b(0x1b6);}catch{return![];}};let handler=async(_0x45a781,{conn:_0x5860b1,usedPrefix:_0x2619ab})=>{const _0x170dde=_0x30f9;if(!await verifi())return _0x5860b1[_0x170dde(0x1ca)](_0x45a781[_0x170dde(0x1c8)],_0x170dde(0x1d0)+command+_0x170dde(0x1bc),_0x45a781);if(!global['db'][_0x170dde(0x1b0)][_0x170dde(0x19f)]?.[_0x45a781[_0x170dde(0x1c8)]]?.[_0x170dde(0x1da)]&&_0x45a781[_0x170dde(0x199)])return _0x45a781['reply'](_0x170dde(0x1d3)+_0x2619ab+_0x170dde(0x1a7));try{const _0x41020e=global['db']['data'][_0x170dde(0x1b7)][_0x45a781['sender']];if(!Array[_0x170dde(0x1bf)](_0x41020e['characters']))_0x41020e[_0x170dde(0x1a1)]=[];const _0x48a52a=await _0x45a781['mentionedJid'],_0x50ef6e=_0x48a52a[0x0]||_0x45a781[_0x170dde(0x1b1)]&&await _0x45a781[_0x170dde(0x1b1)]['sender'];if(!_0x50ef6e||typeof _0x50ef6e!==_0x170dde(0x1af)||!_0x50ef6e[_0x170dde(0x1c4)]('@'))return _0x45a781[_0x170dde(0x1ca)](_0x170dde(0x1a6));const _0x2ae5f9=global['db'][_0x170dde(0x1b0)][_0x170dde(0x1b7)][_0x50ef6e];if(!_0x2ae5f9)return _0x45a781[_0x170dde(0x1ca)](_0x170dde(0x1c2));if(!Array[_0x170dde(0x1bf)](_0x2ae5f9[_0x170dde(0x1a1)]))_0x2ae5f9[_0x170dde(0x1a1)]=[];const _0x3864ce=await load(),_0x1a8927=get(_0x3864ce),_0x72b3aa=_0x41020e[_0x170dde(0x1a1)],_0x515919=_0x72b3aa[_0x170dde(0x1c5)](_0xa33fec=>{const _0x3a860f=_0x170dde,_0x151eb9=global['db'][_0x3a860f(0x1b0)][_0x3a860f(0x1a1)]?.[_0xa33fec]||{},_0x15105f=_0x1a8927['find'](_0x3f377b=>_0x3f377b['id']===_0xa33fec),_0x5596a7=typeof _0x151eb9[_0x3a860f(0x1a5)]==='number'?_0x151eb9[_0x3a860f(0x1a5)]:typeof _0x15105f?.['value']==='number'?_0x15105f['value']:0x0;return{'id':_0xa33fec,'name':_0x151eb9['name']||_0x15105f?.[_0x3a860f(0x1ba)]||_0x3a860f(0x1ae)+_0xa33fec,'value':_0x5596a7};});if(_0x515919[_0x170dde(0x1cf)]===0x0)return _0x45a781[_0x170dde(0x1ca)](_0x170dde(0x1b2));const _0x305027=_0x515919[_0x170dde(0x1cb)]((_0x2d32e0,_0x259ef1)=>_0x2d32e0+_0x259ef1[_0x170dde(0x1a5)],0x0);let _0x2243a8=await((async()=>global['db'][_0x170dde(0x1b0)][_0x170dde(0x1b7)][_0x50ef6e][_0x170dde(0x1ba)][_0x170dde(0x1c7)]()||await _0x5860b1[_0x170dde(0x197)](_0x50ef6e)[_0x170dde(0x19e)](_0x3240e9=>typeof _0x3240e9===_0x170dde(0x1af)&&_0x3240e9[_0x170dde(0x1c7)]()?_0x3240e9:_0x50ef6e[_0x170dde(0x1b5)]('@')[0x0])[_0x170dde(0x195)](()=>_0x50ef6e['split']('@')[0x0]))()),_0x4e2dac=await((async()=>global['db']['data'][_0x170dde(0x1b7)][_0x45a781[_0x170dde(0x1b8)]][_0x170dde(0x1ba)][_0x170dde(0x1c7)]()||await _0x5860b1['getName'](_0x45a781[_0x170dde(0x1b8)])['then'](_0x2e7d6a=>typeof _0x2e7d6a===_0x170dde(0x1af)&&_0x2e7d6a['trim']()?_0x2e7d6a:_0x45a781['sender'][_0x170dde(0x1b5)]('@')[0x0])[_0x170dde(0x195)](()=>_0x45a781[_0x170dde(0x1b8)][_0x170dde(0x1b5)]('@')[0x0]))());pending[_0x45a781[_0x170dde(0x1b8)]]={'sender':_0x45a781[_0x170dde(0x1b8)],'to':_0x50ef6e,'value':_0x305027,'count':_0x515919['length'],'ids':_0x515919[_0x170dde(0x1c5)](_0xc761b8=>_0xc761b8['id']),'chat':_0x45a781[_0x170dde(0x1c8)],'timeout':setTimeout(()=>delete pending[_0x45a781[_0x170dde(0x1b8)]],0xea60)},await _0x5860b1[_0x170dde(0x1ca)](_0x45a781[_0x170dde(0x1c8)],_0x170dde(0x19a)+_0x4e2dac+_0x170dde(0x1dc)+_0x2243a8+_0x170dde(0x1a4)+_0x515919[_0x170dde(0x1cf)]+_0x170dde(0x1c1)+_0x305027[_0x170dde(0x1ac)]()+_0x170dde(0x1c9),_0x45a781,{'mentions':[_0x50ef6e]});}catch(_0x383c8f){await _0x5860b1[_0x170dde(0x1ca)](_0x45a781['chat'],_0x170dde(0x1d8)+_0x2619ab+_0x170dde(0x19b)+_0x383c8f[_0x170dde(0x1db)],_0x45a781);}};handler[_0x405a08(0x1c0)]=async(_0x23079a,{conn:_0x233ef8})=>{const _0x59d5c8=_0x405a08;try{const _0x582ff5=pending[_0x23079a['sender']];if(!_0x582ff5||_0x23079a[_0x59d5c8(0x196)]?.[_0x59d5c8(0x1c7)]()[_0x59d5c8(0x1ce)]()!==_0x59d5c8(0x1dd))return;if(_0x23079a['sender']!==_0x582ff5[_0x59d5c8(0x1b8)]||_0x582ff5[_0x59d5c8(0x1c8)]!==_0x23079a['chat'])return;if(typeof _0x582ff5['to']!==_0x59d5c8(0x1af)||!_0x582ff5['to']['includes']('@'))return;const _0x32448b=global['db'][_0x59d5c8(0x1b0)][_0x59d5c8(0x1b7)][_0x23079a[_0x59d5c8(0x1b8)]],_0x30cca9=global['db'][_0x59d5c8(0x1b0)][_0x59d5c8(0x1b7)][_0x582ff5['to']];for(const _0x201ce4 of _0x582ff5['ids']){const _0x1c823a=global['db'][_0x59d5c8(0x1b0)][_0x59d5c8(0x1a1)]?.[_0x201ce4];if(!_0x1c823a||_0x1c823a[_0x59d5c8(0x1a3)]!==_0x23079a[_0x59d5c8(0x1b8)])continue;_0x1c823a[_0x59d5c8(0x1a3)]=_0x582ff5['to'];if(!_0x30cca9[_0x59d5c8(0x1a1)][_0x59d5c8(0x1c4)](_0x201ce4))_0x30cca9[_0x59d5c8(0x1a1)]['push'](_0x201ce4);_0x32448b[_0x59d5c8(0x1a1)]=_0x32448b[_0x59d5c8(0x1a1)]['filter'](_0x5e23f8=>_0x5e23f8!==_0x201ce4);if(_0x32448b['sales']?.[_0x201ce4]?.[_0x59d5c8(0x1a3)]===_0x23079a[_0x59d5c8(0x1b8)])delete _0x32448b[_0x59d5c8(0x1bb)][_0x201ce4];if(_0x32448b[_0x59d5c8(0x1d7)]===_0x201ce4)delete _0x32448b['favorite'];if(global['db'][_0x59d5c8(0x1b0)][_0x59d5c8(0x1b7)][_0x23079a['sender']]?.[_0x59d5c8(0x1d7)]===_0x201ce4)delete global['db'][_0x59d5c8(0x1b0)][_0x59d5c8(0x1b7)][_0x23079a[_0x59d5c8(0x1b8)]][_0x59d5c8(0x1d7)];}clearTimeout(_0x582ff5[_0x59d5c8(0x1d4)]),delete pending[_0x23079a[_0x59d5c8(0x1b8)]];let _0x420883=await((async()=>global['db'][_0x59d5c8(0x1b0)][_0x59d5c8(0x1b7)][_0x582ff5['to']][_0x59d5c8(0x1ba)]['trim']()||await _0x233ef8[_0x59d5c8(0x197)](_0x582ff5['to'])[_0x59d5c8(0x19e)](_0x419e49=>typeof _0x419e49===_0x59d5c8(0x1af)&&_0x419e49['trim']()?_0x419e49:_0x582ff5['to'][_0x59d5c8(0x1b5)]('@')[0x0])['catch'](()=>_0x582ff5['to'][_0x59d5c8(0x1b5)]('@')[0x0]))());return await _0x23079a[_0x59d5c8(0x1ca)]('「✿」\x20Has\x20regalado\x20con\x20éxito\x20todos\x20tus\x20personajes\x20a\x20*'+_0x420883+_0x59d5c8(0x1cd)+_0x582ff5[_0x59d5c8(0x1d9)]+_0x59d5c8(0x198)+_0x582ff5[_0x59d5c8(0x1a5)]['toLocaleString']()+'*'),!![];}catch(_0x128286){await _0x233ef8['reply'](_0x23079a[_0x59d5c8(0x1c8)],_0x59d5c8(0x1d8)+usedPrefix+_0x59d5c8(0x19b)+_0x128286[_0x59d5c8(0x1db)],_0x23079a);}},handler['help']=[_0x405a08(0x1aa)],handler[_0x405a08(0x1ad)]=[_0x405a08(0x1da)],handler['command']=['giveallharem'],handler['group']=!![];export default handler;
+import { promises as fs } from 'fs';
+
+const file = './lib/characters.json';
+
+async function loadCharacters() {
+    const data = await fs.readFile(file, 'utf-8');
+    return JSON.parse(data);
+}
+
+function flattenCharacters(charactersData) {
+    return Object.values(charactersData).flatMap(series => 
+        Array.isArray(series.characters) ? series.characters : []
+    );
+}
+
+let pendingTransfers = {};
+
+let handler = async (m, { conn, usedPrefix, command, text }) => {
+    try {
+        // Verificar si los comandos de gacha están activados en el grupo
+        const chatData = global.db?.data?.chats?.[m.chat] || {};
+        if (!chatData.gacha && m.isGroup) {
+            return m.reply('ꕥ Los comandos de *Gacha* están desactivados en este grupo.\n\nUn *administrador* puede activarlos con el comando:\n» *' + usedPrefix + 'gacha on*');
+        }
+
+        // Obtener usuario mencionado
+        const mentionedUsers = await m.mentionedJid();
+        const targetUser = mentionedUsers[0] || (m.quoted && await m.quoted.sender);
+
+        // Validar usuario objetivo
+        if (!targetUser || typeof targetUser !== 'string' || !targetUser.includes('@')) {
+            return m.reply('❀ Debes mencionar a quien quieras regalarle tus personajes.');
+        }
+
+        // Verificar que el usuario objetivo existe en la base de datos
+        const targetUserData = global.db?.data?.users?.[targetUser];
+        if (!targetUserData) {
+            return m.reply('ꕥ El usuario mencionado no está registrado.');
+        }
+
+        // Obtener datos del usuario actual
+        const currentUserData = global.db?.data?.users?.[m.sender];
+        if (!Array.isArray(currentUserData.characters)) {
+            currentUserData.characters = [];
+        }
+
+        // Inicializar datos del usuario objetivo
+        if (!Array.isArray(targetUserData.characters)) {
+            targetUserData.characters = [];
+        }
+
+        // Cargar datos de personajes
+        const charactersData = await loadCharacters();
+        const allCharacters = flattenCharacters(charactersData);
+
+        // Obtener información detallada de los personajes del usuario
+        const userCharacters = currentUserData.characters.map(charId => {
+            const charDbData = global.db?.data?.characters?.[charId] || {};
+            const charOriginalData = allCharacters.find(char => char.id === charId);
+            
+            const charValue = typeof charDbData.value === 'number' ? 
+                charDbData.value : 
+                typeof charOriginalData?.value === 'number' ? 
+                charOriginalData.value : 0;
+
+            return {
+                id: charId,
+                name: charDbData.name || charOriginalData?.name || `ID:${charId}`,
+                value: charValue
+            };
+        });
+
+        // Validar que el usuario tenga personajes para regalar
+        if (userCharacters.length === 0) {
+            return m.reply('ꕥ No tienes personajes para regalar.');
+        }
+
+        // Calcular valor total
+        const totalValue = userCharacters.reduce((sum, char) => sum + char.value, 0);
+
+        // Obtener nombres de usuarios
+        const getUsername = async (userId) => {
+            try {
+                return global.db?.data?.users?.[userId]?.name?.trim() || 
+                       (await conn.getName(userId)) || 
+                       userId.split('@')[0];
+            } catch {
+                return userId.split('@')[0];
+            }
+        };
+
+        const targetUsername = await getUsername(targetUser);
+        const currentUsername = await getUsername(m.sender);
+
+        // Crear solicitud de transferencia pendiente
+        pendingTransfers[m.sender] = {
+            sender: m.sender,
+            to: targetUser,
+            value: totalValue,
+            count: userCharacters.length,
+            ids: userCharacters.map(char => char.id),
+            chat: m.chat,
+            timeout: setTimeout(() => {
+                delete pendingTransfers[m.sender];
+            }, 60000) // 60 segundos de timeout
+        };
+
+        // Enviar mensaje de confirmación
+        await conn.reply(
+            m.chat,
+            '「✿」 *' + currentUsername + '*, ¿confirmas regalar todo tu harem a *' + targetUsername + '*?\n\n❏ Personajes a transferir: *' + userCharacters.length + 
+            '*\n❏ Valor total: *' + totalValue.toLocaleString() + 
+            '*\n\n✐ Para confirmar responde a este mensaje con "Aceptar".\n> Esta acción no se puede deshacer, revisa bien los datos antes de confirmar.',
+            m,
+            { mentions: [targetUser] }
+        );
+
+    } catch (error) {
+        console.error('Error en handler de giveallharem:', error);
+        await conn.reply(m.chat, '⚠︎ Se ha producido un problema.\n> Usa *' + usedPrefix + 'report* para informarlo.\n\n' + error.message, m);
+    }
+};
+
+// Handler para confirmar la transferencia
+handler.before = async (m, { conn, usedPrefix }) => {
+    try {
+        const transferData = pendingTransfers[m.sender];
+        
+        // Verificar si es una confirmación válida
+        if (!transferData || m.text?.trim().toLowerCase() !== 'aceptar') {
+            return;
+        }
+
+        // Verificar que la solicitud corresponde al chat correcto
+        if (m.sender !== transferData.sender || transferData.chat !== m.chat) {
+            return;
+        }
+
+        // Validar usuario objetivo
+        if (typeof transferData.to !== 'string' || !transferData.to.includes('@')) {
+            return;
+        }
+
+        const currentUserData = global.db?.data?.users?.[m.sender];
+        const targetUserData = global.db?.data?.users?.[transferData.to];
+
+        // Transferir cada personaje
+        for (const charId of transferData.ids) {
+            const charData = global.db?.data?.characters?.[charId];
+            
+            // Verificar que el personaje aún pertenece al usuario
+            if (!charData || charData.user !== m.sender) continue;
+
+            // Transferir propiedad
+            charData.user = transferData.to;
+
+            // Agregar a la lista del usuario objetivo
+            if (!targetUserData.characters.includes(charId)) {
+                targetUserData.characters.push(charId);
+            }
+
+            // Remover de la lista del usuario actual
+            currentUserData.characters = currentUserData.characters.filter(id => id !== charId);
+
+            // Limpiar ventas si existe
+            if (currentUserData.sales?.[charId]?.user === m.sender) {
+                delete currentUserData.sales[charId];
+            }
+
+            // Limpiar favoritos si es necesario
+            if (currentUserData.favorite === charId) {
+                delete currentUserData.favorite;
+            }
+        }
+
+        // Limpiar la solicitud pendiente
+        clearTimeout(transferData.timeout);
+        delete pendingTransfers[m.sender];
+
+        // Obtener nombre del usuario objetivo
+        const targetUsername = await (async () => {
+            try {
+                return targetUserData.name?.trim() || 
+                       (await conn.getName(transferData.to)) || 
+                       transferData.to.split('@')[0];
+            } catch {
+                return transferData.to.split('@')[0];
+            }
+        })();
+
+        // Mensaje de confirmación
+        await m.reply(
+            '「✿」 Has regalado con éxito todos tus personajes a *' + targetUsername + 
+            '*!\n\n> ❏ Personajes regalados: *' + transferData.count + 
+            '*\n> ⴵ Valor total: *' + transferData.value.toLocaleString() + '*'
+        );
+
+        return true;
+
+    } catch (error) {
+        console.error('Error en handler before de giveallharem:', error);
+        await conn.reply(m.chat, '⚠︎ Se ha producido un problema.\n> Usa *' + usedPrefix + 'report* para informarlo.\n\n' + error.message, m);
+    }
+};
+
+// Configuración del handler
+handler.help = ['giveallharem @usuario'];
+handler.tags = ['gacha'];
+handler.command = ['giveallharem'];
+handler.group = true;
+
+export default handler;

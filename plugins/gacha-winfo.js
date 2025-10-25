@@ -1,1 +1,296 @@
-function _0x16b5(){const _0x2b66a8=['sendFile','cimage','tags','Mozilla/5.0','235233VqQWFV','charvideo','join','headers','help','/search/gelbooru?query=','https://safebooru.org/index.php?page=dapi&s=post&q=index&json=1&tags=','waifuinfo','split','endsWith','file_url','find','chats','user','push','isGroup','name','8414JNVUOC','image','large_file_url','APIs','characters','data','random','votes','🎀\x20El\x20personaje\x20','https://danbooru.donmai.us/posts.json?tags=','chat','content-type','224872SkEflD','number','hace\x20*','gacha','🎀\x20Nombre\x20»\x20*','*\x0a❖\x20Fuente\x20»\x20*','wvideo','mp4','entries','5984iUFgvm','includes','toLowerCase','Reclamado\x20por\x20*','charimage','test','application/json','now','trim','708pUFvWg','toLocaleString','650CmfquQ','\x0a❖\x20Fuente\x20»\x20*','isArray','*\x0a✰\x20Valor\x20»\x20*','findIndex','*\x0a♡\x20Estado\x20»\x20','gacha\x20on*','url','post','\x20Arlette\x20Bot*','🎀\x20No\x20se\x20encontraron\x20imágenes\x20para\x20*','users','\x0aⴵ\x20Fecha\x20de\x20reclamo\x20»\x20*','some','value','es-VE','🎀\x20El\x20personaje\x20*','26990NUSexV','getName','json','charinfo','⚠︎\x20Se\x20ha\x20producido\x20un\x20problema.\x0a>\x20Usa\x20*','utf-8','waifuimage','readFile','.mp4','🎀\x20Los\x20comandos\x20de\x20*Gacha*\x20están\x20desactivados\x20en\x20este\x20grupo.\x0a\x0aUn\x20*administrador*\x20puede\x20activarlos\x20con\x20el\x20comando:\x0a»\x20*','*Nunca*','./lib/characters.json','floor','cvideo','*\x0a❏\x20Puesto\x20»\x20*/','replace','git+https://github.com/speed3xz/ArletteBot-MD.git','reply','Desconocido','>*\x20solo\x20está\x20disponible\x20para\x20Arlette\x20Bot.\x0a>\x20https://github.com/speed3xz/ArletteBot-MD','repository','variants','5836250qDsiSP','map','🎀\x20No\x20se\x20encontró\x20el\x20personaje\x20*','command','report*\x20para\x20informarlo.\x0a\x0a','long','numeric','parse','*\x0aⴵ\x20Último\x20voto\x20»\x20','get','flatMap','delirius','gender','claimedAt','string','values','wimage','waifuvideo','16ykoeUT','463263KXzYSi','length','filter','desconocido','.jpg','🎀\x20Por\x20favor,\x20proporciona\x20el\x20nombre\x20de\x20un\x20personaje.\x0a>\x20Ejemplo\x20»\x20*','lastVotedAt','*\x0a⚥\x20Género\x20»\x20*','🎀\x20No\x20se\x20encontraron\x20videos\x20para\x20','winfo','group'];_0x16b5=function(){return _0x2b66a8;};return _0x16b5();}const _0x2b38ea=_0x330e;(function(_0xbbe412,_0x2fa38d){const _0x1a9dae=_0x330e,_0x117978=_0xbbe412();while(!![]){try{const _0x489ff1=-parseInt(_0x1a9dae(0x11a))/0x1+parseInt(_0x1a9dae(0xc5))/0x2+-parseInt(_0x1a9dae(0xee))/0x3+parseInt(_0x1a9dae(0x123))/0x4*(-parseInt(_0x1a9dae(0xb4))/0x5)+-parseInt(_0x1a9dae(0xb2))/0x6*(-parseInt(_0x1a9dae(0x10e))/0x7)+-parseInt(_0x1a9dae(0xed))/0x8*(parseInt(_0x1a9dae(0xfd))/0x9)+parseInt(_0x1a9dae(0xdb))/0xa;if(_0x489ff1===_0x2fa38d)break;else _0x117978['push'](_0x117978['shift']());}catch(_0x1d7064){_0x117978['push'](_0x117978['shift']());}}}(_0x16b5,0x1b90d));import{promises as _0x2c0dd7}from'fs';function _0x330e(_0x51c7a0,_0x19f859){const _0x16b586=_0x16b5();return _0x330e=function(_0x330e83,_0xcd3ea8){_0x330e83=_0x330e83-0xaf;let _0x393cd5=_0x16b586[_0x330e83];return _0x393cd5;},_0x330e(_0x51c7a0,_0x19f859);}import _0x5e341b from'node-fetch';const charactersFilePath=_0x2b38ea(0xd0);async function loadCharacters(){const _0x2a332c=_0x2b38ea,_0x1e47c9=await _0x2c0dd7[_0x2a332c(0xcc)](charactersFilePath,_0x2a332c(0xca));return JSON[_0x2a332c(0xe2)](_0x1e47c9);}function flattenCharacters(_0x43b58c){const _0x17ee0b=_0x2b38ea;return Object[_0x17ee0b(0xea)](_0x43b58c)[_0x17ee0b(0xe5)](_0x36082b=>Array[_0x17ee0b(0xb6)](_0x36082b[_0x17ee0b(0x112)])?_0x36082b[_0x17ee0b(0x112)]:[]);}function getSeriesNameByCharacter(_0x24a216,_0x177dcc){const _0x1ad036=_0x2b38ea,_0x248807=Object['entries'](_0x24a216)['find'](([,_0x150ca8])=>Array[_0x1ad036(0xb6)](_0x150ca8['characters'])&&_0x150ca8['characters']['some'](_0x1720bc=>_0x1720bc['id']===_0x177dcc));return _0x248807?.[0x1]?.[_0x1ad036(0x10d)]||_0x1ad036(0xd7);}function formatElapsed(_0x344df2){const _0xdbac7d=_0x2b38ea;if(!_0x344df2||_0x344df2<=0x0)return'—';const _0x2dfb38=Math[_0xdbac7d(0xd1)](_0x344df2/0x3e8),_0x5c600e=Math[_0xdbac7d(0xd1)](_0x2dfb38/0x93a80),_0x1c69bc=Math['floor'](_0x2dfb38%0x93a80/0x15180),_0x1e3db1=Math[_0xdbac7d(0xd1)](_0x2dfb38%0x15180/0xe10),_0x4d84ac=Math[_0xdbac7d(0xd1)](_0x2dfb38%0xe10/0x3c),_0x24a213=_0x2dfb38%0x3c,_0x1b1e24=[];if(_0x5c600e>0x0)_0x1b1e24[_0xdbac7d(0x10b)](_0x5c600e+'w');if(_0x1c69bc>0x0)_0x1b1e24[_0xdbac7d(0x10b)](_0x1c69bc+'d');if(_0x1e3db1>0x0)_0x1b1e24[_0xdbac7d(0x10b)](_0x1e3db1+'h');if(_0x4d84ac>0x0)_0x1b1e24[_0xdbac7d(0x10b)](_0x4d84ac+'m');if(_0x24a213>0x0)_0x1b1e24[_0xdbac7d(0x10b)](_0x24a213+'s');return _0x1b1e24[_0xdbac7d(0xff)]('\x20');}function formatTag(_0x2da0e9){const _0x2bad28=_0x2b38ea;return String(_0x2da0e9)[_0x2bad28(0xb1)]()[_0x2bad28(0x125)]()[_0x2bad28(0xd4)](/\s+/g,'_');}async function buscarImagenDelirius(_0x239c2e){const _0x1a8789=_0x2b38ea,_0x40e02d=formatTag(_0x239c2e),_0x477652=[_0x1a8789(0x103)+_0x40e02d,_0x1a8789(0x117)+_0x40e02d,global[_0x1a8789(0x111)][_0x1a8789(0xe6)]['url']+_0x1a8789(0x102)+_0x40e02d];for(const _0x4b6369 of _0x477652){try{const _0x410c26=await _0x5e341b(_0x4b6369,{'headers':{'User-Agent':'Mozilla/5.0','Accept':'application/json'}}),_0x2d1653=_0x410c26[_0x1a8789(0x100)][_0x1a8789(0xe4)](_0x1a8789(0x119))||'';if(!_0x410c26['ok']||!_0x2d1653[_0x1a8789(0x124)](_0x1a8789(0xc7)))continue;const _0x9059c1=await _0x410c26[_0x1a8789(0xc7)](),_0x13a60e=Array[_0x1a8789(0xb6)](_0x9059c1)?_0x9059c1:_0x9059c1?.[_0x1a8789(0xbc)]||_0x9059c1?.[_0x1a8789(0x113)]||[],_0x39979e=_0x13a60e['map'](_0xb2b27=>_0xb2b27?.[_0x1a8789(0x107)]||_0xb2b27?.[_0x1a8789(0x110)]||_0xb2b27?.[_0x1a8789(0x10f)]||_0xb2b27?.['media_asset']?.[_0x1a8789(0xda)]?.[0x0]?.[_0x1a8789(0xbb)])[_0x1a8789(0xf0)](_0x2f0147=>typeof _0x2f0147===_0x1a8789(0xe9)&&/\.(jpe?g|png)$/[_0x1a8789(0x128)](_0x2f0147));if(_0x39979e[_0x1a8789(0xef)])return _0x39979e;}catch{}}return[];}const verifi=async()=>{const _0x43d4ed=_0x2b38ea;try{const _0x1be777=await _0x2c0dd7[_0x43d4ed(0xcc)]('./package.json',_0x43d4ed(0xca)),_0x30a32c=JSON[_0x43d4ed(0xe2)](_0x1be777);return _0x30a32c[_0x43d4ed(0xd9)]?.['url']===_0x43d4ed(0xd5);}catch{return![];}};let handler=async(_0x56f8da,{conn:_0x26ac7c,args:_0x30f3ca,usedPrefix:_0x4685c3,command:_0x477397})=>{const _0x9ffc65=_0x2b38ea;if(!await verifi())return _0x26ac7c[_0x9ffc65(0xd6)](_0x56f8da[_0x9ffc65(0x118)],'🎀\x20El\x20comando\x20*<'+_0x477397+_0x9ffc65(0xd8),_0x56f8da);try{if(!global['db']['data'][_0x9ffc65(0x109)]?.[_0x56f8da[_0x9ffc65(0x118)]]?.[_0x9ffc65(0x11d)]&&_0x56f8da[_0x9ffc65(0x10c)])return _0x56f8da['reply'](_0x9ffc65(0xce)+_0x4685c3+_0x9ffc65(0xba));if(!_0x30f3ca[_0x9ffc65(0xef)])return _0x56f8da[_0x9ffc65(0xd6)](_0x9ffc65(0xf3)+(_0x4685c3+_0x477397)+_0x9ffc65(0xbd));const _0x5c3f47=await loadCharacters(),_0x52683c=flattenCharacters(_0x5c3f47),_0x47e8b9=_0x30f3ca[_0x9ffc65(0xff)]('\x20')[_0x9ffc65(0x125)]()[_0x9ffc65(0xb1)](),_0x2f6c28=_0x52683c[_0x9ffc65(0x108)](_0x4b9ac3=>String(_0x4b9ac3[_0x9ffc65(0x10d)])[_0x9ffc65(0x125)]()===_0x47e8b9)||_0x52683c[_0x9ffc65(0x108)](_0x4f005a=>String(_0x4f005a['name'])[_0x9ffc65(0x125)]()[_0x9ffc65(0x124)](_0x47e8b9)||Array[_0x9ffc65(0xb6)](_0x4f005a[_0x9ffc65(0xfb)])&&_0x4f005a[_0x9ffc65(0xfb)][_0x9ffc65(0xc1)](_0x2dd429=>_0x2dd429[_0x9ffc65(0x125)]()[_0x9ffc65(0x124)](_0x47e8b9)))||_0x52683c[_0x9ffc65(0x108)](_0x2a2349=>_0x47e8b9[_0x9ffc65(0x105)]('\x20')[_0x9ffc65(0xc1)](_0x138abe=>String(_0x2a2349['name'])[_0x9ffc65(0x125)]()[_0x9ffc65(0x124)](_0x138abe)||Array['isArray'](_0x2a2349[_0x9ffc65(0xfb)])&&_0x2a2349[_0x9ffc65(0xfb)][_0x9ffc65(0xc1)](_0x5069ca=>_0x5069ca[_0x9ffc65(0x125)]()[_0x9ffc65(0x124)](_0x138abe))));if(!_0x2f6c28)return _0x56f8da[_0x9ffc65(0xd6)](_0x9ffc65(0xdd)+_0x47e8b9+'*.');const _0x308c02=global['db'][_0x9ffc65(0x113)];switch(_0x477397){case _0x9ffc65(0xc8):case _0x9ffc65(0xf7):case _0x9ffc65(0x104):{if(!_0x308c02['characters'])_0x308c02[_0x9ffc65(0x112)]={};if(!_0x308c02[_0x9ffc65(0x112)][_0x2f6c28['id']])_0x308c02[_0x9ffc65(0x112)][_0x2f6c28['id']]={};const _0x44af0b=_0x308c02['characters'][_0x2f6c28['id']];_0x44af0b[_0x9ffc65(0x10d)]??=_0x2f6c28[_0x9ffc65(0x10d)],_0x44af0b['value']=typeof _0x44af0b[_0x9ffc65(0xc2)]==='number'?_0x44af0b['value']:Number(_0x2f6c28[_0x9ffc65(0xc2)]||0x64),_0x44af0b[_0x9ffc65(0x115)]=typeof _0x44af0b['votes']===_0x9ffc65(0x11b)?_0x44af0b['votes']:0x0;const _0x29b587=getSeriesNameByCharacter(_0x5c3f47,_0x2f6c28['id']),_0x5cac10=Object[_0x9ffc65(0x122)](_0x308c02[_0x9ffc65(0xbf)])[_0x9ffc65(0x108)](([,_0x1b53b1])=>Array['isArray'](_0x1b53b1[_0x9ffc65(0x112)])&&_0x1b53b1[_0x9ffc65(0x112)][_0x9ffc65(0x124)](_0x2f6c28['id']));let _0x13d1a3=await((async()=>_0x5cac10?.[0x0]?_0x308c02['users'][_0x5cac10[0x0]]?.[_0x9ffc65(0x10d)]?.[_0x9ffc65(0xb1)]()||(await _0x26ac7c[_0x9ffc65(0xc6)](_0x5cac10[0x0]))?.[_0x9ffc65(0xb1)]()||_0x5cac10[0x0][_0x9ffc65(0x105)]('@')[0x0]:_0x9ffc65(0xf1))());const _0x5d75f2=_0x44af0b[_0x9ffc65(0x10a)]&&_0x44af0b[_0x9ffc65(0xe8)]?_0x9ffc65(0xc0)+new Date(_0x44af0b[_0x9ffc65(0xe8)])['toLocaleDateString'](_0x9ffc65(0xc3),{'weekday':_0x9ffc65(0xe0),'day':_0x9ffc65(0xe1),'month':'long','year':'numeric'})+'*':'',_0x16b784=typeof _0x44af0b[_0x9ffc65(0xf4)]===_0x9ffc65(0x11b)?_0x9ffc65(0x11c)+formatElapsed(Date[_0x9ffc65(0xb0)]()-_0x44af0b[_0x9ffc65(0xf4)])+'*':_0x9ffc65(0xcf),_0x17396d=Object[_0x9ffc65(0xea)](_0x308c02[_0x9ffc65(0x112)])[_0x9ffc65(0xf0)](_0x402d3e=>typeof _0x402d3e[_0x9ffc65(0xc2)]===_0x9ffc65(0x11b))['sort']((_0x399400,_0x24aaa9)=>_0x24aaa9['value']-_0x399400[_0x9ffc65(0xc2)]),_0x294977=_0x17396d[_0x9ffc65(0xb8)](_0x3ffff8=>_0x3ffff8[_0x9ffc65(0x10d)]===_0x2f6c28['name'])+0x1||'—',_0x31fc5b='🎀\x20Nombre\x20»\x20*'+_0x44af0b[_0x9ffc65(0x10d)]+_0x9ffc65(0xf5)+(_0x2f6c28[_0x9ffc65(0xe7)]||'Desconocido')+_0x9ffc65(0xb7)+_0x44af0b[_0x9ffc65(0xc2)][_0x9ffc65(0xb3)]()+_0x9ffc65(0xb9)+(_0x5cac10?_0x9ffc65(0x126)+_0x13d1a3+'*':'*Libre*')+_0x5d75f2+_0x9ffc65(0xb5)+_0x29b587+_0x9ffc65(0xd3)+_0x294977+_0x9ffc65(0xe3)+_0x16b784;await _0x26ac7c[_0x9ffc65(0xd6)](_0x56f8da[_0x9ffc65(0x118)],_0x31fc5b[_0x9ffc65(0xb1)](),_0x56f8da);break;}case _0x9ffc65(0x127):case _0x9ffc65(0xcb):case'cimage':case _0x9ffc65(0xeb):{const _0x11508e=Array[_0x9ffc65(0xb6)](_0x2f6c28[_0x9ffc65(0xfb)])?_0x2f6c28[_0x9ffc65(0xfb)][0x0]:null;if(!_0x11508e)return _0x56f8da[_0x9ffc65(0xd6)](_0x9ffc65(0xc4)+_0x2f6c28[_0x9ffc65(0x10d)]+'*\x20no\x20tiene\x20un\x20tag\x20válido\x20para\x20buscar\x20imágenes.');const _0x3d945e=await buscarImagenDelirius(_0x11508e),_0x25f81e=_0x3d945e[Math[_0x9ffc65(0xd1)](Math[_0x9ffc65(0x114)]()*_0x3d945e[_0x9ffc65(0xef)])];if(!_0x25f81e)return _0x56f8da[_0x9ffc65(0xd6)](_0x9ffc65(0xbe)+_0x2f6c28['name']+'*\x20con\x20el\x20tag\x20*'+_0x11508e+'*.');const _0x297cde=getSeriesNameByCharacter(_0x5c3f47,_0x2f6c28['id']),_0x4c17dc=_0x9ffc65(0x11e)+_0x2f6c28[_0x9ffc65(0x10d)]+'*\x0a⚥\x20Género\x20»\x20*'+(_0x2f6c28[_0x9ffc65(0xe7)]||_0x9ffc65(0xd7))+_0x9ffc65(0x11f)+_0x297cde+'*';await _0x26ac7c['sendFile'](_0x56f8da[_0x9ffc65(0x118)],_0x25f81e,_0x2f6c28[_0x9ffc65(0x10d)]+_0x9ffc65(0xf2),_0x4c17dc,_0x56f8da);break;}case _0x9ffc65(0xfe):case'waifuvideo':case _0x9ffc65(0xd2):case _0x9ffc65(0x120):{const _0x331ac1=Array['isArray'](_0x2f6c28[_0x9ffc65(0xfb)])?_0x2f6c28['tags'][0x0]:null;if(!_0x331ac1)return _0x56f8da[_0x9ffc65(0xd6)](_0x9ffc65(0x116)+_0x2f6c28[_0x9ffc65(0x10d)]+'\x20no\x20tiene\x20un\x20tag\x20válido\x20para\x20buscar\x20videos.');const _0x18b04c=formatTag(_0x331ac1),_0x5e8a20=[global['APIs'][_0x9ffc65(0xe6)][_0x9ffc65(0xbb)]+'/search/gelbooru?query='+_0x18b04c,_0x9ffc65(0x103)+_0x18b04c,_0x9ffc65(0x117)+_0x18b04c];let _0x4e629c=[];for(const _0x153b5b of _0x5e8a20){try{const _0x55b920=await _0x5e341b(_0x153b5b,{'headers':{'User-Agent':_0x9ffc65(0xfc),'Accept':_0x9ffc65(0xaf)}}),_0x4bad12=_0x55b920[_0x9ffc65(0x100)]['get'](_0x9ffc65(0x119))||'';if(!_0x55b920['ok']||!_0x4bad12[_0x9ffc65(0x124)](_0x9ffc65(0xc7)))continue;const _0x358d2b=await _0x55b920['json'](),_0x1ea591=Array[_0x9ffc65(0xb6)](_0x358d2b)?_0x358d2b:_0x358d2b?.[_0x9ffc65(0xbc)]||_0x358d2b?.['data']||[];_0x4e629c=_0x1ea591[_0x9ffc65(0xdc)](_0x3ba2f4=>_0x3ba2f4?.[_0x9ffc65(0x107)]||_0x3ba2f4?.['large_file_url']||_0x3ba2f4?.[_0x9ffc65(0x10f)]||_0x3ba2f4?.['media_asset']?.[_0x9ffc65(0xda)]?.[0x0]?.[_0x9ffc65(0xbb)])[_0x9ffc65(0xf0)](_0x53113d=>typeof _0x53113d===_0x9ffc65(0xe9)&&/\.(gif|mp4)$/['test'](_0x53113d));if(_0x4e629c[_0x9ffc65(0xef)])break;}catch{}}if(!_0x4e629c['length'])return _0x56f8da[_0x9ffc65(0xd6)](_0x9ffc65(0xf6)+_0x2f6c28[_0x9ffc65(0x10d)]+'.');const _0x11ce91=_0x4e629c[Math['floor'](Math[_0x9ffc65(0x114)]()*_0x4e629c[_0x9ffc65(0xef)])],_0x39c4d8=getSeriesNameByCharacter(_0x5c3f47,_0x2f6c28['id']),_0x1a9b17=_0x9ffc65(0x11e)+_0x2f6c28[_0x9ffc65(0x10d)]+_0x9ffc65(0xf5)+(_0x2f6c28[_0x9ffc65(0xe7)]||_0x9ffc65(0xd7))+'*\x0a❖\x20Fuente\x20»\x20*'+_0x39c4d8+'*';await _0x26ac7c[_0x9ffc65(0xf9)](_0x56f8da[_0x9ffc65(0x118)],_0x11ce91,_0x2f6c28['name']+'.'+(_0x11ce91[_0x9ffc65(0x106)](_0x9ffc65(0xcd))?_0x9ffc65(0x121):'gif'),_0x1a9b17,_0x56f8da);break;}}}catch(_0x4a1000){await _0x26ac7c[_0x9ffc65(0xd6)](_0x56f8da['chat'],_0x9ffc65(0xc9)+_0x4685c3+_0x9ffc65(0xdf)+_0x4a1000['message'],_0x56f8da);}};handler[_0x2b38ea(0x101)]=[_0x2b38ea(0xf7),_0x2b38ea(0xeb),_0x2b38ea(0xec)],handler[_0x2b38ea(0xfb)]=[_0x2b38ea(0x11d)],handler[_0x2b38ea(0xde)]=['charinfo','winfo',_0x2b38ea(0x104),_0x2b38ea(0x127),_0x2b38ea(0xcb),_0x2b38ea(0xfa),'wimage',_0x2b38ea(0xfe),_0x2b38ea(0xec),_0x2b38ea(0xd2),_0x2b38ea(0x120)],handler[_0x2b38ea(0xf8)]=!![];export default handler;
+import { promises as fs } from 'fs';
+import fetch from 'node-fetch';
+
+const charactersFilePath = './lib/characters.json';
+
+async function loadCharacters() {
+    try {
+        const data = await fs.readFile(charactersFilePath, 'utf-8');
+        return JSON.parse(data);
+    } catch (error) {
+        console.error('Error loading characters:', error);
+        return {};
+    }
+}
+
+function flattenCharacters(charactersData) {
+    return Object.values(charactersData).flatMap(series => 
+        Array.isArray(series.characters) ? series.characters : []
+    );
+}
+
+function getSeriesNameByCharacter(charactersData, characterId) {
+    const seriesEntry = Object.entries(charactersData).find(([_, series]) => 
+        Array.isArray(series.characters) && 
+        series.characters.some(char => char.id === characterId)
+    );
+    return seriesEntry?.[1]?.name || 'Desconocido';
+}
+
+function formatElapsed(ms) {
+    if (!ms || ms <= 0) return '—';
+    
+    const totalSeconds = Math.floor(ms / 1000);
+    const weeks = Math.floor(totalSeconds / 604800);
+    const days = Math.floor(totalSeconds % 604800 / 86400);
+    const hours = Math.floor(totalSeconds % 86400 / 3600);
+    const minutes = Math.floor(totalSeconds % 3600 / 60);
+    const seconds = totalSeconds % 60;
+    
+    const parts = [];
+    if (weeks > 0) parts.push(weeks + 'w');
+    if (days > 0) parts.push(days + 'd');
+    if (hours > 0) parts.push(hours + 'h');
+    if (minutes > 0) parts.push(minutes + 'm');
+    if (seconds > 0) parts.push(seconds + 's');
+    
+    return parts.join(' ');
+}
+
+function formatTag(tag) {
+    return String(tag).toLowerCase().trim().replace(/\s+/g, '_');
+}
+
+async function buscarImagenDelirius(tag) {
+    const formattedTag = formatTag(tag);
+    const apiUrls = [
+        `https://danbooru.donmai.us/posts.json?tags=${formattedTag}`,
+        `https://safebooru.org/index.php?page=dapi&s=post&q=index&json=1&tags=${formattedTag}`,
+        `${global.APIs?.delirius?.url || 'https://api.delirius.cc'}/search/gelbooru?query=${formattedTag}`
+    ];
+    
+    for (const url of apiUrls) {
+        try {
+            const response = await fetch(url, {
+                headers: {
+                    'User-Agent': 'Mozilla/5.0',
+                    'Accept': 'application/json'
+                }
+            });
+            
+            const contentType = response.headers.get('content-type') || '';
+            if (!response.ok || !contentType.includes('application/json')) continue;
+            
+            const data = await response.json();
+            const posts = Array.isArray(data) ? data : data?.posts || data?.data || [];
+            
+            const images = posts.map(post => 
+                post?.file_url || 
+                post?.large_file_url || 
+                post?.sample_url || 
+                post?.media_asset?.variants?.[0]?.url
+            ).filter(url => typeof url === 'string' && /\.(jpe?g|png)$/i.test(url));
+            
+            if (images.length) return images;
+        } catch (error) {
+            console.error(`Error fetching from ${url}:`, error);
+        }
+    }
+    return [];
+}
+
+const handler = async (m, { conn, args, usedPrefix, command, text }) => {
+    try {
+        if (!args.length) {
+            return m.reply(`🎀 Por favor, proporciona el nombre de un personaje.\n> Ejemplo » *${usedPrefix + command} nombre*`);
+        }
+        
+        const charactersData = await loadCharacters();
+        const allCharacters = flattenCharacters(charactersData);
+        const query = text.toLowerCase().trim();
+        
+        const character = allCharacters.find(char => 
+            String(char.name).toLowerCase() === query
+        ) || allCharacters.find(char => 
+            String(char.name).toLowerCase().includes(query) || 
+            (Array.isArray(char.tags) && char.tags.some(tag => tag.toLowerCase().includes(query)))
+        ) || allCharacters.find(char => 
+            query.split(' ').some(word => 
+                String(char.name).toLowerCase().includes(word) || 
+                (Array.isArray(char.tags) && char.tags.some(tag => tag.toLowerCase().includes(word)))
+            )
+        );
+        
+        if (!character) {
+            return m.reply(`🎀 No se encontró el personaje *${query}*.`);
+        }
+        
+        const db = global.db?.data || {};
+
+        switch (command) {
+            case 'charinfo':
+            case 'winfo':
+            case 'waifuinfo': {
+                if (!db.characters) db.characters = {};
+                if (!db.characters[character.id]) db.characters[character.id] = {};
+                
+                const charData = db.characters[character.id];
+                charData.name = charData.name || character.name;
+                charData.value = typeof charData.value === 'number' ? charData.value : Number(character.value || 100);
+                charData.votes = typeof charData.votes === 'number' ? charData.votes : 0;
+                
+                const seriesName = getSeriesNameByCharacter(charactersData, character.id);
+                
+                // Buscar si el personaje está reclamado
+                let claimant = null;
+                if (db.users) {
+                    claimant = Object.entries(db.users).find(([_, user]) => 
+                        Array.isArray(user.characters) && user.characters.includes(character.id)
+                    );
+                }
+                
+                let claimantName = 'Nunca';
+                if (claimant) {
+                    try {
+                        claimantName = db.users[claimant[0]]?.name || 
+                                      (await conn.getName(claimant[0])) || 
+                                      claimant[0].split('@')[0];
+                    } catch {
+                        claimantName = claimant[0].split('@')[0];
+                    }
+                }
+                
+                const claimDate = charData.claimedAt ? 
+                    `\nⴵ Fecha de reclamo » *${new Date(charData.claimedAt).toLocaleDateString('es-VE', {
+                        weekday: 'long',
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                    })}*` : '';
+                
+                const lastVote = typeof charData.lastVotedAt === 'number' ? 
+                    `\nⴵ Último voto » *${formatElapsed(Date.now() - charData.lastVotedAt)}*` : '—';
+                
+                // Calcular ranking
+                let rank = '—';
+                if (db.characters) {
+                    const rankedChars = Object.values(db.characters)
+                        .filter(char => typeof char.value === 'number')
+                        .sort((a, b) => b.value - a.value);
+                    rank = rankedChars.findIndex(char => char.name === character.name) + 1 || '—';
+                }
+                
+                const infoText = `🎀 Nombre » *${charData.name}*
+⚥ Género » *${character.gender || 'Desconocido'}*
+✰ Valor » *${charData.value.toLocaleString()}*
+♡ Estado » *${claimant ? 'Reclamado por ' + claimantName : 'Libre'}*${claimDate}
+❖ Fuente » *${seriesName}*
+❏ Puesto » */${rank}*
+${lastVote}`;
+                
+                await conn.reply(m.chat, infoText, m);
+                break;
+            }
+            
+            case 'charimage':
+            case 'wimage':
+            case 'waifuimage':
+            case 'cimage': {
+                const tag = Array.isArray(character.tags) ? character.tags[0] : null;
+                if (!tag) {
+                    return m.reply(`🎀 El personaje *${character.name}* no tiene un tag válido para buscar imágenes.`);
+                }
+                
+                const images = await buscarImagenDelirius(tag);
+                if (!images.length) {
+                    return m.reply(`🎀 No se encontraron imágenes para *${character.name}* con el tag *${tag}*.`);
+                }
+                
+                const randomImage = images[Math.floor(Math.random() * images.length)];
+                const seriesName = getSeriesNameByCharacter(charactersData, character.id);
+                const caption = `🎀 El personaje *${character.name}*
+⚥ Género » *${character.gender || 'Desconocido'}*
+❖ Fuente » *${seriesName}*`;
+                
+                await conn.sendFile(m.chat, randomImage, `${character.name}.jpg`, caption, m);
+                break;
+            }
+            
+            case 'charvideo':
+            case 'waifuvideo':
+            case 'cvideo':
+            case 'wvideo': {
+                const tag = Array.isArray(character.tags) ? character.tags[0] : null;
+                if (!tag) {
+                    return m.reply(`🎀 El personaje *${character.name}* no tiene un tag válido para buscar videos.`);
+                }
+                
+                const formattedTag = formatTag(tag);
+                const apiUrls = [
+                    `${global.APIs?.delirius?.url || 'https://api.delirius.cc'}/search/gelbooru?query=${formattedTag}`,
+                    `https://danbooru.donmai.us/posts.json?tags=${formattedTag}`,
+                    `https://safebooru.org/index.php?page=dapi&s=post&q=index&json=1&tags=${formattedTag}`
+                ];
+                
+                let videos = [];
+                for (const url of apiUrls) {
+                    try {
+                        const response = await fetch(url, {
+                            headers: {
+                                'User-Agent': 'Mozilla/5.0',
+                                'Accept': 'application/json'
+                            }
+                        });
+                        
+                        const contentType = response.headers.get('content-type') || '';
+                        if (!response.ok || !contentType.includes('application/json')) continue;
+                        
+                        const data = await response.json();
+                        const posts = Array.isArray(data) ? data : data?.posts || data?.data || [];
+                        
+                        videos = posts.map(post => 
+                            post?.file_url || 
+                            post?.large_file_url || 
+                            post?.sample_url || 
+                            post?.media_asset?.variants?.[0]?.url
+                        ).filter(url => typeof url === 'string' && /\.(gif|mp4)$/i.test(url));
+                        
+                        if (videos.length) break;
+                    } catch (error) {
+                        console.error(`Error fetching videos from ${url}:`, error);
+                    }
+                }
+                
+                if (!videos.length) {
+                    return m.reply(`🎀 No se encontraron videos para *${character.name}*.`);
+                }
+                
+                const randomVideo = videos[Math.floor(Math.random() * videos.length)];
+                const seriesName = getSeriesNameByCharacter(charactersData, character.id);
+                const caption = `🎀 El personaje *${character.name}*
+⚥ Género » *${character.gender || 'Desconocido'}*
+❖ Fuente » *${seriesName}*`;
+                
+                const extension = randomVideo.endsWith('.mp4') ? 'mp4' : 'gif';
+                await conn.sendFile(m.chat, randomVideo, `${character.name}.${extension}`, caption, m);
+                break;
+            }
+            
+            default:
+                return m.reply(`Comando no reconocido: ${command}`);
+        }
+    } catch (error) {
+        console.error('Error en handler:', error);
+        await conn.reply(m.chat, `⚠️ Se ha producido un problema.\n> Usa *${usedPrefix}report* para informarlo.\n\nError: ${error.message}`, m);
+    }
+};
+
+// Configuración del handler
+handler.help = [
+    'charinfo <personaje>',
+    'winfo <personaje>', 
+    'waifuinfo <personaje>',
+    'charimage <personaje>',
+    'wimage <personaje>',
+    'waifuimage <personaje>',
+    'cimage <personaje>',
+    'charvideo <personaje>',
+    'waifuvideo <personaje>',
+    'cvideo <personaje>',
+    'wvideo <personaje>'
+];
+
+handler.tags = ['anime', 'búsqueda'];
+handler.command = ['charinfo', 'winfo', 'waifuinfo', 'charimage', 'wimage', 'cimage', 'charvideo', 'cvideo', 'wvideo']
+
+export default handler;

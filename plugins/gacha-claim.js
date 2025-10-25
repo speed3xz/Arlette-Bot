@@ -1,108 +1,188 @@
 import { promises as fs } from 'fs';
 
-const charactersFilePath = './menu/characters.json';
-const haremFilePath = './menu/harem.json';
-
-const cooldowns = {};
+const charactersFilePath = './lib/characters.json';
 
 async function loadCharacters() {
-    try {
-        const data = await fs.readFile(charactersFilePath, 'utf-8');
-        return JSON.parse(data);
-    } catch (error) {
-        throw new Error('❀ No se pudo cargar el archivo characters.json.');
-    }
+    const data = await fs.readFile(charactersFilePath, 'utf-8');
+    return JSON.parse(data);
 }
 
-async function saveCharacters(characters) {
-    try {
-        await fs.writeFile(charactersFilePath, JSON.stringify(characters, null, 2), 'utf-8');
-    } catch (error) {
-        throw new Error('❀ No se pudo guardar el archivo characters.json.');
-    }
+function getCharacterById(characterId, charactersData) {
+    return Object.values(charactersData)
+        .flatMap(series => series.characters || [])
+        .find(character => character.id === characterId);
 }
 
-let handler = async (m, { conn }) => {
-    const userId = m.sender;
-    const now = Date.now();
-
-    if (cooldowns[userId] && now < cooldowns[userId]) {
-        const remainingTime = Math.ceil((cooldowns[userId] - now) / 1000);
-        const minutes = Math.floor(remainingTime / 60);
-        const seconds = remainingTime % 60;
-        return await conn.reply(m.chat, `《✧》Debes esperar *${minutes} minutos y ${seconds} segundos* para usar *#c* de nuevo.`, m);
-    }
-
-    if (m.quoted && m.quoted.sender === conn.user.jid) {
-        try {
-            const characters = await loadCharacters();
-            
-            // Múltiples patrones para encontrar el ID
-            const quotedText = m.quoted.text || '';
-            let characterIdMatch = quotedText.match(/✦ ID: \*(.+?)\*/);
-            
-            // Si no encuentra con el primer patrón, busca otros formatos
-            if (!characterIdMatch) {
-                characterIdMatch = quotedText.match(/ID: \*(.+?)\*/);
-            }
-            if (!characterIdMatch) {
-                characterIdMatch = quotedText.match(/✦ ID:\s*\*?(\d+)\*?/);
-            }
-            if (!characterIdMatch) {
-                characterIdMatch = quotedText.match(/ID[\s:]*\*?(\d+)\*?/);
-            }
-
-            console.log('Texto citado:', quotedText); // Para debug
-            console.log('Match encontrado:', characterIdMatch); // Para debug
-
-            if (!characterIdMatch) {
-                await conn.reply(m.chat, '《✧》No se pudo encontrar el ID del personaje en el mensaje citado. Asegúrate de citar un mensaje de personaje válido.', m);
-                return;
-            }
-
-            const characterId = characterIdMatch[1].trim();
-            const character = characters.find(c => c.id.toString() === characterId.toString());
-
-            if (!character) {
-                await conn.reply(m.chat, `《✧》No se encontró el personaje con ID: ${characterId}`, m);
-                return;
-            }
-
-            if (character.user && character.user !== userId) {
-                await conn.reply(m.chat, `《✧》El personaje ya ha sido reclamado por @${character.user.split('@')[0]}, inténtalo a la próxima :v.`, m, { mentions: [character.user] });
-                return;
-            }
-
-            // Si el personaje ya fue reclamado por el mismo usuario
-            if (character.user === userId) {
-                await conn.reply(m.chat, `《✧》Ya tienes reclamado a *${character.name}*.`, m);
-                return;
-            }
-
-            character.user = userId;
-            // No modifiques el status si no existe esa propiedad
-            if (character.status) {
-                character.status = "Reclamado";
-            }
-
-            await saveCharacters(characters);
-
-            await conn.reply(m.chat, `✦ Has reclamado a *${character.name}* con éxito.`, m);
-            cooldowns[userId] = now + 30 * 60 * 1000;
-
-        } catch (error) {
-            console.error('Error en claim:', error);
-            await conn.reply(m.chat, `✘ Error al reclamar el personaje: ${error.message}`, m);
+let handler = async (m, { conn, usedPrefix, command, quoted }) => {
+    const claimCooldown = 30 * 60 * 1000; // 30 minutos en milisegundos
+    
+    try {
+        // Verificar si los comandos de gacha están activados en el grupo
+        const chatData = global.db?.data?.chats?.[m.chat] || {};
+        if (!chatData.gacha && m.isGroup) {
+            return m.reply('ꕥ Los comandos de *Gacha* están desactivados en este grupo.\n\nUn *administrador* puede activarlos con el comando:\n» *' + usedPrefix + 'gacha on*');
         }
 
-    } else {
-        await conn.reply(m.chat, '《✧》Debes citar el mensaje del personaje que quieres reclamar.', m);
+        // Obtener datos del usuario actual
+        const currentUserData = global.db?.data?.users?.[m.sender] || {};
+        const currentTime = Date.now();
+
+        // Verificar cooldown de claim
+        if (currentUserData.lastClaim && currentTime < currentUserData.lastClaim) {
+            const remainingSeconds = Math.ceil((currentUserData.lastClaim - currentTime) / 1000);
+            const minutes = Math.floor(remainingSeconds / 60);
+            const seconds = remainingSeconds % 60;
+            
+            let timeLeft = '';
+            if (minutes > 0) timeLeft += minutes + ' minuto' + (minutes !== 1 ? 's' : '') + ' ';
+            if (seconds > 0 || timeLeft === '') timeLeft += seconds + ' segundo' + (seconds !== 1 ? 's' : '');
+            
+            return m.reply('ꕥ Debes esperar *' + timeLeft.trim() + '* para usar *' + (usedPrefix + command) + '* de nuevo.');
+        }
+
+        // Obtener el personaje del último roll
+        const lastCharacterId = chatData.lastRolledCharacter?.id || '';
+        
+        // Verificar si el mensaje citado es válido
+        const isValidQuoted = quoted?.id === chatData.lastRolledMsgId || 
+                            quoted?.text?.includes(lastCharacterId);
+
+        if (!isValidQuoted) {
+            return m.reply('❀ Debes citar un personaje válido para reclamar.');
+        }
+
+        const characterId = chatData.lastRolledId;
+
+        // Cargar datos del personaje
+        const charactersData = await loadCharacters();
+        const characterData = getCharacterById(characterId, charactersData);
+
+        if (!characterData) {
+            return m.reply('ꕥ Personaje no encontrado en characters.json');
+        }
+
+        // Inicializar datos del personaje en la base de datos
+        if (!global.db.data.characters) global.db.data.characters = {};
+        if (!global.db.data.characters[characterId]) {
+            global.db.data.characters[characterId] = {};
+        }
+
+        const dbCharacter = global.db.data.characters[characterId];
+        
+        // Actualizar datos del personaje
+        dbCharacter.name = dbCharacter.name || characterData.name;
+        dbCharacter.value = typeof dbCharacter.value === 'number' ? dbCharacter.value : characterData.value || 0;
+        dbCharacter.votes = dbCharacter.votes || 0;
+
+        // Verificar si el personaje está reservado
+        if (dbCharacter.reservedBy && dbCharacter.reservedBy !== m.sender && currentTime < dbCharacter.reservedUntil) {
+            const getReserverName = async (userId) => {
+                try {
+                    const userData = global.db?.data?.users?.[userId] || {};
+                    return userData.name?.trim() || 
+                           (await conn.getName(userId)) || 
+                           userId.split('@')[0];
+                } catch {
+                    return userId.split('@')[0];
+                }
+            };
+
+            const reserverName = await getReserverName(dbCharacter.reservedBy);
+            const remainingTime = Math.ceil((dbCharacter.reservedUntil - currentTime) / 1000);
+            
+            return m.reply('ꕥ Este personaje está protegido por *' + reserverName + '* durante *' + remainingTime + 's*');
+        }
+
+        // Verificar si el personaje ha expirado
+        if (dbCharacter.expiresAt && currentTime > dbCharacter.expiresAt && 
+            !dbCharacter.user && 
+            !(dbCharacter.reservedBy && currentTime < dbCharacter.reservedUntil)) {
+            
+            const expiredTime = Math.ceil((currentTime - dbCharacter.expiresAt) / 1000);
+            return m.reply('ꕥ El personaje ha expirado » *' + expiredTime + 's*');
+        }
+
+        // Verificar si el personaje ya está reclamado
+        if (dbCharacter.user) {
+            const getClaimantName = async (userId) => {
+                try {
+                    const userData = global.db?.data?.users?.[userId] || {};
+                    return userData.name?.trim() || 
+                           (await conn.getName(userId)) || 
+                           userId.split('@')[0];
+                } catch {
+                    return userId.split('@')[0];
+                }
+            };
+
+            const claimantName = await getClaimantName(dbCharacter.user);
+            return m.reply('ꕥ El personaje *' + dbCharacter.name + '* ya ha sido reclamado por *' + claimantName + '*');
+        }
+
+        // Reclamar el personaje
+        dbCharacter.user = m.sender;
+        dbCharacter.claimedAt = currentTime;
+        
+        // Limpiar reservas
+        delete dbCharacter.reservedBy;
+        delete dbCharacter.reservedUntil;
+
+        // Actualizar cooldown del usuario
+        currentUserData.lastClaim = currentTime + claimCooldown;
+
+        // Agregar a la lista de personajes del usuario
+        if (!Array.isArray(currentUserData.characters)) {
+            currentUserData.characters = [];
+        }
+        if (!currentUserData.characters.includes(characterId)) {
+            currentUserData.characters.push(characterId);
+        }
+
+        // Obtener nombre del usuario actual
+        const getCurrentUsername = async () => {
+            try {
+                return currentUserData.name?.trim() || 
+                       (await conn.getName(m.sender)) || 
+                       m.sender.split('@')[0];
+            } catch {
+                return m.sender.split('@')[0];
+            }
+        };
+
+        const currentUsername = await getCurrentUsername();
+
+        // Calcular tiempo de expiración si existe
+        const expirationTime = typeof dbCharacter.expiresAt === 'number' ? 
+            Math.ceil((currentTime - dbCharacter.expiresAt + 60000) / 1000) : '∞';
+
+        // Crear mensaje de confirmación
+        const claimMessage = chatData.claimMessage ? 
+            chatData.claimMessage
+                .replace(/€user/g, '*' + currentUsername + '*')
+                .replace(/€character/g, '*' + dbCharacter.name + '*') :
+            '*' + dbCharacter.name + '* ha sido reclamado por *' + currentUsername + '*';
+
+        // Enviar mensaje de confirmación
+        await conn.reply(
+            m.chat, 
+            '❀ ' + claimMessage + ' (' + expirationTime + 's)', 
+            m
+        );
+
+    } catch (error) {
+        console.error('Error en handler de claim:', error);
+        await conn.reply(
+            m.chat, 
+            '⚠︎ Se ha producido un problema.\n> Usa *' + usedPrefix + 'report* para informarlo.\n\n' + error.message, 
+            m
+        );
     }
 };
 
+// Configuración del handler
 handler.help = ['claim'];
 handler.tags = ['gacha'];
-handler.command = ['c', 'claim', 'reclamar'];
+handler.command = ['claim', 'c', 'reclamar'];
 handler.group = true;
 
 export default handler;

@@ -1,128 +1,194 @@
-import { promises as fs } from 'fs'
-import { fileURLToPath } from 'url'
-import path from 'path'
+import { promises as fs } from 'fs';
+import fetch from 'node-fetch';
 
-const charactersFilePath = './menu/characters.json'
-const haremFilePath = './menu/harem.json'
-
-const cooldowns = {}
+const FILE_PATH = './lib/characters.json';
 
 async function loadCharacters() {
     try {
-        const data = await fs.readFile(charactersFilePath, 'utf-8')
-        const characters = JSON.parse(data)
-        
-        if (!Array.isArray(characters) || characters.length === 0) {
-            throw new Error('El archivo characters.json está vacío o no es un array válido')
-        }
-        
-        return characters
-    } catch (error) {
-        console.error('Error loading characters:', error)
-        throw new Error('❀ No se pudo cargar el archivo characters.json o está vacío.')
+        await fs.access(FILE_PATH);
+    } catch {
+        await fs.writeFile(FILE_PATH, '{}');
     }
+    const data = await fs.readFile(FILE_PATH, 'utf-8');
+    return JSON.parse(data);
 }
 
-async function saveCharacters(characters) {
+function flattenCharacters(charactersData) {
+    return Object.values(charactersData).flatMap(series => 
+        Array.isArray(series.characters) ? series.characters : []
+    );
+}
+
+function getSeriesNameByCharacter(charactersData, characterId) {
+    return Object.entries(charactersData).find(([_, series]) => 
+        Array.isArray(series.characters) && 
+        series.characters.some(char => String(char.id) === String(characterId))
+    )?.[1]?.name || 'Desconocido';
+}
+
+function formatTag(tag) {
+    return String(tag).toLowerCase().trim().replace(/\s+/g, '_');
+}
+
+async function buscarImagenDelirius(tag) {
+    const formattedTag = formatTag(tag);
+    const apiUrls = [
+        `https://safebooru.org/index.php?page=dapi&s=post&q=index&json=1&tags=${formattedTag}`,
+        `https://danbooru.donmai.us/posts.json?tags=${formattedTag}`,
+        `${global.APIs?.delirius?.url || 'https://api.delirius.cc'}/search/gelbooru?query=${formattedTag}`
+    ];
+    
+    for (const url of apiUrls) {
+        try {
+            const response = await fetch(url, {
+                headers: {
+                    'User-Agent': 'Mozilla/5.0',
+                    'Accept': 'application/json'
+                }
+            });
+            
+            const contentType = response.headers.get('content-type') || '';
+            if (!response.ok || !contentType.includes('application/json')) continue;
+            
+            const data = await response.json();
+            const posts = Array.isArray(data) ? data : data?.posts || data?.data || [];
+            
+            const images = posts.map(post => 
+                post?.file_url || 
+                post?.large_file_url || 
+                post?.sample_url || 
+                post?.media_asset?.variants?.[0]?.url
+            ).filter(url => typeof url === 'string' && /\.(jpe?g|png)$/i.test(url));
+            
+            if (images.length) return images;
+        } catch (error) {
+            console.error(`Error fetching from ${url}:`, error);
+        }
+    }
+    return [];
+}
+
+let handler = async (m, { conn, usedPrefix, command }) => {
+    const cooldownTime = 15 * 60 * 1000; // 15 minutos en milisegundos
+    
     try {
-        await fs.writeFile(charactersFilePath, JSON.stringify(characters, null, 2), 'utf-8')
+        // Verificar si los comandos de gacha están activados en el grupo
+        const chatData = global.db?.data?.chats?.[m.chat] || {};
+        if (!chatData.gacha && m.isGroup) {
+            return m.reply('ꕥ Los comandos de *Gacha* están desactivados en este grupo.\n\nUn *administrador* puede activarlos con el comando:\n» *' + usedPrefix + 'gacha on*');
+        }
+
+        // Inicializar datos del chat si no existen
+        if (!chatData.characters) chatData.characters = {};
+        if (!chatData.lastRolledId) chatData.lastRolledId = null;
+        if (!chatData.lastRolledMsgId) chatData.lastRolledMsgId = null;
+
+        // Verificar cooldown
+        const userData = global.db?.data?.users?.[m.sender] || {};
+        const currentTime = Date.now();
+        
+        if (userData.lastRoll && currentTime < userData.lastRoll + cooldownTime) {
+            const remainingSeconds = Math.ceil((userData.lastRoll + cooldownTime - currentTime) / 1000);
+            const minutes = Math.floor(remainingSeconds / 60);
+            const seconds = remainingSeconds % 60;
+            
+            let timeLeft = '';
+            if (minutes > 0) timeLeft += minutes + ' minuto' + (minutes !== 1 ? 's' : '') + ' ';
+            if (seconds > 0 || timeLeft === '') timeLeft += seconds + ' segundo' + (seconds !== 1 ? 's' : '');
+            
+            return m.reply('ꕥ Debes esperar *' + timeLeft.trim() + '* para usar *' + (usedPrefix + command) + '* de nuevo.');
+        }
+
+        // Cargar personajes y seleccionar uno aleatorio
+        const charactersData = await loadCharacters();
+        const allCharacters = flattenCharacters(charactersData);
+        
+        if (!allCharacters.length) {
+            return m.reply('ꕥ No hay personajes disponibles en la base de datos.');
+        }
+
+        const randomCharacter = allCharacters[Math.floor(Math.random() * allCharacters.length)];
+        const characterId = String(randomCharacter.id);
+        const seriesName = getSeriesNameByCharacter(charactersData, randomCharacter.id);
+        
+        // Buscar imagen del personaje
+        const characterTag = formatTag(randomCharacter.tags?.[0] || '');
+        const images = await buscarImagenDelirius(characterTag);
+        
+        if (!images.length) {
+            return m.reply('ꕥ No se encontró imágenes para el personaje *' + randomCharacter.name + '*.');
+        }
+
+        const randomImage = images[Math.floor(Math.random() * images.length)];
+
+        // Inicializar datos del personaje en la base de datos
+        const charactersDb = global.db?.data?.characters || {};
+        if (!charactersDb[characterId]) {
+            charactersDb[characterId] = {};
+        }
+
+        const characterDb = charactersDb[characterId];
+        const existingData = charactersDb[characterId] || {};
+
+        // Actualizar datos del personaje
+        characterDb.name = String(randomCharacter.name || 'Sin nombre');
+        characterDb.value = typeof existingData.value === 'number' ? existingData.value : Number(randomCharacter.value) || 100;
+        characterDb.votes = Number(characterDb.votes || existingData.votes || 0);
+        characterDb.user = m.sender; // Usuario que hizo el roll
+        characterDb.reservedUntil = currentTime + 20000; // 20 segundos para reclamar
+        characterDb.expiresAt = currentTime + 60000; // 1 minuto de expiración
+
+        // Obtener nombre del usuario reclamador si existe
+        const getClaimantName = async (userId) => {
+            try {
+                return global.db?.data?.users?.[userId]?.name?.trim() || 
+                       (await conn.getName(userId)) || 
+                       userId.split('@')[0];
+            } catch {
+                return userId.split('@')[0];
+            }
+        };
+
+        const claimantName = await getClaimantName(characterDb.user);
+
+        // Crear texto de información del personaje
+        const infoText = '❀ Nombre » *' + characterDb.name +
+                       '*\n⚥ Género » *' + (randomCharacter.gender || 'Desconocido') +
+                       '*\n✰ Valor » *' + characterDb.value.toLocaleString() +
+                       '*\n♡ Estado » *' + (characterDb.user ? 'Reclamado por ' + claimantName : 'Libre') +
+                       '*\n❖ Fuente » *' + seriesName + '*';
+
+        // Enviar imagen con información
+        const sentMessage = await conn.sendFile(
+            m.chat, 
+            randomImage, 
+            characterDb.name + '.jpg', 
+            infoText, 
+            m
+        );
+
+        // Guardar información del roll actual
+        chatData.lastRolledId = characterId;
+        chatData.lastRolledMsgId = sentMessage?.key?.id || null;
+        chatData.lastRolledCharacter = {
+            id: characterId,
+            name: characterDb.name,
+            media: randomImage
+        };
+
+        // Actualizar cooldown del usuario
+        userData.lastRoll = currentTime;
+
     } catch (error) {
-        throw new Error('❀ No se pudo guardar el archivo characters.json.')
+        console.error('Error en handler de roll:', error);
+        await conn.reply(m.chat, '⚠︎ Se ha producido un problema.\n> Usa *' + usedPrefix + 'report* para informarlo.\n\n' + error.message, m);
     }
-}
+};
 
-async function loadHarem() {
-    try {
-        const data = await fs.readFile(haremFilePath, 'utf-8')
-        return JSON.parse(data)
-    } catch (error) {
-        return []
-    }
-}
+// Configuración del handler
+handler.help = ['roll', 'rw', 'rollwaifu'];
+handler.tags = ['gacha'];
+handler.command = ['rollwaifu', 'rw', 'roll'];
+handler.group = true;
 
-async function saveHarem(harem) {
-    try {
-        await fs.writeFile(haremFilePath, JSON.stringify(harem, null, 2), 'utf-8')
-    } catch (error) {
-        throw new Error('❀ No se pudo guardar el archivo harem.json.')
-    }
-}
-
-let handler = async (m, { conn }) => {
-    const userId = m.sender
-    const now = Date.now()
-
-    if (cooldowns[userId] && now < cooldowns[userId]) {
-        const remainingTime = Math.ceil((cooldowns[userId] - now) / 1000)
-        const minutes = Math.floor(remainingTime / 60)
-        const seconds = remainingTime % 60
-        return await conn.reply(m.chat, `《✧》Debes esperar *${minutes} minutos y ${seconds} segundos* para usar */rw* de nuevo.`, m)
-    }
-
-    try {
-        const characters = await loadCharacters()
-        
-        if (!characters || characters.length === 0) {
-            return await conn.reply(m.chat, '❀ No hay personajes disponibles en la base de datos.', m)
-        }
-
-        const randomCharacter = characters[Math.floor(Math.random() * characters.length)]
-        
-        if (!randomCharacter || !randomCharacter.img || !Array.isArray(randomCharacter.img)) {
-            console.error('Personaje inválido:', randomCharacter)
-            return await conn.reply(m.chat, '❀ Error: Personaje con datos incompletos.', m)
-        }
-
-        const randomImage = randomCharacter.img[Math.floor(Math.random() * randomCharacter.img.length)]
-        
-        if (!randomImage) {
-            return await conn.reply(m.chat, '❀ Error: No se encontró imagen para este personaje.', m)
-        }
-
-        const harem = await loadHarem()
-        const userEntry = harem.find(entry => entry.characterId === randomCharacter.id)
-        const statusMessage = randomCharacter.user 
-            ? `Reclamado por @${randomCharacter.user.split('@')[0]}` 
-            : 'Libre'
-
-        const message = `❀ Nombre » *${randomCharacter.name || 'Desconocido'}*
-⚥ Género » *${randomCharacter.gender || 'No especificado'}*
-✰ Valor » *${randomCharacter.value || 'N/A'}*
-♡ Estado » ${statusMessage}
-❖ Fuente » *${randomCharacter.source || 'Desconocida'}*
-✦ ID: *${randomCharacter.id || 'N/A'}*`
-
-        const mentions = userEntry ? [userEntry.userId] : []
-        
-        // SOLUCIÓN: Enviar la imagen directamente desde la URL sin descargar
-        await conn.sendMessage(m.chat, {
-            image: { url: randomImage },
-            caption: message,
-            mentions: mentions
-        }, { quoted: m })
-
-        if (!randomCharacter.user) {
-            await saveCharacters(characters)
-        }
-
-        cooldowns[userId] = now + 15 * 60 * 1000
-
-    } catch (error) {
-        console.error('Error en el handler:', error)
-        
-        // Mensaje de error más específico
-        let errorMessage = `✘ Error al cargar el personaje: ${error.message}`
-        if (error.message.includes('ENOENT')) {
-            errorMessage = '✘ Error: Problema con el acceso a archivos temporales. Contacta al administrador.'
-        }
-        
-        await conn.reply(m.chat, errorMessage, m)
-    }
-}
-
-handler.help = ['ver', 'rw', 'rollwaifu']
-handler.tags = ['gacha']
-handler.command = ['ver', 'rw', 'rollwaifu']
-handler.group = true
-
-export default handler
+export default handler;

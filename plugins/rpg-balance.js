@@ -17,7 +17,7 @@ const texto = `ᥫ᭡ Informacion -  Balance ❀
 ⚿ Banco » *¥${bank.toLocaleString()} ${currency}*
 ⛁ Total » *¥${total.toLocaleString()} ${currency}*
 
-> *Para proteger tu dinero, ¡depósitalo en el banco usando #deposit!*`
+> *Para proteger tu dinero, ¡depósitalo en el banco usando /deposit!*`
 await conn.reply(m.chat, texto, m)
 }
 

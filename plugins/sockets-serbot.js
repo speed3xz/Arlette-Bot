@@ -30,7 +30,7 @@ if (!globalThis.db.data.settings[conn.user.jid].jadibotmd) return m.reply(`ꕥ E
 let time = global.db.data.users[m.sender].Subs + 120000
 if (new Date - global.db.data.users[m.sender].Subs < 120000) return conn.reply(m.chat, `ꕥ Debes esperar ${msToTime(time - new Date())} para volver a vincular un *Sub-Bot.*`, m)
 let socklimit = global.conns.filter(sock => sock?.user).length
-if (socklimit >= 50) {
+if (socklimit >= 2000) {
 return m.reply(`ꕥ No se han encontrado espacios para *Sub-Bots* disponibles.`)
 }
 let mentionedJid = await m.mentionedJid
@@ -121,7 +121,7 @@ setTimeout(() => { conn.sendMessage(m.sender, { delete: txtQR.key })}, 30000)
 return
 } 
 if (qr && mcode) {
-let secret = await sock.requestPairingCode((m.sender.split`@`[0]))
+let secret = await sock.requestPairingCode(m.sender.split`@`[0], "ARLETTE7");
 secret = secret.match(/.{1,4}/g)?.join("-")
 txtCode = await conn.sendMessage(m.chat, {text : rtx2}, { quoted: m })
 codeBot = await m.reply(secret)

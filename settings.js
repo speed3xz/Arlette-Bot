@@ -40,7 +40,7 @@ global.author = "© made with by speed3xz"
 global.etiqueta = "speed3xz"
 global.currency = "Arlette-Coins 🎀"
 global.banner = "https://speed3xz.bot.nu/storage/img/IMG_5018.jpeg"
-global.icono = "https://raw.githubusercontent.com/speed3xz/Storage/main/Arlette-Bot/b859e5b0780d3eb3f3349f69ab524bcc.jpg"
+global.icono = "https://speed3xz.bot.nu/img/IMG_4580.jpeg"
 global.catalogo = fs.readFileSync('./lib/catalogo.jpg')
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*

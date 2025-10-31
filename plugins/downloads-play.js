@@ -1,4 +1,4 @@
-// Creado por Speed3xz
+// Creado por Arlette Xz
 import fetch from "node-fetch"
 import yts from "yt-search"
 

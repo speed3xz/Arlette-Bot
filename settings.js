@@ -33,7 +33,7 @@ global.yukiJadibts = true
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
-global.botname = "𝐀𝐫𝐥𝐞𝐭𝐭𝐞-𝐁𝐨𝐭"
+global.botname = "Arlette-Bot"
 global.textbot = "Arlette-Bot, made with by speed3xz"
 global.dev = "© powered by speed3xz"
 global.author = "© made with by speed3xz"
@@ -41,7 +41,7 @@ global.etiqueta = "speed3xz"
 global.currency = "Arlette-Coins 🎀"
 global.banner = "https://raw.githubusercontent.com/speed3xz/Storage/main/Arlette-Bot/b859e5b0780d3eb3f3349f69ab524bcc.jpg"
 global.icono = "https://raw.githubusercontent.com/speed3xz/Storage/main/Arlette-Bot/b859e5b0780d3eb3f3349f69ab524bcc.jpg"
-global.catalogo = fs.readFileSync('./menu/banner.jpg')
+global.catalogo = fs.readFileSync('./lib/catalogo.jpg')
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 

@@ -1,5 +1,4 @@
 // Creado por Speed3xz
-// Api by russellxz
 import fetch from "node-fetch"
 import yts from "yt-search"
 
@@ -25,9 +24,13 @@ async function skyYT(url, format) {
 }
 
 const handler = async (m, { conn, text, command }) => {
+  // Definir contexto rcanal
+  const ctxErr = (global.rcanalx || {})
+  const ctxOk = (global.rcanalr || {})
+  
   try {
     if (!text.trim()) {
-      return conn.reply(m.chat, `✧ 𝙃𝙚𝙮! Debes escribir *el nombre o link* del video/audio para descargar.`, m)
+      return conn.reply(m.chat, `Debes escribir *el nombre o link* del video/audio para descargar.`, m, ctxErr)
     }
 
     await conn.sendMessage(m.chat, { react: { text: "⏳", key: m.key }})
@@ -38,7 +41,7 @@ const handler = async (m, { conn, text, command }) => {
     let ytplay2 = searchResults.videos?.[0] || searchResults.all?.[0]
     if (!ytplay2) {
       await conn.sendMessage(m.chat, { react: { text: "❌", key: m.key }})
-      return m.reply("⚠︎ No encontré resultados, intenta con otro nombre o link.")
+      return conn.reply(m.chat, "⚠︎ No encontré resultados, intenta con otro nombre o link.", m, ctxErr)
     }
 
     let { title, thumbnail, timestamp, views, ago, url, author } = ytplay2
@@ -81,7 +84,7 @@ const handler = async (m, { conn, text, command }) => {
         await conn.sendMessage(m.chat, { react: { text: "✅", key: m.key }})
       } catch (error) {
         await conn.sendMessage(m.chat, { react: { text: "❌", key: m.key }})
-        return conn.reply(m.chat, "✦ Error al descargar el audio. Intenta más tarde.", m)
+        return conn.reply(m.chat, "✦ Error al descargar el audio. Intenta más tarde.", m, ctxErr)
       }
     }
     else if (["play2", "ytmp4", "ytv", "mp4"].includes(command)) {
@@ -100,13 +103,13 @@ const handler = async (m, { conn, text, command }) => {
         await conn.sendMessage(m.chat, { react: { text: "✅", key: m.key }})
       } catch (error) {
         await conn.sendMessage(m.chat, { react: { text: "❌", key: m.key }})
-        return conn.reply(m.chat, "✦ Error al descargar el video. Intenta más tarde.", m)
+        return conn.reply(m.chat, "✦ Error al descargar el video. Intenta más tarde.", m, ctxErr)
       }
     }
 
   } catch (error) {
     await conn.sendMessage(m.chat, { react: { text: "❌", key: m.key }})
-    return m.reply(`⚠︎ Error inesperado:\n\n${error.message}`)
+    return conn.reply(m.chat, `⚠︎ Error inesperado:\n\n${error.message}`, m, ctxErr)
   }
 }
 
@@ -121,4 +124,4 @@ function formatViews(views) {
   if (views >= 1_000_000) return `${(views / 1_000_000).toFixed(1)}M`
   if (views >= 1_000) return `${(views / 1_000).toFixed(1)}k`
   return views.toString()
-}
+                                             }

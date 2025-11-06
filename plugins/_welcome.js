@@ -12,7 +12,7 @@ async function generarBienvenida({ conn, userId, groupMetadata, chat }) {
     const background = 'https://speed3xz.bot.nu/storage/img/IMG_5018.jpeg'
     
     // Descripción con nombre del grupo
-    const descripcion = `to ${groupMetadata.subject}`
+    const descripcion = `${username}`
     
     // Construir URL de la API
     const apiUrl = `https://api.siputzx.my.id/api/canvas/welcomev4?avatar=${encodeURIComponent(avatar)}&background=${encodeURIComponent(background)}&description=${encodeURIComponent(descripcion)}`
@@ -50,7 +50,7 @@ async function generarDespedida({ conn, userId, groupMetadata, chat }) {
     const background = 'https://speed3xz.bot.nu/storage/img/IMG_5018.jpeg'
     
     // Descripción con nombre del grupo
-    const descripcion = `Se fue de ${groupMetadata.subject}`
+    const descripcion = `${username}`
     
     // Construir URL de la API usando goodbyev4
     const apiUrl = `https://api.siputzx.my.id/api/canvas/goodbyev4?avatar=${encodeURIComponent(avatar)}&background=${encodeURIComponent(background)}&description=${encodeURIComponent(descripcion)}`

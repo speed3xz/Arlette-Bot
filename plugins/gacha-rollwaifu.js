@@ -2,15 +2,25 @@ import { promises as fs } from 'fs';
 import fetch from 'node-fetch';
 
 const FILE_PATH = './lib/characters.json';
+let charactersCache = null;
+let lastCacheLoad = 0;
+const CACHE_TTL = 5 * 60 * 1000;
 
 async function loadCharacters() {
+    const now = Date.now();
+    if (charactersCache && (now - lastCacheLoad) < CACHE_TTL) {
+        return charactersCache;
+    }
+    
     try {
         await fs.access(FILE_PATH);
     } catch {
         await fs.writeFile(FILE_PATH, '{}');
     }
     const data = await fs.readFile(FILE_PATH, 'utf-8');
-    return JSON.parse(data);
+    charactersCache = JSON.parse(data);
+    lastCacheLoad = now;
+    return charactersCache;
 }
 
 function flattenCharacters(charactersData) {
@@ -38,17 +48,23 @@ async function buscarImagenDelirius(tag) {
         `${global.APIs?.delirius?.url || 'https://api.delirius.cc'}/search/gelbooru?query=${formattedTag}`
     ];
     
-    for (const url of apiUrls) {
+    const fetchPromises = apiUrls.map(async (url) => {
         try {
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 5000);
+            
             const response = await fetch(url, {
                 headers: {
                     'User-Agent': 'Mozilla/5.0',
                     'Accept': 'application/json'
-                }
+                },
+                signal: controller.signal
             });
             
+            clearTimeout(timeout);
+            
             const contentType = response.headers.get('content-type') || '';
-            if (!response.ok || !contentType.includes('application/json')) continue;
+            if (!response.ok || !contentType.includes('application/json')) return [];
             
             const data = await response.json();
             const posts = Array.isArray(data) ? data : data?.posts || data?.data || [];
@@ -58,32 +74,43 @@ async function buscarImagenDelirius(tag) {
                 post?.large_file_url || 
                 post?.sample_url || 
                 post?.media_asset?.variants?.[0]?.url
-            ).filter(url => typeof url === 'string' && /\.(jpe?g|png)$/i.test(url));
+            ).filter(url => typeof url === 'string' && /\.(jpe?g|png|webp)$/i.test(url));
             
-            if (images.length) return images;
+            return images.length ? images : [];
         } catch (error) {
-            console.error(`Error fetching from ${url}:`, error);
+            if (error.name !== 'AbortError') {
+                console.error(`Error fetching from ${url}:`, error);
+            }
+            return [];
+        }
+    });
+    
+    const results = await Promise.allSettled(fetchPromises);
+    for (const result of results) {
+        if (result.status === 'fulfilled' && result.value.length > 0) {
+            return result.value;
         }
     }
     return [];
 }
 
 let handler = async (m, { conn, usedPrefix, command }) => {
-    const cooldownTime = 15 * 60 * 1000; // 15 minutos en milisegundos
+    const ctxErr = (global.rcanalx || {});
+    const ctxWarn = (global.rcanalw || {});
+    const ctxOk = (global.rcanalr || {});
+    
+    const cooldownTime = 15 * 60 * 1000;
     
     try {
-        // Verificar si los comandos de gacha están activados en el grupo
         const chatData = global.db?.data?.chats?.[m.chat] || {};
         if (!chatData.gacha && m.isGroup) {
-            return m.reply('ꕥ Los comandos de *Gacha* están desactivados en este grupo.\n\nUn *administrador* puede activarlos con el comando:\n» *' + usedPrefix + 'gacha on*');
+            return await conn.reply(m.chat, 'ꕥ Los comandos de *Gacha* están desactivados en este grupo.\n\nUn *administrador* puede activarlos con el comando:\n» *' + usedPrefix + 'gacha on*', m, ctxWarn);
         }
 
-        // Inicializar datos del chat si no existen
         if (!chatData.characters) chatData.characters = {};
         if (!chatData.lastRolledId) chatData.lastRolledId = null;
         if (!chatData.lastRolledMsgId) chatData.lastRolledMsgId = null;
 
-        // Verificar cooldown
         const userData = global.db?.data?.users?.[m.sender] || {};
         const currentTime = Date.now();
         
@@ -96,32 +123,29 @@ let handler = async (m, { conn, usedPrefix, command }) => {
             if (minutes > 0) timeLeft += minutes + ' minuto' + (minutes !== 1 ? 's' : '') + ' ';
             if (seconds > 0 || timeLeft === '') timeLeft += seconds + ' segundo' + (seconds !== 1 ? 's' : '');
             
-            return m.reply('ꕥ Debes esperar *' + timeLeft.trim() + '* para usar *' + (usedPrefix + command) + '* de nuevo.');
+            return await conn.reply(m.chat, 'ꕥ Debes esperar *' + timeLeft.trim() + '* para usar *' + (usedPrefix + command) + '* de nuevo.', m, ctxWarn);
         }
 
-        // Cargar personajes y seleccionar uno aleatorio
         const charactersData = await loadCharacters();
         const allCharacters = flattenCharacters(charactersData);
         
         if (!allCharacters.length) {
-            return m.reply('ꕥ No hay personajes disponibles en la base de datos.');
+            return await conn.reply(m.chat, 'ꕥ No hay personajes disponibles en la base de datos.', m, ctxErr);
         }
 
         const randomCharacter = allCharacters[Math.floor(Math.random() * allCharacters.length)];
         const characterId = String(randomCharacter.id);
         const seriesName = getSeriesNameByCharacter(charactersData, randomCharacter.id);
         
-        // Buscar imagen del personaje
         const characterTag = formatTag(randomCharacter.tags?.[0] || '');
         const images = await buscarImagenDelirius(characterTag);
         
         if (!images.length) {
-            return m.reply('ꕥ No se encontró imágenes para el personaje *' + randomCharacter.name + '*.');
+            return await conn.reply(m.chat, 'ꕥ No se encontró imágenes para el personaje *' + randomCharacter.name + '*.', m, ctxErr);
         }
 
         const randomImage = images[Math.floor(Math.random() * images.length)];
 
-        // Inicializar datos del personaje en la base de datos
         const charactersDb = global.db?.data?.characters || {};
         if (!charactersDb[characterId]) {
             charactersDb[characterId] = {};
@@ -130,15 +154,13 @@ let handler = async (m, { conn, usedPrefix, command }) => {
         const characterDb = charactersDb[characterId];
         const existingData = charactersDb[characterId] || {};
 
-        // Actualizar datos del personaje
         characterDb.name = String(randomCharacter.name || 'Sin nombre');
         characterDb.value = typeof existingData.value === 'number' ? existingData.value : Number(randomCharacter.value) || 100;
         characterDb.votes = Number(characterDb.votes || existingData.votes || 0);
-        characterDb.user = m.sender; // Usuario que hizo el roll
-        characterDb.reservedUntil = currentTime + 20000; // 20 segundos para reclamar
-        characterDb.expiresAt = currentTime + 60000; // 1 minuto de expiración
+        characterDb.user = m.sender;
+        characterDb.reservedUntil = currentTime + 20000;
+        characterDb.expiresAt = currentTime + 60000;
 
-        // Obtener nombre del usuario reclamador si existe
         const getClaimantName = async (userId) => {
             try {
                 return global.db?.data?.users?.[userId]?.name?.trim() || 
@@ -150,15 +172,17 @@ let handler = async (m, { conn, usedPrefix, command }) => {
         };
 
         const claimantName = await getClaimantName(characterDb.user);
+        const statusMessage = characterDb.user ? `Reclamado por ${claimantName}` : 'Libre';
 
-        // Crear texto de información del personaje
-        const infoText = '❀ Nombre » *' + characterDb.name +
-                       '*\n⚥ Género » *' + (randomCharacter.gender || 'Desconocido') +
-                       '*\n✰ Valor » *' + characterDb.value.toLocaleString() +
-                       '*\n♡ Estado » *' + (characterDb.user ? 'Reclamado por ' + claimantName : 'Libre') +
-                       '*\n❖ Fuente » *' + seriesName + '*';
+        const infoText = `╭━━━〔 🌸 𝐏𝐄𝐑𝐒𝐎𝐍𝐀𝐉𝐄 𝐀𝐋𝐄𝐀𝐓𝐎𝐑𝐈𝐎 🌸 〕━━━⬣
+│ 🎴 Nombre ➪ *${randomCharacter.name}*
+│ ⚧️ Género ➪ *${randomCharacter.gender || 'Desconocido'}*
+│ 💎 Valor ➪ *${randomCharacter.value || 100}*
+│ 🎯 Estado ➪ ${statusMessage}
+│ 📚 Fuente ➪ *${seriesName}*
+│ 🪪 ID: *${randomCharacter.id}*
+╰━━━━━━━━━━━━━━━━━━━━━━⬣`;
 
-        // Enviar imagen con información
         const sentMessage = await conn.sendFile(
             m.chat, 
             randomImage, 
@@ -167,7 +191,6 @@ let handler = async (m, { conn, usedPrefix, command }) => {
             m
         );
 
-        // Guardar información del roll actual
         chatData.lastRolledId = characterId;
         chatData.lastRolledMsgId = sentMessage?.key?.id || null;
         chatData.lastRolledCharacter = {
@@ -176,16 +199,14 @@ let handler = async (m, { conn, usedPrefix, command }) => {
             media: randomImage
         };
 
-        // Actualizar cooldown del usuario
         userData.lastRoll = currentTime;
 
     } catch (error) {
         console.error('Error en handler de roll:', error);
-        await conn.reply(m.chat, '⚠︎ Se ha producido un problema.\n> Usa *' + usedPrefix + 'report* para informarlo.\n\n' + error.message, m);
+        await conn.reply(m.chat, '⚠︎ Se ha producido un problema.\n> Usa *' + usedPrefix + 'report* para informarlo.\n\n' + error.message, m, ctxErr);
     }
 };
 
-// Configuración del handler
 handler.help = ['roll', 'rw', 'rollwaifu'];
 handler.tags = ['gacha'];
 handler.command = ['rollwaifu', 'rw', 'roll'];

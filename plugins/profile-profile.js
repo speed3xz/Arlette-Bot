@@ -38,7 +38,7 @@ const value = typeof char.value === 'number' ? char.value : 0
 return acc + value }, 0)
 const pp = await conn.profilePictureUrl(userId, 'image').catch(_ => 'https://raw.githubusercontent.com/speed3xz/Storage/refs/heads/main/Arlette-Bot/b75b29441bbd967deda4365441497221.jpg')
 const text = `
-╭─⊱ 🌸『 PERFIL DE ✦ *${name}* ✦ 』🌸⊰─╮
+╭─⊱ 🌸『 ✦ *${name}* ✦ 』🌸⊰─╮
 ${description}
 
 ╭──❀ *DETALLES PERSONALES* ❀──╮

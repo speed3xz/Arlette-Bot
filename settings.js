@@ -17,6 +17,7 @@ global.owner = [
 "5215665619261",
 "19106335998",
 "819095203873",
+"16503058299",
 ]
 
 global.suittag = ["573114910796"] 
@@ -38,7 +39,7 @@ global.textbot = "Arlette-Bot, made with by speed3xz"
 global.dev = "© powered by speed3xz"
 global.author = "© made with by speed3xz"
 global.etiqueta = "speed3xz"
-global.currency = "Arlette-Coins 🎀"
+global.currency = "Arlette-Coins 🪙"
 global.banner = "https://speed3xz.bot.nu/storage/img/IMG_5018.jpeg"
 global.icono = "https://speed3xz.bot.nu/img/IMG_4580.jpeg"
 global.catalogo = fs.readFileSync('./lib/catalogo.jpg')

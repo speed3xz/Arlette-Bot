@@ -1,7 +1,7 @@
 import PhoneNumber from 'awesome-phonenumber'
 
 async function handler(m, { conn }) {
-  m.react('📇')
+  m.react('👑')
 
   const contactos = [
     {

@@ -6,9 +6,9 @@ async function handler(m, { conn }) {
   const contactos = [
     {
       numero: '573114910796',
-      nombre: 'Arlette 🦇',
-      cargo: 'Dueño Principal',
-      nota: 'Creador del Bot',
+      nombre: 'Arlette Xzy ✨️',
+      cargo: 'Dueña Principal',
+      nota: 'Creadora de la Bot',
       region: '🇨🇴 Colombia',
       web: 'https://github.com/speed3xz',
       biografia: await conn.fetchStatus('573114910796@s.whatsapp.net').then(res => res.status).catch(_ => 'Sin biografía')

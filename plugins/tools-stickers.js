@@ -1,73 +1,122 @@
-import { sticker } from '../lib/sticker.js'
-import uploadFile from '../lib/uploadFile.js'
-import uploadImage from '../lib/uploadImage.js'
-import { webp2png } from '../lib/webp2mp4.js'
+import { sticker, addExif } from '../lib/sticker.js'
+import axios from 'axios'
+import fetch from 'node-fetch'
 
-let handler = async (m, { conn, args }) => {
-    const ctxErr = (global.rcanalx || {})
-    const ctxWarn = (global.rcanalw || {})
-    const ctxOk = (global.rcanalr || {})
-    
-    let stiker = false
-    let userId = m.sender
-    let packstickers = global.db.data.users[userId] || {}
-    let texto1 = packstickers.text1 || global.packsticker
-    let texto2 = packstickers.text2 || global.packsticker2
-    
-    try {
-        let q = m.quoted ? m.quoted : m
-        let mime = (q.msg || q).mimetype || q.mediaType || ''
-        let txt = args.join(' ')
-        
-        if (/webp|image|video/g.test(mime) && q.download) {
-            if (/video/.test(mime) && (q.msg || q).seconds > 16)
-                return await conn.reply(m.chat, '✧ El video no puede durar más de *15 segundos*', m, ctxWarn)
-            
-            let buffer = await q.download()
-            await m.react('🕓')
-            let marca = txt ? txt.split(/[\u2022|]/).map(part => part.trim()) : [texto1, texto2]
-            stiker = await sticker(buffer, false, marca[0], marca[1])
-        } else if (args[0] && isUrl(args[0])) {
-            stiker = await sticker(false, args[0], texto1, texto2)
-        } else {
-            return await conn.reply(m.chat, '❀ Por favor, envía una *imagen* o *video* para hacer un sticker.', m, ctxErr)
-        }
-    } catch (e) {
-        await conn.reply(m.chat, '⚠︎ Ocurrió un Error: ' + e.message, m, ctxErr)
-        await m.react('✖️')
-        return
-    }
-    
-    if (stiker) {
-        try {
-            // Verificar si stiker es un buffer válido
-            if (Buffer.isBuffer(stiker)) {
-                await conn.sendMessage(m.chat, { 
-                    sticker: stiker 
-                }, { 
-                    quoted: m 
-                })
-                await m.react('✅')
-            } else {
-                // Si no es un buffer, intentar convertirlo
-                console.log('Sticker no es un buffer:', typeof stiker)
-                await conn.reply(m.chat, '⚠︎ Error al crear el sticker', m, ctxErr)
-                await m.react('✖️')
-            }
-        } catch (error) {
-            console.error('Error enviando sticker:', error)
-            await conn.reply(m.chat, '⚠︎ Error al enviar el sticker: ' + error.message, m, ctxErr)
-            await m.react('✖️')
-        }
-    }
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+
+const fetchSticker = async (text, attempt = 1) => {
+try {
+const response = await axios.get(`https://skyzxu-brat.hf.space/brat`, { params: { text }, responseType: 'arraybuffer' })
+return response.data
+} catch (error) {
+if (error.response?.status === 429 && attempt <= 3) {
+const retryAfter = error.response.headers['retry-after'] || 5
+await delay(retryAfter * 1000)
+return fetchSticker(text, attempt + 1)
+}
+throw error
+}}
+
+const fetchStickerVideo = async (text) => {
+const response = await axios.get(`https://skyzxu-brat.hf.space/brat-animated`, { params: { text }, responseType: 'arraybuffer' })
+if (!response.data) throw new Error('Error al obtener el video de la API.')
+return response.data
 }
 
-handler.help = ['sticker']
+const fetchJson = (url, options) =>
+new Promise((resolve, reject) => { fetch(url, options).then(res => res.json()).then(json => resolve(json)).catch(err => reject(err)) })
+
+const handler = async (m, { conn, text, args, command, usedPrefix }) => {
+const ctxErr = (global.rcanalx || {})
+const ctxWarn = (global.rcanalw || {})
+const ctxOk = (global.rcanalr || {})
+
+try {
+let userId = m.sender
+let packstickers = global.db.data.users[userId] || {}
+let texto1 = packstickers.text1 || global.packsticker
+let texto2 = packstickers.text2 || global.packsticker2
+
+switch (command) {
+case 'brat': {
+text = m.quoted?.text || text
+if (!text) return await conn.reply(m.chat, '❀ Por favor, responde a un mensaje o ingresa un texto para crear el Sticker.', m, ctxErr)
+await m.react('🕒')
+const buffer = await fetchSticker(text)
+const stiker = await sticker(buffer, false, texto1, texto2)
+if (!stiker) throw new Error('ꕥ No se pudo generar el sticker.')
+await conn.sendFile(m.chat, stiker, 'sticker.webp', '', m)
+await m.react('✔️')
+break
+}
+
+case 'bratv': {
+text = m.quoted?.text || text
+if (!text) return await conn.reply(m.chat, '❀ Por favor, responde a un mensaje o ingresa un texto para crear el Sticker.', m, ctxErr)
+await m.react('🕒')
+const videoBuffer = await fetchStickerVideo(text)
+const stickerBuffer = await sticker(videoBuffer, null, texto1, texto2)
+await conn.sendMessage(m.chat, { sticker: stickerBuffer }, { quoted: m })
+await m.react('✔️')
+break
+}
+
+case 'emojimix': {
+if (!args[0]) return await conn.reply(m.chat, `❀ Ingresa 2 emojis para combinar.\n> Ejemplo: *${usedPrefix + command}* 👻+👀`, m, ctxErr)
+let [emoji1, emoji2] = text.split`+`
+await m.react('🕒')
+const res = await fetchJson(`https://tenor.googleapis.com/v2/featured?key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(emoji1)}_${encodeURIComponent(emoji2)}`)
+if (!res.results || res.results.length === 0) throw new Error('ꕥ No se encontraron stickers para esos emojis.')
+for (let result of res.results) {
+let stiker = await sticker(false, result.url, texto1, texto2)
+await conn.sendFile(m.chat, stiker, null, { asSticker: true }, m)
+}
+await m.react('✔️')
+break
+}
+
+case 'qc': {
+let textFinal = args.join(' ') || m.quoted?.text
+if (!textFinal) return await conn.reply(m.chat, `❀ Ingresa un texto para crear el sticker.`, m, ctxErr)
+let target = m.quoted ? await m.quoted.sender : m.sender
+const pp = await conn.profilePictureUrl(target).catch((_) => 'https://telegra.ph/file/24fa902ead26340f3df2c.png')
+const nombre = await (async () => global.db.data.users[target].name || (async () => { try { const n = await conn.getName(target); return typeof n === 'string' && n.trim() ? n : target.split('@')[0] } catch { return target.split('@')[0] } })())()
+const mentionRegex = new RegExp(`@${target.split('@')[0]}`, 'g')
+let frase = textFinal.replace(mentionRegex, '')
+if (frase.length > 30) return await m.react('✖️'), await conn.reply(m.chat, `ꕥ El texto no puede tener más de 30 caracteres.`, m, ctxErr)
+await m.react('🕒')
+const quoteObj = { type: 'quote', format: 'png', backgroundColor: '#000000', width: 512, height: 768, scale: 2, messages: [{ entities: [], avatar: true, from: { id: 1, name: nombre, photo: { url: pp } }, text: frase, replyMessage: {} }]}
+const json = await axios.post('https://bot.lyo.su/quote/generate', quoteObj, { headers: { 'Content-Type': 'application/json' }})
+const buffer = Buffer.from(json.data.result.image, 'base64')
+const stiker = await sticker(buffer, false, texto1, texto2)
+if (stiker) {
+await m.react('✔️')
+await conn.sendFile(m.chat, stiker, 'sticker.webp', '', m)
+}
+break
+}
+
+case 'take': case 'wm': {
+if (!m.quoted) return await conn.reply(m.chat, `❀ Responde a un sticker con el comando *${usedPrefix + command}* seguido del nuevo nombre.\n> Ejemplo: *${usedPrefix + command}* NuevoNombre`, m, ctxErr)
+await m.react('🕒')
+const stickerData = await m.quoted.download()
+if (!stickerData) return await m.react('✖️'), await conn.reply(m.chat, 'ꕥ No se pudo descargar el sticker.', m, ctxErr)
+const parts = text.split(/[\u2022|]/).map(p => p.trim())
+const nuevoPack = parts[0] || texto1
+const nuevoAutor = parts[1] || texto2
+const exif = await addExif(stickerData, nuevoPack, nuevoAutor)
+await conn.sendMessage(m.chat, { sticker: exif }, { quoted: m })
+await m.react('✔️')
+break
+}
+}
+} catch (e) {
+await m.react('✖️')
+await conn.reply(m.chat, `⚠︎ Se ha producido un problema.\n> Usa *${usedPrefix}report* para informarlo.\n\n${e.message}`, m, ctxErr)
+}}
+
 handler.tags = ['sticker']
-handler.command = ['s', 'sticker']
+handler.help = ['brat', 'bratv', 'emojimix', 'qc', 'take', 'robar', 'wm']
+handler.command = ['brat', 'bratv', 'emojimix', 'qc', 'take', 'wm']
 
 export default handler
-
-const isUrl = (text) => {
-    return text.match(new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)(jpe?g|gif|png)/, 'gi'))
-                    }

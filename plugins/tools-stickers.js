@@ -28,23 +28,36 @@ let handler = async (m, { conn, args }) => {
             let marca = txt ? txt.split(/[\u2022|]/).map(part => part.trim()) : [texto1, texto2]
             stiker = await sticker(buffer, false, marca[0], marca[1])
         } else if (args[0] && isUrl(args[0])) {
-            let buffer = await sticker(false, args[0], texto1, texto2)
-            stiker = buffer
+            stiker = await sticker(false, args[0], texto1, texto2)
         } else {
             return await conn.reply(m.chat, '❀ Por favor, envía una *imagen* o *video* para hacer un sticker.', m, ctxErr)
         }
     } catch (e) {
         await conn.reply(m.chat, '⚠︎ Ocurrió un Error: ' + e.message, m, ctxErr)
         await m.react('✖️')
-    } finally {
-        if (stiker) {
-            // Enviar como sticker de WhatsApp en lugar de archivo
-            await conn.sendMessage(m.chat, { 
-                sticker: stiker 
-            }, { 
-                quoted: m 
-            })
-            await m.react('✅')
+        return
+    }
+    
+    if (stiker) {
+        try {
+            // Verificar si stiker es un buffer válido
+            if (Buffer.isBuffer(stiker)) {
+                await conn.sendMessage(m.chat, { 
+                    sticker: stiker 
+                }, { 
+                    quoted: m 
+                })
+                await m.react('✅')
+            } else {
+                // Si no es un buffer, intentar convertirlo
+                console.log('Sticker no es un buffer:', typeof stiker)
+                await conn.reply(m.chat, '⚠︎ Error al crear el sticker', m, ctxErr)
+                await m.react('✖️')
+            }
+        } catch (error) {
+            console.error('Error enviando sticker:', error)
+            await conn.reply(m.chat, '⚠︎ Error al enviar el sticker: ' + error.message, m, ctxErr)
+            await m.react('✖️')
         }
     }
 }
@@ -57,4 +70,4 @@ export default handler
 
 const isUrl = (text) => {
     return text.match(new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)(jpe?g|gif|png)/, 'gi'))
-                                    }
+                    }

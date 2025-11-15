@@ -15,7 +15,7 @@
     "url": "git+https://github.com/speed3xz/Arlette-Bot.git"
 },
   "dependencies": {
-    "@whiskeysockets/baileys": "github:this-xyz/bail",
+    "@whiskeysockets/baileys": "github:this-xyz/baileys",
     "awesome-phonenumber": "^5.5.1",
     "boxen": "^7.1.1",
     "chalk": "^5.3.0",

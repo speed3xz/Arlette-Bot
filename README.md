@@ -194,7 +194,7 @@ href="https://home.akirax.net"><img src="https://raw.githubusercontent.com/The-K
   </a>
 </p>
 
-## 🧑‍💻 Desarrollador Principal
+## 🌷 Desarrolladora Principal
 
 <p align="center">
   <a href="https://github.com/Speed3xz">

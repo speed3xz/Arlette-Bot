@@ -7,9 +7,8 @@ let handler = async (m, { conn, args }) => {
   let totalCommands = Object.values(global.plugins).filter((v) => v.help && v.tags).length
 
   const menuHeader = (userId) => `
-︶⊹︶︶୨୧︶︶⊹︶︶⊹︶︶୨୧︶︶⊹︶︶⊹︶
-「🎀」 ¡Hola! *@${userId.split('@')[0]}*, Soy *${botname}*, Aquí tienes la lista de comandos.
-> Para Ver Tu Perfil Usa */perfil* ❒
+「🎀」 ¡Hola! Soy *${botname}*
+> Aquí tienes la lista de comandos.
 
 ╭┈ ↷
 │❀ *Modo* » Público

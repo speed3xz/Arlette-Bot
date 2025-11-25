@@ -178,7 +178,7 @@ global.packsticker2 = `┊Bot 🎀\n┊⤷${botname} \n\n┊Usuario:\n┊⤷${no
                 newsletterName: channelRD.name 
             }, 
             externalAdReply: { 
-                title: nombreBot, 
+                title: global.botname, 
                 body: dev, 
                 mediaUrl: null, 
                 description: null, 

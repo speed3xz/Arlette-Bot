@@ -40,4 +40,4 @@ handler.help = ['setpfp', 'setimage', 'setstatus', 'setbio', 'setusername', 'set
 handler.tags = ['socket']
 handler.command = ['setpfp', 'setimage', 'setstatus', 'setbio', 'setusername', 'setuser']
 
-export default handlerault handler
+export default handler;

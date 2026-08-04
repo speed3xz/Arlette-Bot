@@ -33,10 +33,10 @@ global.packsticker2 = `┊Bot 🎀\n┊⤷${botname} \n\n┊Usuario:\n┊⤷${no
 // Variables rcanal del primer código
    global.idchannel = '120363402095978084@newsletter'
     global.namechannel = '【 ✰ 】𝗦𝗽𝗲𝗲𝗱𝟯𝘅𝘇 𝗧𝗲𝗮𝗺 - 𝗢𝗳𝗶𝗰𝗶𝗮𝗹 𝗖𝗵𝗮𝗻𝗲𝗹'
-    global.iconorcanal = 'https://speed3xz.bot.nu/img/IMG_4580.jpeg'
-    let icono = 'https://speed3xz.bot.nu/img/IMG_4580.jpeg'
-    let iconoden = 'https://speed3xz.bot.nu/img/IMG_4580.jpeg'
-    let iconodev = 'https://speed3xz.bot.nu/img/IMG_4580.jpeg'
+    global.iconorcanal = 'https://cdn.nexylight.xyz/files/5vm7xbo.jpeg'
+    let icono = 'https://cdn.nexylight.xyz/files/5vm7xbo.jpeg'
+    let iconoden = 'https://cdn.nexylight.xyz/files/5vm7xbo.jpeg'
+    let iconodev = 'https://cdn.nexylight.xyz/files/5vm7xbo.jpeg'
 
     global.rcanalw = {
         contextInfo: {

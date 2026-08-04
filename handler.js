@@ -117,6 +117,62 @@ export async function pickTargetJid(m, conn) {
     }
 }
 
+export async function deleteBotMessage(sock, from, targetSender, quotedKey) {
+    return new Promise(async (resolve) => {
+        try {
+            const botId = decodeJid(sock.user?.jid || sock.user?.id || '');
+            const botLid = sock.user?.lid ? decodeJid(sock.user.lid) : null;
+
+            const isBotMessage = targetSender === botId || (botLid && targetSender === botLid);
+
+            if (isBotMessage && quotedKey) {
+                await sock.sendMessage(from, { 
+                    delete: { 
+                        remoteJid: from, 
+                        fromMe: true, 
+                        id: quotedKey.stanzaId || quotedKey.id, 
+                        participant: quotedKey.participant 
+                    } 
+                }).catch(() => null);
+                return resolve(true);
+            }
+            resolve(false);
+        } catch {
+            resolve(false);
+        }
+    });
+}
+
+export async function getAdminStatus(sock, from, sender) {
+    return new Promise(async (resolve) => {
+        try {
+            let cached = groupMetadataCache.get(from);
+            let meta = (cached && (Date.now() - cached.timestamp < metadataTTL)) ? cached.metadata : null;
+
+            if (!meta) {
+                meta = await sock.groupMetadata(from).catch(() => null);
+                if (meta) groupMetadataCache.set(from, { metadata: meta, timestamp: Date.now() });
+            }
+
+            if (!meta) return resolve({ isUserAdmin: false, isBotAdmin: false });
+
+            const participants = Array.isArray(meta.participants) ? meta.participants : [];
+            const admins = participants.filter(p => p.admin).map(p => decodeJid(p.id || p.jid));
+
+            const botId = decodeJid(sock.user?.jid || sock.user?.id || '');
+            const botLid = sock.user?.lid ? decodeJid(sock.user.lid) : null;
+
+            const decodedSender = decodeJid(sender);
+            const isUserAdmin = admins.some(admin => admin === decodedSender);
+            const isBotAdmin = admins.some(admin => admin === botId || (botLid && admin === botLid));
+
+            resolve({ isUserAdmin, isBotAdmin });
+        } catch {
+            resolve({ isUserAdmin: false, isBotAdmin: false });
+        }
+    });
+}
+
 const isNumber = x => typeof x === "number" && !isNaN(x)
 const delay = ms => isNumber(ms) && new Promise(resolve => setTimeout(function () {
 clearTimeout(this)
@@ -307,8 +363,16 @@ if (!metaDataObj && m.isGroup) {
 const groupMetadata = m.isGroup ? { ...(this.chats?.[m.chat]?.metadata || metaDataObj || {}), ...(((this.chats?.[m.chat]?.metadata || metaDataObj || {}).participants) && { participants: ((this.chats?.[m.chat]?.metadata || metaDataObj || {}).participants || []).map(p => ({ ...p, id: decodeJid(p.id || p.jid), jid: decodeJid(p.jid || p.id), lid: decodeJid(p.lid) })) }) } : {}
 const participants = ((m.isGroup ? groupMetadata.participants : []) || []).map(participant => ({ id: participant.jid, jid: participant.jid, lid: participant.lid, admin: participant.admin }))
 
+const botId = decodeJid(this.user?.jid || this.user?.id || '')
+const botLid = this.user?.lid ? decodeJid(this.user.lid) : null
+
 const userGroup = (m.isGroup ? participants.find((u) => decodeJid(u.jid) === sender || decodeJid(u.lid) === sender) : {}) || {}
-const botGroup = (m.isGroup ? participants.find((u) => decodeJid(u.jid) === decodeJid(this.user.jid) || decodeJid(u.lid) === decodeJid(this.user.lid)) : {}) || {}
+const botGroup = (m.isGroup ? participants.find((u) => {
+    const uJid = decodeJid(u.jid || u.id);
+    const uLid = decodeJid(u.lid);
+    return uJid === botId || (botLid && uLid === botLid) || (botLid && uJid === botLid);
+}) : {}) || {}
+
 const isRAdmin = userGroup?.admin == "superadmin" || false
 const isAdmin = isRAdmin || userGroup?.admin == "admin" || false
 const isBotAdmin = !!botGroup?.admin
@@ -505,7 +569,7 @@ rowner: `🌸 *Acceso Especial* 🌸\n\n┊ El comando *${global.comando}* solo 
 owner: `🎀 *Zona de Desarrolladores* 🎀\n\n┊ El comando *${global.comando}* solo está disponible para los *desarrolladores* del bot. ♡`, 
 mods: `🍥 *Solo para Moderadores* 🍥\n\n┊ El comando *${global.comando}* es exclusivo para *moderadores*.`, 
 premium: `💖 *Usuario Premium* 💖\n\n┊ El comando *${global.comando}* está reservado para los *usuarios premium*\n> use el comando "/vip". ₊˚ʚ♡ɞ˚₊`, 
-group: `🌼 *Disponible en Grupos* 🌼\n\n┊ El comando *${global.comando}* solo puede usarse en *grupos*. (≧◡≦)`,
+group: `🌼 *Disponible en Grupos* 🌼\n\n┊ El comando *${global.comando}* solo puede usarse en *grupos*. (≧◡┴)`,
 private: `💌 *Solo en Privado* 💌\n\n┊ El comando *${global.comando}* solo funciona en *chats privados*. ꒰ᐢ. .ᐢ꒱`,
 admin: `⭐ *Requiere Admin* ⭐\n\n┊ El comando *${global.comando}* es para los *administradores* del grupo. ฅ^•ﻌ•^ฅ`, 
 botAdmin: `⚙️ *Necesito Ser Admin* ⚙️\n\n┊ Para ejecutar *${global.comando}*, primero debo ser *admin* del grupo, ¡ayúdame! (｡•́︿•̀｡)`,
@@ -513,6 +577,7 @@ restrict: `🚫 *Función No Disponible* 🚫\n\n┊ Esta característica está 
 }[type]
 if (msg) return conn.reply(m.chat, msg, m).then(_ => m.react('✖️')).catch(() => null)
 }
+
 let file = global.__filename(import.meta.url, true)
 watchFile(file, async () => {
 unwatchFile(file)

@@ -11,7 +11,7 @@
 Este bot ofrece una variedad de características para mejorar tu experiencia en WhatsApp.
 
 🚫 Este proyecto NO está afiliado a WhatsApp ni WhatsApp LLC.
-un bot hecho 100% independiente, la base del bot es de **Yuki bot** personalizado por **[Speed3xz](https://github.com/speed3xz)**.
+un bot hecho 100% independiente, la base del bot es de **Yuki bot** personalizado por **[Arlette-Xz](https://github.com/Arlette-Xz)**.
 
 #### Características
 Configuración avanzada de grupos 
@@ -198,9 +198,9 @@ href="https://home.akirax.net"><img src="https://raw.githubusercontent.com/The-K
 
 <p align="center">
   <a href="https://github.com/Arlette-Xz">
-    <img src="https://github.com/Arlette-Xz.png" width="130" height="130" alt="Speed3xz 🎀"/>
+    <img src="https://github.com/Arlette-Xz.png" width="130" height="130" alt="Arlette-Xz 🎀"/>
     <br>
-    <strong>Speed3xz 🎀</strong>
+    <strong>Arlette-Xz 🎀</strong>
   </a>
 </p>
 

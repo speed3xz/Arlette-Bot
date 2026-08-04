@@ -10,7 +10,7 @@
   "dependencies": {
     "@napi-rs/canvas": "^0.1.53",
     "@vitalets/google-translate-api": "^8.0.0",
-    "@whiskeysockets/baileys": "github:this-xys/bails",
+    "@whiskeysockets/baileys": "npm:@itsliaaa/baileys",
     "acrcloud": "^1.4.0",
     "aptoide-scraper": "github:DIEGO-OFC/dv-aptoide-scraper",
     "awesome-phonenumber": "^5.5.1",

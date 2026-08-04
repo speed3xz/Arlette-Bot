@@ -12,7 +12,6 @@
     "@vitalets/google-translate-api": "^8.0.0",
     "@whiskeysockets/baileys": "npm:@itsliaaa/baileys",
     "acrcloud": "^1.4.0",
-    "aptoide-scraper": "github:DIEGO-OFC/dv-aptoide-scraper",
     "awesome-phonenumber": "^5.5.1",
     "axios": "^1.1.2",
     "boxen": "^7.1.1",

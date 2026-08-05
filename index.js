@@ -69,7 +69,7 @@ global.loadDatabase = async function loadDatabase() {
 }
 loadDatabase()
 
-const { state, saveCreds } = await useMultiFileAuthState(global.sessions || 'Sessions/Principal')
+const { state, saveCreds } = await useMultiFileAuthState(global.sessions)
 const msgRetryCounterCache = new NodeCache({ stdTTL: 0, checkperiod: 0 })
 const userDevicesCache = new NodeCache({ stdTTL: 0, checkperiod: 0 })
 const { version } = await fetchLatestBaileysVersion()
@@ -85,7 +85,7 @@ let opcion
 if (methodCodeQR) {
   opcion = '1'
 }
-if (!methodCodeQR && !methodCode && !fs.existsSync(`./${global.sessions || 'Sessions/Principal'}/creds.json`)) {
+if (!methodCodeQR && !methodCode && !fs.existsSync(`./${global.sessions}/creds.json`)) {
   do {
     opcion = await question("Seleccione una opción:\n1. Con código QR\n2. Con código de texto de 8 dígitos\n--> ")
   } while (opcion !== '1' && opcion !== '2')
@@ -215,19 +215,7 @@ global.reloadHandler = async function(restatConn) {
     conn.ev.off('creds.update', conn.credsUpdate)
   }
   
-  // FIX: Envoltorio seguro para procesar notificaciones y evitar el error de "Esperando mensaje"
-  conn.handler = async (chatUpdate) => {
-    if (!chatUpdate.messages || chatUpdate.type !== 'notify') return
-    for (let m of chatUpdate.messages) {
-      if (!m.message || m.messageStubType) continue
-      try {
-        await handler.handler(chatUpdate)
-      } catch (e) {
-        console.error('Error en el handler:', e)
-      }
-    }
-  }
-
+  conn.handler = handler.handler.bind(global.conn)
   conn.connectionUpdate = connectionUpdate.bind(global.conn)
   conn.credsUpdate = saveCreds.bind(global.conn, true)
   

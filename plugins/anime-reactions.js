@@ -1,4 +1,5 @@
 import fetch from 'node-fetch'
+import { resolveLidToPnJid, normalizeNumber } from '../handler.js'
 
 const fetchReactions = async (cat) => {
     try {
@@ -22,252 +23,265 @@ const fetchTenor = async (query) => {
     }
 }
 
-let handler = async (m, { conn, command, usedPrefix }) => {
-    let mentionedJid = await m.mentionedJid
-    let userId = mentionedJid.length > 0 ? mentionedJid[0] : (m.quoted ? await m.quoted.sender : m.sender)
-    let from = await (async () => global.db.data.users[m.sender].name || (async () => { try { const n = await conn.getName(m.sender); return typeof n === 'string' && n.trim() ? n : m.sender.split('@')[0] } catch { return m.sender.split('@')[0] } })())()
-    let who = await (async () => global.db.data.users[userId].name || (async () => { try { const n = await conn.getName(userId); return typeof n === 'string' && n.trim() ? n : userId.split('@')[0] } catch { return userId.split('@')[0] } })())()
-    
+let handler = async (m, { conn, command, usedPrefix, args }) => {
+    const contextInfo = m.message?.extendedTextMessage?.contextInfo || m.msg?.contextInfo
+    const q = args[0]
+    let rawtarget = (m.mentionedJid && m.mentionedJid.length > 0) ? m.mentionedJid : contextInfo?.mentionedJid
+
+    let targetRaw = m.quoted?.sender || rawtarget?.[0] || contextInfo?.participant || (q ? q.replace(/[^0-9]/g, '') + '@s.whatsapp.net' : m.sender)
+
+    const resolvedJid = await resolveLidToPnJid(conn, m.chat, targetRaw)
+    const normalized = normalizeNumber(resolvedJid)
+    let userId = normalized ? normalized + '@s.whatsapp.net' : targetRaw
+
+    let senderResolved = await resolveLidToPnJid(conn, m.chat, m.sender)
+    let senderNormalized = normalizeNumber(senderResolved)
+    let senderJid = senderNormalized ? senderNormalized + '@s.whatsapp.net' : m.sender
+
+    let from = await (async () => global.db.data.users[senderJid]?.name || (async () => { try { const n = await conn.getName(senderJid); return typeof n === 'string' && n.trim() ? n : senderJid.split('@')[0] } catch { return senderJid.split('@')[0] } })())()
+    let whoName = await (async () => global.db.data.users[userId]?.name || (async () => { try { const n = await conn.getName(userId); return typeof n === 'string' && n.trim() ? n : userId.split('@')[0] } catch { return userId.split('@')[0] } })())()
+
+    let who = userId
     let str, query, category
 
     switch (command) {
         case 'angry': case 'enojado':
-            str = from === who ? `\`${from}\` está enojado/a! 凸ಠ益ಠ)凸` : `\`${from}\` está enojado/a con \`${who}\`! 凸ಠ益ಠ)凸`
+            str = senderJid === who ? `\`${from}\` está enojado/a! 凸ಠ益ಠ)凸` : `\`${from}\` está enojado/a con \`${whoName}\`! 凸ಠ益ಠ)凸`
             query = 'anime angry'
             category = 'angry'
             break
         case 'bath': case 'bañarse':
-            str = from === who ? `\`${from}\` se está bañando! ٩(ˊᗜˋ )و` : `\`${from}\` está bañando a \`${who}\`! ٩(ˊᗜˋ )و`
+            str = senderJid === who ? `\`${from}\` se está bañando! ٩(ˊᗜˋ )و` : `\`${from}\` está bañando a \`${whoName}\`! ٩(ˊᗜˋ )و`
             query = 'anime bath'
             category = 'bath'
             break
         case 'bite': case 'morder':
-            str = from === who ? `\`${from}\` se mordió a sí mismo/a! ≽^•⩊•^≼` : `\`${from}\` mordió a \`${who}\`! ≽^•⩊•^≼`
+            str = senderJid === who ? `\`${from}\` se mordió a sí mismo/a! ≽^•⩊•^≼` : `\`${from}\` mordió a \`${whoName}\`! ≽^•⩊•^≼`
             query = 'anime bite'
             category = 'bite'
             break
         case 'bleh': case 'lengua':
-            str = from === who ? `\`${from}\` saca la lengua! (｡╹ω╹｡)` : `\`${from}\` le sacó la lengua a \`${who}\`! (｡╹ω╹｡)`
+            str = senderJid === who ? `\`${from}\` saca la lengua! (｡╹ω╹｡)` : `\`${from}\` le sacó la lengua a \`${whoName}\`! (｡╹ω╹｡)`
             query = 'anime bleh'
             category = 'bleh'
             break
         case 'blush': case 'sonrojarse':
-            str = from === who ? `\`${from}\` se sonrojó! ( ˶o˶˶o˶)` : `\`${from}\` se sonrojó por \`${who}\`! ( ˶o˶˶o˶)`
+            str = senderJid === who ? `\`${from}\` se sonrojó! ( ˶o˶˶o˶)` : `\`${from}\` se sonrojó por \`${whoName}\`! ( ˶o˶˶o˶)`
             query = 'anime blush'
             category = 'blush'
             break
         case 'bored': case 'aburrido':
-            str = from === who ? `\`${from}\` está aburrido/a! ( ¬_¬)` : `\`${from}\` está aburrido/a de \`${who}\`! ( ¬_¬)`
+            str = senderJid === who ? `\`${from}\` está aburrido/a! ( ¬_¬)` : `\`${from}\` está aburrido/a de \`${whoName}\`! ( ¬_¬)`
             query = 'anime bored'
             category = 'bored'
             break
         case 'clap': case 'aplaudir':
-            str = from === who ? `\`${from}\` está aplaudiendo! (୨୧•͈ᴗ•͈)` : `\`${from}\` está aplaudiendo por \`${who}\`! (୨୧•͈ᴗ•͈)`
+            str = senderJid === who ? `\`${from}\` está aplaudiendo! (୨୧•͈ᴗ•͈)` : `\`${from}\` está aplaudiendo por \`${whoName}\`! (୨୧•͈ᴗ•͈)`
             query = 'anime clap'
             category = 'clap'
             break
         case 'coffee': case 'cafe': case 'café':
-            str = from === who ? `\`${from}\` está tomando café! ٩(●ᴗ●)۶` : `\`${from}\` está tomando café con \`${who}\`! ٩(●ᴗ●)۶`
+            str = senderJid === who ? `\`${from}\` está tomando café! ٩(●ᴗ●)۶` : `\`${from}\` está tomando café con \`${whoName}\`! ٩(●ᴗ●)۶`
             query = 'anime coffee'
             category = 'coffee'
             break
         case 'cry': case 'llorar':
-            str = from === who ? `\`${from}\` está llorando! (╥_╥)` : `\`${from}\` está llorando por \`${who}\`! (╥_╥)`
+            str = senderJid === who ? `\`${from}\` está llorando! (╥_╥)` : `\`${from}\` está llorando por \`${whoName}\`! (╥_╥)`
             query = 'anime cry'
             category = 'cry'
             break
         case 'cuddle': case 'acurrucarse':
-            str = from === who ? `\`${from}\` se acurrucó con sí mismo/a! ꒰ঌ(˶ˆᗜˆ˵)໒꒱` : `\`${from}\` se acurrucó con \`${who}\`! ꒰ঌ(˶ˆᗜˆ˵)໒꒱`
+            str = senderJid === who ? `\`${from}\` se acurrucó con sí mismo/a! ꒰ঌ(˶ˆᗜˆ˵)໒꒱` : `\`${from}\` se acurrucó con \`${whoName}\`! ꒰ঌ(˶ˆᗜˆ˵)໒꒱`
             query = 'anime cuddle'
             category = 'cuddle'
             break
         case 'dance': case 'bailar':
-            str = from === who ? `\`${from}\` está bailando! (ﾉ^ヮ^)ﾉ*:・ﾟ✧` : `\`${from}\` está bailando con \`${who}\`! (ﾉ^ヮ^)ﾉ*:・ﾟ✧`
+            str = senderJid === who ? `\`${from}\` está bailando! (ﾉ^ヮ^)ﾉ*:・ﾟ✧` : `\`${from}\` está bailando con \`${whoName}\`! (ﾉ^ヮ^)ﾉ*:・ﾟ✧`
             query = 'anime dance'
             category = 'dance'
             break
         case 'drunk': case 'borracho':
-            str = from === who ? `\`${from}\` está borracho! (⸝⸝๑﹏๑⸝⸝)` : `\`${from}\` está borracho con \`${who}\`! (⸝⸝๑﹏๑⸝⸝)`
+            str = senderJid === who ? `\`${from}\` está borracho! (⸝⸝๑﹏๑⸝⸝)` : `\`${from}\` está borracho con \`${whoName}\`! (⸝⸝๑﹏๑⸝⸝)`
             query = 'anime drunk'
             category = 'drunk'
             break
         case 'eat': case 'comer':
-            str = from === who ? `\`${from}\` está comiendo! (っ˘ڡ˘ς)` : `\`${from}\` está comiendo con \`${who}\`! (っ˘ڡ˘ς)`
+            str = senderJid === who ? `\`${from}\` está comiendo! (っ˘ڡ˘ς)` : `\`${from}\` está comiendo con \`${whoName}\`! (っ˘ڡ˘ς)`
             query = 'anime eat'
             category = 'eat'
             break
         case 'facepalm': case 'palmada':
-            str = from === who ? `\`${from}\` se da una palmada en la cara! (ভ_ ভ) ރ` : `\`${from}\` se frustra y se da una palmada en la cara por \`${who}\`! (ভ_ ভ) ރ`
+            str = senderJid === who ? `\`${from}\` se da una palmada en la cara! (ভ_ ভ) ރ` : `\`${from}\` se frustra y se da una palmada en la cara por \`${whoName}\`! (ভ_ ভ) ރ`
             query = 'anime facepalm'
             category = 'facepalm'
             break
         case 'happy': case 'feliz':
-            str = from === who ? `\`${from}\` está feliz! ٩(˶ˆᗜˆ˵)و` : `\`${from}\` está feliz por \`${who}\`! ٩(˶ˆᗜˆ˵)و`
+            str = senderJid === who ? `\`${from}\` está feliz! ٩(˶ˆᗜˆ˵)و` : `\`${from}\` está feliz por \`${whoName}\`! ٩(˶ˆᗜˆ˵)و`
             query = 'anime happy'
             category = 'happy'
             break
         case 'hug': case 'abrazar':
-            str = from === who ? `\`${from}\` se abrazó a sí mismo/a! (づ˶•༝•˶)づ♡` : `\`${from}\` abrazó a \`${who}\`! (づ˶•༝•˶)づ♡`
+            str = senderJid === who ? `\`${from}\` se abrazó a sí mismo/a! (づ˶•༝•˶)づ♡` : `\`${from}\` abrazó a \`${whoName}\`! (づ˶•༝•˶)づ♡`
             query = 'anime hug'
             category = 'hug'
             break
         case 'kill': case 'matar':
-            str = from === who ? `\`${from}\` se mató a sí mismo/a! ( ⚆ _ ⚆ )` : `\`${from}\` mató a \`${who}\`! ( ⚆ _ ⚆ )`
+            str = senderJid === who ? `\`${from}\` se mató a sí mismo/a! ( ⚆ _ ⚆ )` : `\`${from}\` mató a \`${whoName}\`! ( ⚆ _ ⚆ )`
             query = 'anime kill'
             category = 'kill'
             break
         case 'kiss': case 'muak':
-            str = from === who ? `\`${from}\` se besó a sí mismo/a! ( ˘ ³˘)♥` : `\`${from}\` besó a \`${who}\`! ( ˘ ³˘)♥`
+            str = senderJid === who ? `\`${from}\` se besó a sí mismo/a! ( ˘ ³˘)♥` : `\`${from}\` besó a \`${whoName}\`! ( ˘ ³˘)♥`
             query = 'anime kiss'
             category = 'kiss'
             break
         case 'laugh': case 'reirse':
-            str = from === who ? `\`${from}\` se ríe! (≧▽≦)` : `\`${from}\` se está riendo de \`${who}\`! (≧▽≦)`
+            str = senderJid === who ? `\`${from}\` se ríe! (≧▽≦)` : `\`${from}\` se está riendo de \`${whoName}\`! (≧▽≦)`
             query = 'anime laugh'
             category = 'laugh'
             break
         case 'lick': case 'lamer':
-            str = from === who ? `\`${from}\` se lamió a sí mismo/a!（＾ω＾）` : `\`${from}\` lamió a \`${who}\`!（＾ω＾）`
+            str = senderJid === who ? `\`${from}\` se lamió a sí mismo/a!（＾ω＾）` : `\`${from}\` lamió a \`${whoName}\`!（＾ω＾）`
             query = 'anime lick'
             category = 'lick'
             break
         case 'slap': case 'bofetada':
-            str = from === who ? `\`${from}\` se golpeó a sí mismo/a! ᕙ(⇀‸↼‵‵)ᕗ` : `\`${from}\` le dio una bofetada a \`${who}\`! ᕙ(⇀‸↼‵‵)ᕗ`
+            str = senderJid === who ? `\`${from}\` se golpeó a sí mismo/a! ᕙ(⇀‸↼‵‵)ᕗ` : `\`${from}\` le dio una bofetada a \`${whoName}\`! ᕙ(⇀‸↼‵‵)ᕗ`
             query = 'anime slap'
             category = 'slap'
             break
         case 'sleep': case 'dormir':
-            str = from === who ? `\`${from}\` está durmiendo profundamente! (∪｡∪)｡｡｡zzz` : `\`${from}\` duerme junto a \`${who}\`! (∪｡∪)｡｡｡zzz`
+            str = senderJid === who ? `\`${from}\` está durmiendo profundamente! (∪｡∪)｡｡｡zzz` : `\`${from}\` duerme junto a \`${whoName}\`! (∪｡∪)｡｡｡zzz`
             query = 'anime sleep'
             category = 'sleep'
             break
         case 'smoke': case 'fumar':
-            str = from === who ? `\`${from}\` está fumando! (￣ー￣)_旦~` : `\`${from}\` está fumando con \`${who}\`! (￣ー￣)_旦~`
+            str = senderJid === who ? `\`${from}\` está fumando! (￣ー￣)_旦~` : `\`${from}\` está fumando con \`${whoName}\`! (￣ー￣)_旦~`
             query = 'anime smoke'
             category = 'smoke'
             break
         case 'spit': case 'escupir':
-            str = from === who ? `\`${from}\` se escupió a sí mismo/a! ٩(๑˘^˘๑)۶` : `\`${from}\` escupió a \`${who}\`! ٩(๑˘^˘๑)۶`
+            str = senderJid === who ? `\`${from}\` se escupió a sí mismo/a! ٩(๑˘^˘๑)۶` : `\`${from}\` escupió a \`${whoName}\`! ٩(๑˘^˘๑)۶`
             query = 'anime spit'
             category = 'spit'
             break
         case 'step': case 'pisar':
-            str = from === who ? `\`${from}\` se pisó a sí mismo/a! ಥ_ಥ` : `\`${from}\` pisó a \`${who}\` sin piedad!`
+            str = senderJid === who ? `\`${from}\` se pisó a sí mismo/a! ಥ_ಥ` : `\`${from}\` pisó a \`${whoName}\` sin piedad!`
             query = 'anime step'
             category = 'step'
             break
         case 'think': case 'pensar':
-            str = from === who ? `\`${from}\` está pensando! (⸝⸝╸-╺⸝⸝)` : `\`${from}\` está pensando en \`${who}\`! (⸝⸝╸-╺⸝⸝)`
+            str = senderJid === who ? `\`${from}\` está pensando! (⸝⸝╸-╺⸝⸝)` : `\`${from}\` está pensando en \`${whoName}\`! (⸝⸝╸-╺⸝⸝)`
             query = 'anime think'
             category = 'think'
             break
         case 'love': case 'enamorado': case 'enamorada':
-            str = from === who ? `\`${from}\` está enamorado/a de sí mismo/a! (≧◡≦) ♡` : `\`${from}\` está enamorado/a de \`${who}\`! (≧◡≦) ♡`
+            str = senderJid === who ? `\`${from}\` está enamorado/a de sí mismo/a! (≧◡≦) ♡` : `\`${from}\` está enamorado/a de \`${whoName}\`! (≧◡≦) ♡`
             query = 'anime love'
             category = 'love'
             break
         case 'pat': case 'palmadita':
-            str = from === who ? `\`${from}\` se da palmaditas de autoapoyo! ଘ(੭ˊᵕˋ)੭` : `\`${from}\` acaricia suavemente a \`${who}\`! ଘ(੭ˊᵕˋ)੭`
+            str = senderJid === who ? `\`${from}\` se da palmaditas de autoapoyo! ଘ(੭ˊᵕˋ)੭` : `\`${from}\` acaricia suavemente a \`${whoName}\`! ଘ(੭ˊᵕˋ)੭`
             query = 'anime pat'
             category = 'pat'
             break
         case 'poke': case 'picar':
-            str = from === who ? `\`${from}\` se da un toque curioso! (,,◕.◕,,)` : `\`${from}\` da un golpecito a \`${who}\`! (,,◕.◕,,)`
+            str = senderJid === who ? `\`${from}\` se da un toque curioso! (,,◕.◕,,)` : `\`${from}\` da un golpecito a \`${whoName}\`! (,,◕.◕,,)`
             query = 'anime poke'
             category = 'poke'
             break
         case 'pout': case 'pucheros':
-            str = from === who ? `\`${from}\` hace pucheros! (๑•́ ₃ •̀๑)` : `\`${from}\` está haciendo pucheros por \`${who}\`! (๑•́ ₃ •̀๑)`
+            str = senderJid === who ? `\`${from}\` hace pucheros! (๑•́ ₃ •̀๑)` : `\`${from}\` está haciendo pucheros por \`${whoName}\`! (๑•́ ₃ •̀๑)`
             query = 'anime pout'
             category = 'pout'
             break
         case 'punch': case 'pegar': case 'golpear':
-            str = from === who ? `\`${from}\` se golpeó a sí mismo/a! (ദി˙ᗜ˙)` : `\`${from}\` golpea a \`${who}\` con todas sus fuerzas! (ദ്ദി˙ᗜ˙)`
+            str = senderJid === who ? `\`${from}\` se golpeó a sí mismo/a! (ദി˙ᗜ˙)` : `\`${from}\` golpea a \`${whoName}\` con todas sus fuerzas! (ദ്ദി˙ᗜ˙)`
             query = 'anime punch'
             category = 'punch'
             break
         case 'preg': case 'preñar': case 'embarazar':
-            str = from === who ? `\`${from}\` se embarazó solito/a... misterioso! (¬ω¬)` : `\`${from}\` le regaló 9 meses de espera a \`${who}\`! (¬ω¬)`
+            str = senderJid === who ? `\`${from}\` se embarazó solito/a... misterioso! (¬ω¬)` : `\`${from}\` le regaló 9 meses de espera a \`${whoName}\`! (¬ω¬)`
             query = 'anime preg'
             category = 'preg'
             break
         case 'run': case 'correr':
-            str = from === who ? `\`${from}\` está haciendo cardio... o eso dice! ┗(＾0＾)┓` : `\`${from}\` sale disparado/a al ver a \`${who}\` acercarse! ┗(＾0＾)┓`
+            str = senderJid === who ? `\`${from}\` está haciendo cardio... o eso dice! ┗(＾0＾)┓` : `\`${from}\` sale disparado/a al ver a \`${whoName}\` acercarse! ┗(＾0＾)┓`
             query = 'anime run'
             category = 'run'
             break
         case 'sad': case 'triste':
-            str = from === who ? `\`${from}\` contempla la lluvia con expresión triste! (｡•́︿•̀｡)` : `\`${from}\` mira por la ventana y piensa en \`${who}\`! (｡•́︿•̀｡)`
+            str = senderJid === who ? `\`${from}\` contempla la lluvia con expresión triste! (｡•́︿•̀｡)` : `\`${from}\` mira por la ventana y piensa en \`${whoName}\`! (｡•́︿•̀｡)`
             query = 'anime sad'
             category = 'sad'
             break
         case 'scared': case 'asustada': case 'asustado':
-            str = from === who ? `\`${from}\` se asusta! (꒪ཀ꒪)` : `\`${from}\` está aterrorizado/a de \`${who}\`! (꒪ཀ꒪)`
+            str = senderJid === who ? `\`${from}\` se asusta! (꒪ཀ꒪)` : `\`${from}\` está aterrorizado/a de \`${whoName}\`! (꒪ཀ꒪)`
             query = 'anime scared'
             category = 'scared'
             break
         case 'seduce': case 'seducir':
-            str = from === who ? `\`${from}\` susurra versos de amor al aire! ( ͡° ͜ʖ ͡°)` : `\`${from}\` lanza una mirada que derrite a \`${who}\`! ( ͡° ͜ʖ ͡°)`
+            str = senderJid === who ? `\`${from}\` susurra versos de amor al aire! ( ͡° ͜ʖ ͡°)` : `\`${from}\` lanza una mirada que derrite a \`${whoName}\`! ( ͡° ͜ʖ ͡°)`
             query = 'anime seduce'
             category = 'seduce'
             break
         case 'shy': case 'timido': case 'timida':
-            str = from === who ? `\`${from}\` no sabe cómo actuar... se pone rojo/a! (⸝⸝⸝-﹏-⸝⸝⸝)` : `\`${from}\` baja la mirada tímidamente frente a \`${who}\`! (⸝⸝⸝-﹏-⸝⸝⸝)`
+            str = senderJid === who ? `\`${from}\` no sabe cómo actuar... se pone rojo/a! (⸝⸝⸝-﹏-⸝⸝⸝)` : `\`${from}\` baja la mirada tímidamente frente a \`${whoName}\`! (⸝⸝⸝-﹏-⸝⸝⸝)`
             query = 'anime shy'
             category = 'shy'
             break
         case 'walk': case 'caminar':
-            str = from === who ? `\`${from}\` pasea! ┌( ಠ‿ಠ)┘` : `\`${from}\` está caminando con \`${who}\`! ┌( ಠ‿ಠ)┘`
+            str = senderJid === who ? `\`${from}\` pasea! ┌( ಠ‿ಠ)┘` : `\`${from}\` está caminando con \`${whoName}\`! ┌( ಠ‿ಠ)┘`
             query = 'anime walk'
             category = 'walk'
             break
         case 'dramatic': case 'drama':
-            str = from === who ? `\`${from}\` está montando un show digno de un Oscar! (┬┬﹏┬┬)` : `\`${from}\` está actuando dramáticamente por \`${who}\`! (┬┬﹏┬┬)`
+            str = senderJid === who ? `\`${from}\` está montando un show digno de un Oscar! (┬┬﹏┬┬)` : `\`${from}\` está actuando dramáticamente por \`${whoName}\`! (┬┬﹏┬┬)`
             query = 'anime dramatic'
             category = 'dramatic'
             break
         case 'kisscheek':
-            str = from === who ? `\`${from}\` se besó la mejilla con cariño! (˶ ˘ ³˘)` : `\`${from}\` besó la mejilla de \`${who}\` con ternura! (˶ ˘ ³˘)`
+            str = senderJid === who ? `\`${from}\` se besó la mejilla con cariño! (˶ ˘ ³˘)` : `\`${from}\` besó la mejilla de \`${whoName}\` con ternura! (˶ ˘ ³˘)`
             query = 'anime kiss cheek'
             category = 'kisscheek'
             break
         case 'wink': case 'guiñar':
-            str = from === who ? `\`${from}\` se guiñó el ojo a sí mismo/a en el espejo! (⸝⸝> ᴗ•⸝⸝)` : `\`${from}\` le guiñó el ojo a \`${who}\`! (⸝⸝> ᴗ•⸝⸝)`
+            str = senderJid === who ? `\`${from}\` se guiñó el ojo a sí mismo/a en el espejo! (⸝⸝> ᴗ•⸝⸝)` : `\`${from}\` le guiñó el ojo a \`${whoName}\`! (⸝⸝> ᴗ•⸝⸝)`
             query = 'anime wink'
             category = 'wink'
             break
         case 'cringe': case 'avergonzarse':
-            str = from === who ? `\`${from}\` siente cringe! (ᇂ_ᇂ|||)` : `\`${from}\` siente cringe por \`${who}\`! (ᇂ_ᇂ|||)`
+            str = senderJid === who ? `\`${from}\` siente cringe! (ᇂ_ᇂ|||)` : `\`${from}\` siente cringe por \`${whoName}\`! (ᇂ_ᇂ|||)`
             query = 'anime cringe'
             category = 'cringe'
             break
         case 'smug': case 'presumir':
-            str = from === who ? `\`${from}\` está presumiendo mucho últimamente! ପ(๑•ᴗ•๑)ଓ` : `\`${from}\` está presumiendo a \`${who}\`! ପ(๑•ᴗ•๑)ଓ`
+            str = senderJid === who ? `\`${from}\` está presumiendo mucho últimamente! convention(๑•ᴗ•๑)ଓ` : `\`${from}\` está presumiendo a \`${whoName}\`! ପ(๑•ᴗ•๑)ଓ`
             query = 'anime smug'
             category = 'smug'
             break
         case 'smile': case 'sonreir':
-            str = from === who ? `\`${from}\` está sonriendo! ( ˶ˆᗜˆ˵ )` : `\`${from}\` le sonrió a \`${who}\`! ( ˶ˆᗜˆ˵ )`
+            str = senderJid === who ? `\`${from}\` está sonriendo! ( ˶ˆᗜˆ˵ )` : `\`${from}\` le sonrió a \`${whoName}\`! ( ˶ˆᗜˆ˵ )`
             query = 'anime smile'
             category = 'smile'
             break
         case 'highfive': case '5':
-            str = from === who ? `\`${from}\` se chocó los cinco frente al espejo! (•̀o•́)ง` : `\`${from}\` chocó los 5 con \`${who}\`! (•̀o•́)ง٩(ˊᗜˋ)`
+            str = senderJid === who ? `\`${from}\` se chocó los cinco frente al espejo! (•̀o•́)ง` : `\`${from}\` chocó los 5 con \`${whoName}\`! (•̀o•́)ง٩(ˊᗜˋ)`
             query = 'anime highfive'
             category = 'highfive'
             break
         case 'handhold': case 'mano':
-            str = from === who ? `\`${from}\` se dio la mano consigo mismo/a! (∩•̀ω•́)⊃` : `\`${from}\` le agarró la mano a \`${who}\`! (∩•̀ω•́)⊃`
+            str = senderJid === who ? `\`${from}\` se dio la mano consigo mismo/a! (∩•̀ω•́)⊃` : `\`${from}\` le agarró la mano a \`${whoName}\`! (∩•̀ω•́)⊃`
             query = 'anime handhold'
             category = 'handhold'
             break
         case 'bullying': case 'bully':
-            str = from === who ? `\`${from}\` se hace bullying solo… alguien abrácelo! ༼ ಠДಠ ༽` : `\`${from}\` le está haciendo bullying a \`${who}\`! ༼ ಠДಠ ༽`
+            str = senderJid === who ? `\`${from}\` se hace bullying solo… alguien abrácelo! ༼ ಠДಠ ༽` : `\`${from}\` le está haciendo bullying a \`${whoName}\`! ༼ ಠДಠ ༽`
             query = 'anime bullying'
             category = 'bullying'
             break
         case 'wave': case 'hola': case 'ola':
-            str = from === who ? `\`${from}\` se saludó a sí mismo/a en el espejo! (๑˃̵ᴗ˂̵)و` : `\`${from}\` está saludando a \`${who}\`! (๑˃̵ᴗ˂̵)و`
+            str = senderJid === who ? `\`${from}\` se saludó a sí mismo/a en el espejo! (๑˃̵ᴗ˂̵)و` : `\`${from}\` está saludando a \`${whoName}\`! (๑˃̵ᴗ˂̵)و`
             query = 'anime wave'
             category = 'wave'
             break

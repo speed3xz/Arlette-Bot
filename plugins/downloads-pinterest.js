@@ -10,12 +10,10 @@ let handler = async (m, { conn, text, args, usedPrefix }) => {
     if (!text) return await conn.reply(m.chat, `❀ Por favor, ingresa lo que deseas buscar por Pinterest.`, m, ctxErr)
     
     try {
-        await m.react('🕒')
-        
         if (text.includes("https://")) {
             let i = await dl(args[0])
             let isVideo = i.download.includes(".mp4")
-            await conn.sendMessage(m.chat, { [isVideo ? "video" : "image"]: { url: i.download }, caption: i.title }, { quoted: fkontak })
+            await conn.sendMessage(m.chat, { [isVideo ? "video" : "image"]: { url: i.download }, caption: `📌 *Título:* ${i.title || 'Sin título'}\n🔗 *Enlace:* ${args[0]}` }, { quoted: m })
         } else {
             const results = await pins(text)
             if (!results.length) {
@@ -27,15 +25,22 @@ let handler = async (m, { conn, text, args, usedPrefix }) => {
             
             const pinInfo = await getPinInfo(selectedImage)
             
+            let userName = pinInfo.userRaw ? pinInfo.userRaw.replace(/\*/g, '') : 'Información no disponible'
+            let titleName = pinInfo.titleRaw ? pinInfo.titleRaw.replace(/\*/g, '') : 'Sin título'
+            let boardName = pinInfo.boardRaw ? pinInfo.boardRaw.replace(/\*/g, '') : 'Tablero no disponible'
+            let pinLink = pinInfo.link || '#'
+
+            let captionText = `📌 *Título:* ${titleName}\n` +
+                              `👤 *Usuario:* ${userName}\n` +
+                              `🗂️ *Tablero:* ${boardName}\n` +
+                              `🔗 *Enlace:* ${pinLink}`
+
             await conn.sendMessage(m.chat, { 
                 image: { url: selectedImage.image_large_url }, 
-                caption: `❀ Pinterest - Search ❀\n\n✧ Búsqueda » "${text}"\n✧ Usuario » ${pinInfo.user || '*Información no disponible*'}\n❖ Título » ${pinInfo.title || '*Sin título*'}\n❏ Tablero » ${pinInfo.board || '*Tablero no disponible*'}\n🜸 Link » _${pinInfo.link || '#'}_`
+                caption: captionText
             }, { quoted: m })
-            
-            await m.react('✔️')
         }
     } catch (e) {
-        await m.react('✖️')
         await conn.reply(m.chat, `⚠︎ Se ha producido un problema.\n> Usa *${usedPrefix}report* para informarlo.\n\n` + e, m, ctxErr)
     }
 }
@@ -51,6 +56,9 @@ async function getPinInfo(imageData) {
     try {
         if (imageData.pinner) {
             return {
+                userRaw: `${imageData.pinner.full_name || imageData.pinner.username} (${imageData.pinner.username || 'N/A'})`,
+                titleRaw: `${imageData.title || imageData.grid_title || 'Sin título'}`,
+                boardRaw: `${imageData.board?.name || 'Tablero no disponible'}`,
                 user: `*${imageData.pinner.full_name || imageData.pinner.username}* (${imageData.pinner.username || 'N/A'})`,
                 title: `*${imageData.title || imageData.grid_title || 'Sin título'}*`,
                 board: `*${imageData.board?.name || 'Tablero no disponible'}*`,
@@ -59,6 +67,9 @@ async function getPinInfo(imageData) {
         }
         
         return {
+            userRaw: 'Información no disponible',
+            titleRaw: 'Sin título',
+            boardRaw: 'Tablero no disponible',
             user: '*Información no disponible*',
             title: '*Sin título*',
             board: '*Tablero no disponible*',
@@ -66,6 +77,9 @@ async function getPinInfo(imageData) {
         }
     } catch (error) {
         return {
+            userRaw: 'Información no disponible',
+            titleRaw: 'Sin título',
+            boardRaw: 'Tablero no disponible',
             user: '*Información no disponible*',
             title: '*Sin título*',
             board: '*Tablero no disponible*',

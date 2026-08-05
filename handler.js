@@ -378,6 +378,32 @@ const plugin = global.plugins[name]
 if (!plugin) continue
 if (plugin.disabled) continue
 const __filename = join(___dirname, name)
+if (typeof plugin.before === "function") {
+try {
+if (await plugin.before.call(this, m, {
+match: null,
+conn: this,
+participants,
+groupMetadata,
+userGroup,
+botGroup,
+isROwner,
+isOwner,
+isRAdmin,
+isAdmin,
+isBotAdmin,
+isPrems,
+chatUpdate,
+__dirname: ___dirname,
+__filename,
+user,
+chat,
+settings
+})) {
+continue
+}} catch (err) {
+console.error(err)
+}}
 if (typeof plugin.all === "function") {
 try {
 await plugin.all.call(this, m, {
@@ -407,29 +433,7 @@ return [regex.exec(m.text), regex]
 }) : typeof pluginPrefix === "string" ?
 [[new RegExp(strRegex(pluginPrefix)).exec(m.text), new RegExp(strRegex(pluginPrefix))]] :
 [[[], new RegExp]]).find(prefix => prefix[1])
-if (typeof plugin.before === "function") {
-if (await plugin.before.call(this, m, {
-match,
-conn: this,
-participants,
-groupMetadata,
-userGroup,
-botGroup,
-isROwner,
-isOwner,
-isRAdmin,
-isAdmin,
-isBotAdmin,
-isPrems,
-chatUpdate,
-__dirname: ___dirname,
-__filename,
-user,
-chat,
-settings
-})) {
-continue
-}}
+
 if (typeof plugin !== "function") {
 continue
 }

@@ -86,7 +86,7 @@ const getFlag = (number) => {
 
 const handler = async (m, { isOwner, isAdmin, conn, text, participants, args, command }) => {
     const pesan = args.join` `
-    const oi = `*» INFO :* Mensaje: ${pesan || 'Sin mensaje'}`
+    const oi = `*» Mensaje :* ${pesan || 'Sin mensaje'}`
     let teks = `*!  MENCION GENERAL  !*\n  *PARA ${participants.length} MIEMBROS* 🗣️\n\n ${oi}\n\n╭  ┄ 𝅄 ۪꒰ \`⡞᪲=͟͟͞${global.botname || 'Bot'}≼᳞ׄ\` ꒱ ۟ 𝅄 ┄\n`
     
     let mentions = []

@@ -25,12 +25,13 @@ let handler = async (m, { conn, args, usedPrefix }) => {
         const genero = user.genre || 'Sin especificar'
         const pareja = user.marry
 
-        let casado = 'Nadie'
+        let casadoLine = ''
         if (pareja) {
             let pResolved = await resolveLidToPnJid(conn, m.chat, pareja)
             let pNormalized = normalizeNumber(pResolved || pareja)
             let parejaJid = pNormalized ? pNormalized + '@s.whatsapp.net' : pareja
-            casado = global.db.data.users[parejaJid]?.name || await conn.getName(parejaJid).catch(() => parejaJid.split('@')[0])
+            let casado = global.db.data.users[parejaJid]?.name || await conn.getName(parejaJid).catch(() => parejaJid.split('@')[0])
+            casadoLine = `💞 *Pareja:* ${casado}\n`
         }
 
         const exp = user.exp || 0
@@ -64,7 +65,7 @@ let handler = async (m, { conn, args, usedPrefix }) => {
         caption += `\n`
         caption += `🎂 *Cumpleaños:* ${cumpleanos}\n`
         caption += `⚥ *Género:* ${genero}\n`
-        caption += `💞 *Pareja:* ${casado}\n`
+        caption += casadoLine
         caption += `\n`
         caption += `⭐ *Experiencia:* ${exp.toLocaleString()}\n`
         caption += `🎀 *Nivel:* ${nivel}\n`

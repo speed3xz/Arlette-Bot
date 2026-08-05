@@ -97,7 +97,6 @@ async function buscarImagenDelirius(tag) {
 let handler = async (m, { conn, usedPrefix, command }) => {
     const ctxErr = (global.rcanalx || {});
     const ctxWarn = (global.rcanalw || {});
-    const ctxOk = (global.rcanalr || {});
     
     const cooldownTime = 15 * 60 * 1000;
     
@@ -174,21 +173,20 @@ let handler = async (m, { conn, usedPrefix, command }) => {
         const claimantName = await getClaimantName(characterDb.user);
         const statusMessage = characterDb.user ? `Reclamado por ${claimantName}` : 'Libre';
 
-        const infoText = `╭━━━〔 🌸 𝐏𝐄𝐑𝐒𝐎𝐍𝐀𝐉𝐄 𝐀𝐋𝐄𝐀𝐓𝐎𝐑𝐈𝐎 🌸 〕━━━⬣
-│ 🎴 Nombre ➪ *${randomCharacter.name}*
-│ ⚧️ Género ➪ *${randomCharacter.gender || 'Desconocido'}*
-│ 💎 Valor ➪ *${randomCharacter.value || 100}*
-│ 🎯 Estado ➪ ${statusMessage}
-│ 📚 Fuente ➪ *${seriesName}*
-│ 🪪 ID: *${randomCharacter.id}*
-╰━━━━━━━━━━━━━━━━━━━━━━⬣`;
+        const infoText = `🎴 *Personaje:* ${randomCharacter.name}
+⚧️ *Género:* ${randomCharacter.gender || 'Desconocido'}
+💎 *Valor:* ${randomCharacter.value || 100}
+🎯 *Estado:* ${statusMessage}
+📚 *Fuente:* ${seriesName}
+🪪 *ID:* ${randomCharacter.id}`;
 
-        const sentMessage = await conn.sendFile(
+        const sentMessage = await conn.sendMessage(
             m.chat, 
-            randomImage, 
-            characterDb.name + '.jpg', 
-            infoText, 
-            m
+            { 
+                image: { url: randomImage }, 
+                caption: infoText 
+            }, 
+            { quoted: m }
         );
 
         chatData.lastRolledId = characterId;
@@ -212,4 +210,4 @@ handler.tags = ['gacha'];
 handler.command = ['rollwaifu', 'rw', 'roll'];
 handler.group = true;
 
-export default handler;
+export default handler

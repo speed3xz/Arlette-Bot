@@ -27,7 +27,7 @@ let handler = async (m, { conn, args, command, usedPrefix }) => {
     }
 
     if (!['abrir', 'open', 'cerrar', 'close'].includes(action)) {
-        return m.reply(`⚙️ *Ajustes de Grupo*\n\nUsa el comando junto con la acción que deseas realizar:\n\n🔓 *abrir* / *open*\n🔒 *cerrar* / *close*\n\nEjemplo: *${usedPrefix}grupo abrir 10m* o *${usedPrefix}cerrar 1h*`)
+        return m.reply(`⚙️ *Ajustes de Configuración*\n\nUsa el comando junto con la acción que deseas cambiar:\n\n🔓 *abrir* / *open*\n🔒 *cerrar* / *close*\n\nEjemplo: *${usedPrefix}grupo abrir 10m* o *${usedPrefix}close 1h*`)
     }
 
     let isClose = (action === 'cerrar' || action === 'close') ? 'announcement' : 'not_announcement'
@@ -36,25 +36,25 @@ let handler = async (m, { conn, args, command, usedPrefix }) => {
     if (timerMs > 0) {
         let timeFormatted = formatDuration(timeArg)
         if (isClose === 'announcement') {
-            m.reply(`🔒 *Ajustes de Grupo*\n\nEl grupo se cerrará automáticamente en *${timeFormatted}*.`)
+            m.reply(`⏳ El grupo se cerrará en *${timeFormatted}*.`)
         } else {
-            m.reply(`🔓 *Ajustes de Grupo*\n\nEl grupo se abrirá automáticamente en *${timeFormatted}*.`)
+            m.reply(`⏳ El grupo se abrirá en *${timeFormatted}*.`)
         }
 
         setTimeout(async () => {
             await conn.groupSettingUpdate(m.chat, isClose)
             if (isClose === 'announcement') {
-                conn.sendMessage(m.chat, { text: `🔒 *Ajustes de Grupo*\n\nEl tiempo ha finalizado. Sólo los admins pueden escribir en este grupo.` })
+                conn.sendMessage(m.chat, { text: `🔒 *El grupo ha sido cerrado.* Solo los administradores pueden enviar mensajes.` })
             } else {
-                conn.sendMessage(m.chat, { text: `🔓 *Ajustes de Grupo*\n\nEl tiempo ha finalizado. Ya todos pueden escribir en este grupo.` })
+                conn.sendMessage(m.chat, { text: `🔓 *El grupo ha sido abierto.* Todos los participantes pueden enviar mensajes.` })
             }
         }, timerMs)
     } else {
         await conn.groupSettingUpdate(m.chat, isClose)
         if (isClose === 'announcement') {
-            m.reply(`🔒 *Ajustes de Grupo*\n\nSólo los admins pueden escribir en este grupo.`)
+            m.reply(`🔒 *El grupo ha sido cerrado.* Solo los administradores pueden enviar mensajes.`)
         } else {
-            m.reply(`🔓 *Ajustes de Grupo*\n\nYa todos pueden escribir en este grupo.`)
+            m.reply(`🔓 *El grupo ha sido abierto.* Todos los participantes pueden enviar mensajes.`)
         }
     }
 }

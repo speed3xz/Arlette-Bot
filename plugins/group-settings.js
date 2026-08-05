@@ -31,6 +31,16 @@ let handler = async (m, { conn, args, command, usedPrefix }) => {
     }
 
     let isClose = (action === 'cerrar' || action === 'close') ? 'announcement' : 'not_announcement'
+    let groupMetadata = await conn.groupMetadata(m.chat).catch(() => null)
+    let isCurrentlyClosed = groupMetadata?.announce
+
+    if (isClose === 'announcement' && isCurrentlyClosed) {
+        return m.reply(`🔒 *El grupo ya se encuentra cerrado.*`)
+    }
+    if (isClose === 'not_announcement' && !isCurrentlyClosed) {
+        return m.reply(`🔓 *El grupo ya se encuentra abierto.*`)
+    }
+
     let timerMs = timeArg ? parseDuration(timeArg) : 0
 
     if (timerMs > 0) {
@@ -42,6 +52,12 @@ let handler = async (m, { conn, args, command, usedPrefix }) => {
         }
 
         setTimeout(async () => {
+            let currentMetadata = await conn.groupMetadata(m.chat).catch(() => null)
+            let currentStatus = currentMetadata?.announce
+
+            if (isClose === 'announcement' && currentStatus) return
+            if (isClose === 'not_announcement' && !currentStatus) return
+
             await conn.groupSettingUpdate(m.chat, isClose)
             if (isClose === 'announcement') {
                 conn.sendMessage(m.chat, { text: `🔒 *El grupo ha sido cerrado.* Solo los administradores pueden enviar mensajes.` })

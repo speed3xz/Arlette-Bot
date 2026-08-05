@@ -2,21 +2,30 @@ import fetch from 'node-fetch'
 import { WAMessageStubType } from '@whiskeysockets/baileys'
 
 async function obtenerImagenUsuario(conn, userId, chatJid) {
-    try {
-        const url = await conn.profilePictureUrl(userId, 'image')
-        const res = await fetch(url)
-        if (res.ok) return await res.buffer()
-    } catch {}
-
-    try {
-        const url = await conn.profilePictureUrl(chatJid, 'image')
-        const res = await fetch(url)
-        if (res.ok) return await res.buffer()
-    } catch {}
-
     const fallbackUrl = global.icono || 'https://raw.githubusercontent.com/speed3xz/Storage/refs/heads/main/Arlette-Bot/b75b29441bbd967deda4365441497221.jpg'
-    const res = await fetch(fallbackUrl)
-    return await res.buffer()
+
+    try {
+        const url = await conn.profilePictureUrl(userId, 'image').catch(() => null)
+        if (url) {
+            const res = await fetch(url)
+            if (res.ok) return await res.buffer()
+        }
+    } catch {}
+
+    try {
+        const url = await conn.profilePictureUrl(chatJid, 'image').catch(() => null)
+        if (url) {
+            const res = await fetch(url)
+            if (res.ok) return await res.buffer()
+        }
+    } catch {}
+
+    try {
+        const res = await fetch(fallbackUrl)
+        if (res.ok) return await res.buffer()
+    } catch {}
+
+    return Buffer.from('')
 }
 
 function formatearMensaje(plantilla, userNum, grupo, desc) {

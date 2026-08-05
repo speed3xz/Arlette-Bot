@@ -87,7 +87,7 @@ let opcion
 if (methodCodeQR) {
   opcion = '1'
 }
-if (!methodCodeQR && !methodCode && !fs.existsSync(`./${global.sessions}/creds.json`)) {
+if (!methodCodeQR && !methodCode && !fs.existsSync(`./${global.sessions || 'Sessions/Principal'}/creds.json`)) {
   do {
     opcion = await question("Seleccione una opción:\n1. Con código QR\n2. Con código de texto de 8 dígitos\n--> ")
   } while (opcion !== '1' && opcion !== '2')
@@ -128,7 +128,7 @@ const connectionOptions = {
 global.conn = makeWASocket(connectionOptions)
 conn.ev.on("creds.update", saveCreds)
 
-if (!fs.existsSync(`./${global.sessions}/creds.json`)) {
+if (!fs.existsSync(`./${global.sessions || 'Sessions/Principal'}/creds.json`)) {
   if (opcion === '2' || methodCode) {
     opcion = '2'
     if (!conn.authState.creds.registered) {
@@ -217,7 +217,7 @@ global.reloadHandler = async function(restatConn) {
     conn.ev.off('creds.update', conn.credsUpdate)
   }
   
-  // Manejador optimizado para evitar el error de "Esperando mensaje"
+  // Filtro estricto para evitar el "Esperando mensaje" y proteger contra objetos congelados
   conn.handler = async (chatUpdate) => {
     if (!chatUpdate.messages || chatUpdate.type !== 'notify') return
     for (let m of chatUpdate.messages) {

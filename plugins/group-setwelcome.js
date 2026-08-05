@@ -34,7 +34,6 @@ const handler = async (m, { conn, command, usedPrefix, text, groupMetadata }) =>
                 break
             }
             case 'testwelcome': {
-                if (!chat.sWelcome) return m.reply('👋🏻 *Mensaje de Bienvenida*\nNo hay un mensaje configurado en este grupo.')
                 const { image, caption, mentions } = await generarBienvenida({ conn, userId: m.sender, groupMetadata, chat, chatJid: m.chat })
                 
                 if (image && image.length > 0) {
@@ -45,7 +44,6 @@ const handler = async (m, { conn, command, usedPrefix, text, groupMetadata }) =>
                 break
             }
             case 'testbye': {
-                if (!chat.sBye) return m.reply('👋🏻 *Mensaje de Despedida*\nNo hay un mensaje configurado en este grupo.')
                 const { image, caption, mentions } = await generarDespedida({ conn, userId: m.sender, groupMetadata, chat, chatJid: m.chat })
                 
                 if (image && image.length > 0) {

@@ -1,6 +1,11 @@
 import { resolveLidToPnJid, normalizeNumber } from '../handler.js'
 
 let handler = async (m, { conn, args, command, usedPrefix }) => {
+    let chat = global.db.data.chats[m.chat] || {}
+    if (!Array.isArray(chat.muteds)) {
+        chat.muteds = []
+    }
+
     switch (command) {
         case 'marry':
         case 'casar':
@@ -27,27 +32,30 @@ let handler = async (m, { conn, args, command, usedPrefix }) => {
                 return m.reply(`✿ Ya estás ${status} con *${pName}*\n> Puedes divorciarte con: *${usedPrefix}divorce*`)
             }
 
-            let texto = await m.mentionedJid
-            let q = args[0]
-            let rawTarget = texto && texto.length > 0 ? texto[0] : (m.quoted ? m.quoted.sender : (q ? q.replace(/[^0-9]/g, '') + '@s.whatsapp.net' : null))
+            const contextInfo = m.message?.extendedTextMessage?.contextInfo || m.msg?.contextInfo
+            const q = args[0]
+            let rawtarget = (m.mentionedJid && m.mentionedJid.length > 0) ? m.mentionedJid : contextInfo?.mentionedJid
+
+            let who = await (m.quoted?.sender || rawtarget?.[0] || contextInfo?.participant || (q ? q.replace(/[^0-9]/g, '') + '@s.whatsapp.net' : null))
 
             let pendingProposer = Object.keys(conn.marry).find(proposer => conn.marry[proposer] === realSender)
 
-            if (!rawTarget && pendingProposer) {
-                rawTarget = pendingProposer
+            if ((!who || who === '@s.whatsapp.net') && pendingProposer) {
+                who = pendingProposer
             }
 
-            if (!rawTarget) {
+            if (!who || who === '@s.whatsapp.net') {
                 return m.reply(`✿ Debes mencionar o responder al usuario con el que te quieres casar o aceptar una propuesta.\n> Ejemplo » *${usedPrefix}marry @usuario*`)
             }
 
-            let resolvedTarget = await resolveLidToPnJid(conn, m.chat, rawTarget)
-            let normalizedTarget = normalizeNumber(resolvedTarget || rawTarget)
-            let target = normalizedTarget ? normalizedTarget + '@s.whatsapp.net' : rawTarget
+            const resolvedJid = await resolveLidToPnJid(conn, m.chat, who)
+            const normalized = normalizeNumber(resolvedJid)
 
-            if (!target.endsWith('@s.whatsapp.net')) {
-                target = target.split('@')[0].split(':')[0] + '@s.whatsapp.net'
+            if (!normalized) {
+                return m.reply(`⚠︎ No se pudo identificar al usuario.`)
             }
+
+            const target = normalized + '@s.whatsapp.net'
 
             if (target === realSender) {
                 return conn.sendMessage(m.chat, { text: `✰ No puedes casarte contigo mism@.`, mentions: [realSender] }, { quoted: m })

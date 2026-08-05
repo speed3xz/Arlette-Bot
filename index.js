@@ -42,9 +42,7 @@ global.__require = function require(dir = import.meta.url) {
 global.timestamp = { start: new Date() }
 const __dirname = global.__dirname(import.meta.url)
 global.opts = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse())
-
-// Se conecta al prefix definido en settings.js o usa por defecto los formatos de matriz
-global.prefix = global.prefix || ['.', '/']
+global.prefix = new RegExp('^[/.]')
 
 global.db = new Low(new JSONFile(join(__dirname, './lib/database.json')))
 global.DATABASE = global.db
@@ -71,7 +69,7 @@ global.loadDatabase = async function loadDatabase() {
 }
 loadDatabase()
 
-const { state, saveCreds } = await useMultiFileAuthState(global.sessions || 'Sessions/Principal')
+const { state, saveCreds } = await useMultiFileAuthState(global.sessions)
 const msgRetryCounterCache = new NodeCache({ stdTTL: 0, checkperiod: 0 })
 const userDevicesCache = new NodeCache({ stdTTL: 0, checkperiod: 0 })
 const { version } = await fetchLatestBaileysVersion()
@@ -87,7 +85,7 @@ let opcion
 if (methodCodeQR) {
   opcion = '1'
 }
-if (!methodCodeQR && !methodCode && !fs.existsSync(`./${global.sessions || 'Sessions/Principal'}/creds.json`)) {
+if (!methodCodeQR && !methodCode && !fs.existsSync(`./${global.sessions}/creds.json`)) {
   do {
     opcion = await question("Seleccione una opción:\n1. Con código QR\n2. Con código de texto de 8 dígitos\n--> ")
   } while (opcion !== '1' && opcion !== '2')
@@ -128,7 +126,7 @@ const connectionOptions = {
 global.conn = makeWASocket(connectionOptions)
 conn.ev.on("creds.update", saveCreds)
 
-if (!fs.existsSync(`./${global.sessions || 'Sessions/Principal'}/creds.json`)) {
+if (!fs.existsSync(`./${global.sessions}/creds.json`)) {
   if (opcion === '2' || methodCode) {
     opcion = '2'
     if (!conn.authState.creds.registered) {
@@ -217,7 +215,7 @@ global.reloadHandler = async function(restatConn) {
     conn.ev.off('creds.update', conn.credsUpdate)
   }
   
-  // Filtro estricto para evitar el "Esperando mensaje" y proteger contra objetos congelados
+  // FIX: Envoltorio seguro para procesar notificaciones y evitar el error de "Esperando mensaje"
   conn.handler = async (chatUpdate) => {
     if (!chatUpdate.messages || chatUpdate.type !== 'notify') return
     for (let m of chatUpdate.messages) {

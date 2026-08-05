@@ -564,17 +564,17 @@ console.log(m.message)
 
 global.dfail = (type, m, conn) => {
 const msg = {
-rowner: `🌸 *Acceso Especial* 🌸\n\n┊ El comando *${global.comando}* solo puede ser usado por los *creadores* del bot. ✨`, 
-owner: `🎀 *Zona de Desarrolladores* 🎀\n\n┊ El comando *${global.comando}* solo está disponible para los *desarrolladores* del bot. ♡`, 
-mods: `🍥 *Solo para Moderadores* 🍥\n\n┊ El comando *${global.comando}* es exclusivo para *moderadores*.`, 
-premium: `💖 *Usuario Premium* 💖\n\n┊ El comando *${global.comando}* está reservado para los *usuarios premium*\n> use el comando "/vip". ₊˚ʚ♡ɞ˚₊`, 
-group: `🌼 *Disponible en Grupos* 🌼\n\n┊ El comando *${global.comando}* solo puede usarse en *grupos*. (≧◡≦)`,
-private: `💌 *Solo en Privado* 💌\n\n┊ El comando *${global.comando}* solo funciona en *chats privados*. ꒰ᐢ. .ᐢ꒱`,
-admin: `⭐ *Requiere Admin* ⭐\n\n┊ El comando *${global.comando}* es para los *administradores* del grupo. ฅ^•ﻌ•^ฅ`, 
-botAdmin: `⚙️ *Necesito Ser Admin* ⚙️\n\n┊ Para ejecutar *${global.comando}*, primero debo ser *admin* del grupo, ¡ayúdame! (｡•́︿•̀｡)`,
-restrict: `🚫 *Función No Disponible* 🚫\n\n┊ Esta característica está *desactivada* por ahora. ₍ᐢ.ˬ.ᐢ₎`
+rowner: `🛡️ *Acceso Restringido.* El comando *${global.comando}* solo puede ser usado por los creadores del bot.`, 
+owner: `👑 *Zona de Desarrolladores.* El comando *${global.comando}* solo está disponible para los desarrolladores del bot.`, 
+mods: `🛡️ *Solo para Moderadores.* El comando *${global.comando}* es exclusivo para moderadores.`, 
+premium: `💎 *Usuario Premium.* El comando *${global.comando}* está reservado para los usuarios premium.`, 
+group: `👥 *Disponible en Grupos.* El comando *${global.comando}* solo puede usarse en grupos.`,
+private: `💌 *Solo en Privado.* El comando *${global.comando}* solo funciona en chats privados.`,
+admin: `⚡ *Requiere Admin.* El comando *${global.comando}* es para los administradores del grupo.`, 
+botAdmin: `⚙️ *Necesito Ser Admin.* Para ejecutar *${global.comando}*, primero debo ser admin del grupo.`,
+restrict: `⚠️ *Función No Disponible.* Esta característica está desactivada por ahora.`
 }[type]
-if (msg) return conn.reply(m.chat, msg, m).then(_ => m.react('✖️')).catch(() => null)
+if (msg) return conn.reply(m.chat, msg, m)
 }
 let file = global.__filename(import.meta.url, true)
 watchFile(file, async () => {

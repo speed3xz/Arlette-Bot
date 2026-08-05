@@ -1,35 +1,38 @@
-import { watchFile, unwatchFile } from "fs"
-import { fileURLToPath } from "url"
-import fs from "fs"
+import { watchFile, unwatchFile } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname } from 'node:path';
 
-global.botNumber = ""
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-global.owner = [
-  "573114910796",
-  "819095203873",
-  "5216671548329"
-]
+export const global = {
+  botNumber: "",
+  owner: [
+    "573114910796",
+    "819095203873",
+    "5216671548329"
+  ],
+  suittag: ["573114910796"],
+  prems: [],
+  libreria: "Baileys Multi Device",
+  vs: "V2",
+  nameqr: "Arlette-Bot",
+  sessions: "Sessions/Principal",
+  botname: "Arlette-Bot",
+  textbot: "Arlette-Bot, made with love by Arlette Xz",
+  dev: "© powered by Arlette Xz",
+  author: "© made with love by Arlette Xz",
+  etiqueta: "Arlette Xz",
+  currency: "Coins 🍒",
+  banner: "https://raw.githubusercontent.com/speed3xz/Storage/main/Arlette-Bot/b859e5b0780d3eb3f3349f69ab524bcc.jpg",
+  icono: "https://files.evogb.win/XD8JxJ.jpg"
+};
 
-global.suittag = ["573114910796"] 
-global.prems = []
-
-global.libreria = "Baileys Multi Device"
-global.vs = "V2"
-global.nameqr = "Arlette-Bot"
-global.sessions = "Sessions/Principal"
-
-global.botname = "Arlette-Bot"
-global.textbot = "Arlette-Bot, made with love by Arlette Xz"
-global.dev = "© powered by Arlette Xz"
-global.author = "© made with love by Arlette Xz"
-global.etiqueta = "Arlette Xz"
-global.currency = "Coins 🍒"
-global.banner = "https://raw.githubusercontent.com/speed3xz/Storage/main/Arlette-Bot/b859e5b0780d3eb3f3349f69ab524bcc.jpg"
-global.icono = "https://files.evogb.win/XD8JxJ.jpg"
-
-let file = fileURLToPath(import.meta.url)
+let file = __filename;
 watchFile(file, () => {
-  unwatchFile(file)
-  console.log("Update 'settings.js'")
-  import(`${file}?update=${Date.now()}`)
-})
+  unwatchFile(file);
+  console.log("Update 'settings.js'");
+  import(`${file}?update=${Date.now()}`);
+});
+
+export default global;

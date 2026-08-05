@@ -7,6 +7,7 @@ const __dirname = dirname(__filename);
 
 export const global = {
   botNumber: "",
+  prefix: ['.', '/'],
   owner: [
     "573114910796",
     "819095203873",

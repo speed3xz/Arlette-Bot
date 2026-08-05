@@ -42,7 +42,9 @@ global.__require = function require(dir = import.meta.url) {
 global.timestamp = { start: new Date() }
 const __dirname = global.__dirname(import.meta.url)
 global.opts = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse())
-global.prefix = new RegExp('^[/.]')
+
+// Se conecta al prefix definido en settings.js o usa por defecto los formatos de matriz
+global.prefix = global.prefix || ['.', '/']
 
 global.db = new Low(new JSONFile(join(__dirname, './lib/database.json')))
 global.DATABASE = global.db
@@ -215,7 +217,19 @@ global.reloadHandler = async function(restatConn) {
     conn.ev.off('creds.update', conn.credsUpdate)
   }
   
-  conn.handler = handler.handler.bind(global.conn)
+  // Manejador optimizado para evitar el error de "Esperando mensaje"
+  conn.handler = async (chatUpdate) => {
+    if (!chatUpdate.messages || chatUpdate.type !== 'notify') return
+    for (let m of chatUpdate.messages) {
+      if (!m.message || m.messageStubType) continue
+      try {
+        await handler.handler(chatUpdate)
+      } catch (e) {
+        console.error('Error en el handler:', e)
+      }
+    }
+  }
+
   conn.connectionUpdate = connectionUpdate.bind(global.conn)
   conn.credsUpdate = saveCreds.bind(global.conn, true)
   

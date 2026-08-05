@@ -116,8 +116,8 @@ export async function checkAdminStatus(sock, from, sender) {
             .map(p => decodeJid(p.id));
 
         const senderJid = decodeJid(sender);
-        const botId = decodeJid(sock.user?.id || sock.user?.jid);
-        const botLid = sock.user?.lid ? decodeJid(sock.user.lid) : null;
+        const botId = decodeJid(sock?.user?.id || sock?.user?.jid || '');
+        const botLid = sock?.user?.lid ? decodeJid(sock.user.lid) : null;
 
         const adminSet = new Set(
             participants
@@ -235,12 +235,21 @@ try {
     m.sender = sender;
 }
 
-m.exp = 0
+    m.exp = 0
 try {
-const user = global.db.data.users[sender]
-if (typeof user !== "object") {
-global.db.data.users[sender] = {}
-}
+    if (!global.db.data.users[sender] || typeof global.db.data.users[sender] !== "object") {
+        global.db.data.users[sender] = {}
+    }
+    const user = global.db.data.users[sender]
+
+    try {
+        const actual = user.name || ""
+        const nuevo = m.pushName || (typeof this.getName === 'function' ? await this.getName(sender) : m.name || "Desconocido")
+        if (typeof nuevo === "string" && nuevo.trim() && nuevo !== actual) {
+            user.name = nuevo
+        }
+    } catch {}
+
 if (user) {
 if (!("name" in user)) user.name = m.name
 if (!("exp" in user) || !isNumber(user.exp)) user.exp = 0

@@ -1,4 +1,5 @@
 import { areJidsSameUser } from '@whiskeysockets/baileys'
+import { resolveLidToPnJid, normalizeNumber } from '../handler.js'
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
@@ -10,24 +11,23 @@ var handler = async (m, { conn, text, participants, command, usedPrefix }) => {
         var total = 0
         var sider = []
 
-        let groupMetadata = await conn.groupMetadata(m.chat).catch(() => null)
-        let realParticipants = groupMetadata?.participants || participants
-
         for (let i = 0; i < sum; i++) {
             let rawJid = member[i]
             
-            let pData = realParticipants.find(u => u.id === rawJid || u.jid === rawJid || u.lid === rawJid)
-            let phoneJid = pData?.id || rawJid
-            
-            if (phoneJid.includes(':')) {
-                phoneJid = phoneJid.split(':')[0] + '@s.whatsapp.net'
+            let resolved = await resolveLidToPnJid(conn, m.chat, rawJid)
+            let normalized = normalizeNumber(resolved || rawJid)
+            let userJid = normalized ? normalized + '@s.whatsapp.net' : rawJid
+
+            if (!userJid.endsWith('@s.whatsapp.net')) {
+                userJid = userJid.split('@')[0].split(':')[0] + '@s.whatsapp.net'
             }
 
-            let isAdmin = pData?.admin || pData?.isAdmin || pData?.isSuperAdmin
-            if (isAdmin) continue
-            if (areJidsSameUser(phoneJid, conn.user.id) || areJidsSameUser(rawJid, conn.user.id)) continue
+            let userGroup = participants.find(u => u.id === rawJid || u.id === userJid) || {}
+            
+            if (userGroup.isAdmin || userGroup.isSuperAdmin) continue
+            if (areJidsSameUser(userJid, conn.user.id) || areJidsSameUser(rawJid, conn.user.id)) continue
 
-            let userDb = global.db.data.users[phoneJid] || global.db.data.users[rawJid]
+            let userDb = global.db.data.users[userJid] || global.db.data.users[rawJid]
 
             let isGhost = false
 
@@ -43,10 +43,9 @@ var handler = async (m, { conn, text, participants, command, usedPrefix }) => {
             }
 
             if (isGhost) {
-                let cleanJid = phoneJid.split('@')[0] + '@s.whatsapp.net'
-                if (!sider.includes(cleanJid)) {
+                if (!sider.includes(userJid)) {
                     total++
-                    sider.push(cleanJid)
+                    sider.push(userJid)
                 }
             }
         }
@@ -73,7 +72,7 @@ var handler = async (m, { conn, text, participants, command, usedPrefix }) => {
                     for (let user of sider) {
                         if (areJidsSameUser(user, conn.user.id)) continue
                         
-                        let userGroup = realParticipants.find(v => areJidsSameUser(v.id, user))
+                        let userGroup = participants.find(v => areJidsSameUser(v.id, user))
                         if (userGroup && !userGroup.admin) {
                             await conn.groupParticipantsUpdate(m.chat, [user], 'remove')
                             await delay(10000)

@@ -156,27 +156,14 @@ let handler = async (m, { conn, usedPrefix, command }) => {
         characterDb.name = String(randomCharacter.name || 'Sin nombre');
         characterDb.value = typeof existingData.value === 'number' ? existingData.value : Number(randomCharacter.value) || 100;
         characterDb.votes = Number(characterDb.votes || existingData.votes || 0);
-        characterDb.user = m.sender;
-        characterDb.reservedUntil = currentTime + 20000;
-        characterDb.expiresAt = currentTime + 60000;
-
-        const getClaimantName = async (userId) => {
-            try {
-                return global.db?.data?.users?.[userId]?.name?.trim() || 
-                       (await conn.getName(userId)) || 
-                       userId.split('@')[0];
-            } catch {
-                return userId.split('@')[0];
-            }
-        };
-
-        const claimantName = await getClaimantName(characterDb.user);
-        const statusMessage = characterDb.user ? `Reclamado por ${claimantName}` : 'Libre';
+        
+        // El personaje sale Libre de inicio en la base de datos general para que pueda ser reclamado
+        characterDb.user = null; 
 
         const infoText = `🎴 *Personaje:* ${randomCharacter.name}
 ⚧️ *Género:* ${randomCharacter.gender || 'Desconocido'}
 💎 *Valor:* ${randomCharacter.value || 100}
-🎯 *Estado:* ${statusMessage}
+🎯 *Estado:* Libre
 📚 *Fuente:* ${seriesName}
 🪪 *ID:* ${randomCharacter.id}`;
 
@@ -191,6 +178,8 @@ let handler = async (m, { conn, usedPrefix, command }) => {
 
         chatData.lastRolledId = characterId;
         chatData.lastRolledMsgId = sentMessage?.key?.id || null;
+        chatData.lastRolledTime = currentTime;
+        chatData.lastRolledUser = m.sender;
         chatData.lastRolledCharacter = {
             id: characterId,
             name: characterDb.name,
@@ -210,4 +199,4 @@ handler.tags = ['gacha'];
 handler.command = ['rollwaifu', 'rw', 'roll'];
 handler.group = true;
 
-export default handler
+export default handler;

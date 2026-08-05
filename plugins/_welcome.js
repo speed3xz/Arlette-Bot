@@ -44,11 +44,9 @@ async function generarBienvenida({ conn, userId, groupMetadata, chat, chatJid })
     const desc = groupMetadata?.desc ? String(groupMetadata.desc) : 'Sin descripción'
     const grupo = groupMetadata?.subject || 'el grupo'
 
-    const mensajeCustom = chat.sWelcome 
+    const caption = chat.sWelcome 
         ? formatearMensaje(chat.sWelcome, userNum, grupo, desc)
         : `👋🏻 @${userNum}\nBienvenido(a) a *${grupo}*`
-
-    const caption = `👋🏻 @${userNum}\n\n${mensajeCustom}`
 
     return { image: imageBuffer, caption, mentions: [userJid] }
 }
@@ -61,11 +59,9 @@ async function generarDespedida({ conn, userId, groupMetadata, chat, chatJid }) 
     const desc = groupMetadata?.desc ? String(groupMetadata.desc) : 'Sin descripción'
     const grupo = groupMetadata?.subject || 'el grupo'
 
-    const mensajeCustom = chat.sBye 
+    const caption = chat.sBye 
         ? formatearMensaje(chat.sBye, userNum, grupo, desc)
-        : `👋🏻 @${userNum}\nHa salido de *${grupo}*`
-
-    const caption = `👋🏻 @${userNum}\n\n${mensajeCustom}`
+        : `👋🏻 @${userNum} se fue de *${grupo}*\nUn estorbo menos, ni te ocupábamos.`
 
     return { image: imageBuffer, caption, mentions: [userJid] }
 }

@@ -2,121 +2,62 @@ import fetch from "node-fetch"
 import yts from 'yt-search'
 
 const handler = async (m, { conn, text, usedPrefix, command }) => {
-    const ctxErr = (global.rcanalx || {})
-    const ctxWarn = (global.rcanalw || {})
-    const ctxOk = (global.rcanalr || {})
-    
     try {
-        if (!text.trim()) return await conn.reply(m.chat, `❀ Por favor, ingresa el nombre de la música a descargar.`, m, ctxErr)
-        await m.react('🕒')
+        if (!text.trim()) return await conn.reply(m.chat, '*Ingresa el nombre o enlace del video a descargar.*', m)
         
         const videoMatch = text.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/|v\/))([a-zA-Z0-9_-]{11})/)
         const query = videoMatch ? 'https://youtu.be/' + videoMatch[1] : text
         const search = await yts(query)
         const result = videoMatch ? search.videos.find(v => v.videoId === videoMatch[1]) || search.all[0] : search.all[0]
-        if (!result) throw 'ꕥ No se encontraron resultados.'
+        if (!result) throw 'No se encontraron resultados.'
         
         const { title, thumbnail, timestamp, views, ago, url, author, seconds } = result
-        if (seconds > 1800) throw '⚠ El contenido supera el límite de duración (10 minutos).'
+        if (seconds > 1800) throw 'El contenido supera el límite de duración.'
         
         const vistas = formatViews(views)
         const canal = author.name
-        const info = `╭──❀ Detalles del contenido ❀──╮
-🎀 Título » *${title}*  
-🌸 Canal » *${canal}*  
-🍃 Vistas » *${vistas}*  
-⏳ Duración » *${timestamp}*  
-🗓️ Publicado » *${ago}*  
-🔗 Link » *${url}*  
-╰──────────────────────╯
+        const info = `🎵 *Detalles de Descarga*
 
-> 𐙚🌷 ｡･ﾟ✧ Preparando tu descarga... ˙𐙚🌸`
+📌 *Título:* ${title}
+👤 *Canal:* ${canal}
+👁️ *Vistas:* ${vistas}
+⏱️ *Duración:* ${timestamp}
+📅 *Publicado:* ${ago}
+🔗 *Enlace:* ${url}
+
+Ejemplo: *${usedPrefix + command} ${text}*`
         
         const thumb = (await conn.getFile(thumbnail)).data
         
-        // Enviar información y procesar descarga en paralelo
         const [_, mediaResult] = await Promise.all([
             conn.sendMessage(m.chat, { image: thumb, caption: info }, { quoted: m }),
-            processDownload(command, url, title)
+            getMediaUrl(url)
         ])
         
-        if (!mediaResult?.url) throw '⚠ No se pudo obtener el contenido.'
+        if (!mediaResult) throw 'No se pudo obtener el contenido.'
         
         if (['play', 'yta', 'ytmp3', 'playaudio', 'ytaudio'].includes(command)) {
             await conn.sendMessage(m.chat, { 
-                audio: { url: mediaResult.url }, 
+                audio: { url: mediaResult }, 
                 fileName: `${title}.mp3`, 
                 mimetype: 'audio/mpeg' 
             }, { quoted: m })
         } else if (['play2', 'ytv', 'ytmp4', 'mp4'].includes(command)) {
-            await conn.sendFile(m.chat, mediaResult.url, `${title}.mp4`, `> ❀ ${title}`, m)
+            await conn.sendFile(m.chat, mediaResult, `${title}.mp4`, title, m)
         }
-        
-        await m.react('✔️')
         
     } catch (e) {
-        await m.react('✖️')
-        return await conn.reply(m.chat, typeof e === 'string' ? e : '⚠︎ Se ha producido un problema.\n> Usa *' + usedPrefix + 'report* para informarlo.\n\n' + e.message, m, ctxErr)
+        return await conn.reply(m.chat, typeof e === 'string' ? e : 'Ocurrió un error: ' + e.message, m)
     }
 }
 
-// Función optimizada para procesar descargas
-async function processDownload(command, url, title) {
-    if (['play', 'yta', 'ytmp3', 'playaudio', 'ytaudio'].includes(command)) {
-        return await getAud(url)
-    } else if (['play2', 'ytv', 'ytmp4', 'mp4'].includes(command)) {
-        return await getVid(url)
+async function getMediaUrl(url) {
+    try {
+        const res = await fetch(`https://api.sventy.store/api/ytdl?url=${encodeURIComponent(url)}`).then(r => r.json())
+        return res.data?.download || null
+    } catch {
+        return null
     }
-    return null
-}
-
-// APIs optimizadas con timeout más agresivo para audio
-async function getAud(url) {
-    const apis = [
-        { api: 'ZenzzXD', endpoint: `${global.APIs.zenzxz.url}/downloader/ytmp3?url=${encodeURIComponent(url)}`, extractor: res => res.data?.download_url, timeout: 6000 },
-        { api: 'ZenzzXD v2', endpoint: `${global.APIs.zenzxz.url}/downloader/ytmp3v2?url=${encodeURIComponent(url)}`, extractor: res => res.data?.download_url, timeout: 6000 },
-        { api: 'Yupra', endpoint: `${global.APIs.yupra.url}/api/downloader/ytmp3?url=${encodeURIComponent(url)}`, extractor: res => res.result?.link, timeout: 6000 },
-        { api: 'Vreden', endpoint: `${global.APIs.vreden.url}/api/v1/download/youtube/audio?url=${encodeURIComponent(url)}&quality=128`, extractor: res => res.result?.download?.url, timeout: 6000 },
-        { api: 'Vreden v2', endpoint: `${global.APIs.vreden.url}/api/v1/download/play/audio?query=${encodeURIComponent(url)}`, extractor: res => res.result?.download?.url, timeout: 6000 },
-        { api: 'Xyro', endpoint: `${global.APIs.xyro.url}/download/youtubemp3?url=${encodeURIComponent(url)}`, extractor: res => res.result?.download, timeout: 6000 }
-    ]
-    return await fetchFromApisOptimized(apis)
-}
-
-async function getVid(url) {
-    const apis = [
-        { api: 'ZenzzXD', endpoint: `${global.APIs.zenzxz.url}/downloader/ytmp4?url=${encodeURIComponent(url)}&resolution=360p`, extractor: res => res.data?.download_url, timeout: 10000 },
-        { api: 'ZenzzXD v2', endpoint: `${global.APIs.zenzxz.url}/downloader/ytmp4v2?url=${encodeURIComponent(url)}&resolution=360`, extractor: res => res.data?.download_url, timeout: 10000 },
-        { api: 'Yupra', endpoint: `${global.APIs.yupra.url}/api/downloader/ytmp4?url=${encodeURIComponent(url)}`, extractor: res => res.result?.formats?.[0]?.url, timeout: 10000 },
-        { api: 'Vreden', endpoint: `${global.APIs.vreden.url}/api/v1/download/youtube/video?url=${encodeURIComponent(url)}&quality=360`, extractor: res => res.result?.download?.url, timeout: 10000 },
-        { api: 'Vreden v2', endpoint: `${global.APIs.vreden.url}/api/v1/download/play/video?query=${encodeURIComponent(url)}`, extractor: res => res.result?.download?.url, timeout: 10000 },
-        { api: 'Xyro', endpoint: `${global.APIs.xyro.url}/download/youtubemp4?url=${encodeURIComponent(url)}&quality=360`, extractor: res => res.result?.download, timeout: 10000 }
-    ]
-    return await fetchFromApisOptimized(apis)
-}
-
-// Función optimizada con timeouts más rápidos
-async function fetchFromApisOptimized(apis) {
-    const promises = apis.map(async ({ api, endpoint, extractor, timeout }) => {
-        try {
-            const controller = new AbortController()
-            const timeoutId = setTimeout(() => controller.abort(), timeout)
-            const res = await fetch(endpoint, { signal: controller.signal }).then(r => r.json())
-            clearTimeout(timeoutId)
-            const link = extractor(res)
-            if (link) return { url: link, api }
-        } catch (e) {
-            return null
-        }
-    })
-    
-    const results = await Promise.allSettled(promises)
-    for (const result of results) {
-        if (result.status === 'fulfilled' && result.value) {
-            return result.value
-        }
-    }
-    return null
 }
 
 function formatViews(views) {

@@ -42,7 +42,7 @@ global.__require = function require(dir = import.meta.url) {
 global.timestamp = { start: new Date() }
 const __dirname = global.__dirname(import.meta.url)
 global.opts = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse())
-global.prefix = new RegExp('^[/]')
+global.prefix = new RegExp('^[/.]')
 
 global.db = new Low(new JSONFile(join(__dirname, './lib/database.json')))
 global.DATABASE = global.db

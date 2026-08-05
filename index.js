@@ -69,7 +69,7 @@ global.loadDatabase = async function loadDatabase() {
 }
 loadDatabase()
 
-const { state, saveCreds } = await useMultiFileAuthState(global.sessions)
+const { state, saveCreds } = await useMultiFileAuthState(global.sessions || 'Sessions/Principal')
 const msgRetryCounterCache = new NodeCache({ stdTTL: 0, checkperiod: 0 })
 const userDevicesCache = new NodeCache({ stdTTL: 0, checkperiod: 0 })
 const { version } = await fetchLatestBaileysVersion()
@@ -85,7 +85,7 @@ let opcion
 if (methodCodeQR) {
   opcion = '1'
 }
-if (!methodCodeQR && !methodCode && !fs.existsSync(`./${global.sessions}/creds.json`)) {
+if (!methodCodeQR && !methodCode && !fs.existsSync(`./${global.sessions || 'Sessions/Principal'}/creds.json`)) {
   do {
     opcion = await question("Seleccione una opción:\n1. Con código QR\n2. Con código de texto de 8 dígitos\n--> ")
   } while (opcion !== '1' && opcion !== '2')

@@ -92,17 +92,23 @@ handler.before = async function (m, { conn }) {
     const rawTarget = parseCleanJid(m.messageStubParameters?.[0])
     const rawSender = parseCleanJid(m.sender)
 
-    const target = await resolveLidToPnJid(conn, chatJid, rawTarget)
-    const realSender = await resolveLidToPnJid(conn, chatJid, rawSender)
+    const whoTarget = rawTarget ? await resolveLidToPnJid(conn, chatJid, rawTarget) : null
+    const whoSender = rawSender ? await resolveLidToPnJid(conn, chatJid, rawSender) : null
 
-    const nombre = `📝 *Nombre actualizado*\n@${realSender.split('@')[0]} cambió el nombre a: *${m.messageStubParameters[0]}*`
-    const edit = `⚙️ *Ajustes del grupo*\n@${realSender.split('@')[0]} cambió la configuración: ${m.messageStubParameters[0] == 'on' ? 'Solo administradores pueden editar los datos del grupo.' : 'Todos los miembros pueden editar los datos del grupo.'}`
-    const newlink = `🔗 *Enlace restablecido*\n@${realSender.split('@')[0]} ha restablecido el enlace de invitación.`
+    const targetJid = whoTarget ? (whoTarget.includes('@') ? whoTarget : whoTarget + '@s.whatsapp.net') : null
+    const senderJid = whoSender ? (whoSender.includes('@') ? whoSender : whoSender + '@s.whatsapp.net') : null
+
+    const targetNum = targetJid ? targetJid.split('@')[0] : ''
+    const senderNum = senderJid ? senderJid.split('@')[0] : ''
+
+    const nombre = `📝 *Nombre actualizado*\n@${senderNum} cambió el nombre a: *${m.messageStubParameters[0]}*`
+    const edit = `⚙️ *Ajustes del grupo*\n@${senderNum} cambió la configuración: ${m.messageStubParameters[0] == 'on' ? 'Solo administradores pueden editar los datos del grupo.' : 'Todos los miembros pueden editar los datos del grupo.'}`
+    const newlink = `🔗 *Enlace restablecido*\n@${senderNum} ha restablecido el enlace de invitación.`
     const status = m.messageStubParameters[0] == 'on' 
-        ? `🔒 *El grupo ha sido cerrado.*\nAcción por @${realSender.split('@')[0]}. Solo los administradores pueden enviar mensajes.`
-        : `🔓 *El grupo ha sido abierto.*\nAcción por @${realSender.split('@')[0]}. Todos los participantes pueden enviar mensajes.`
-    const admingp = `👑 *Nuevo administrador*\n@${target.split('@')[0]} ahora es admin. Otorgado por @${realSender.split('@')[0]}`
-    const noadmingp = `👤 *Admin removido*\n@${target.split('@')[0]} ya no es admin. Removido por @${realSender.split('@')[0]}`
+        ? `🔒 *El grupo ha sido cerrado.*\nAcción por @${senderNum}. Solo los administradores pueden enviar mensajes.`
+        : `🔓 *El grupo ha sido abierto.*\nAcción por @${senderNum}. Todos los participantes pueden enviar mensajes.`
+    const admingp = `👑 *Nuevo administrador*\n@${targetNum} ahora es admin. Otorgado por @${senderNum}`
+    const noadmingp = `👤 *Admin removido*\n@${targetNum} ya no es admin. Removido por @${senderNum}`
 
     if (chat.detect && m.messageStubType == 2) {
         const uniqid = (m.isGroup ? m.chat : m.sender).split('@')[0]
@@ -116,18 +122,18 @@ handler.before = async function (m, { conn }) {
     } 
 
     if (chat.detect && m.messageStubType == 21) {
-        await this.sendMessage(m.chat, { text: nombre, mentions: [realSender] })
+        await this.sendMessage(m.chat, { text: nombre, mentions: [senderJid] })
     } if (chat.detect && m.messageStubType == 23) {
-        await this.sendMessage(m.chat, { text: newlink, mentions: [realSender] })
+        await this.sendMessage(m.chat, { text: newlink, mentions: [senderJid] })
     } if (chat.detect && m.messageStubType == 25) {
-        await this.sendMessage(m.chat, { text: edit, mentions: [realSender] })
+        await this.sendMessage(m.chat, { text: edit, mentions: [senderJid] })
     } if (chat.detect && m.messageStubType == 26) {
-        await this.sendMessage(m.chat, { text: status, mentions: [realSender] })
+        await this.sendMessage(m.chat, { text: status, mentions: [senderJid] })
     } if (chat.detect && m.messageStubType == 29) {
-        await this.sendMessage(m.chat, { text: admingp, mentions: [target, realSender] })
+        await this.sendMessage(m.chat, { text: admingp, mentions: [targetJid, senderJid] })
         return
     } if (chat.detect && m.messageStubType == 30) {
-        await this.sendMessage(m.chat, { text: noadmingp, mentions: [target, realSender] })
+        await this.sendMessage(m.chat, { text: noadmingp, mentions: [targetJid, senderJid] })
     } else { 
         if (m.messageStubType == 2 || m.messageStubType == 22) return
         console.log({

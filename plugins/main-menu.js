@@ -15,6 +15,9 @@ const categoryNames = new Map([
   ['misc', '🌀 Varios']
 ]);
 
+const randomEmojis = ['🍓', '🌸', '🌷', '🦋', '🍨', '🍧', '🍡', '🎀', '🍒', '⭐', '💫', '🧸'];
+const getRandomEmoji = () => randomEmojis[Math.floor(Math.random() * randomEmojis.length)];
+
 function formatUptime(seconds) {
   seconds = Number(seconds);
   const d = Math.floor(seconds / (3600 * 24));
@@ -60,25 +63,27 @@ let handler = async (m, { conn, args, usedPrefix }) => {
     const title = categoryNames.get(category) || `📁 ${category.toUpperCase()}`;
     const pluginList = categorized.get(category) || [];
     
-    let subMenu = `🤖 *${botName}*\n`;
-    subMenu += `👤 *Usuario:* @${userId.split('@')[0]}\n`;
-    subMenu += `🔑 *Prefijo usado:* [ ${prefixUsed} ]\n`;
-    subMenu += `⭐ *Usuarios:* ${totalreg.toLocaleString()}\n`;
-    subMenu += `🍰 *Comandos:* ${totalCommands}\n`;
-    subMenu += `⏱️ *Uptime:* ${uptime}\n`;
-    subMenu += `💻 *RAM:* ${ramGB} GB\n\n`;
-    subMenu += `*${title}*\n`;
+    let subMenu = `╭─ • 🌸 *${botName}* 🌸 • ─╮\n`;
+    subMenu += `│ 👤 *Usuario:* @${userId.split('@')[0]}\n`;
+    subMenu += `│ 🔑 *Prefijo:* [ ${prefixUsed} ]\n`;
+    subMenu += `│ ⭐ *Usuarios:* ${totalreg.toLocaleString()}\n`;
+    subMenu += `│ 🍰 *Comandos:* ${totalCommands}\n`;
+    subMenu += `│ ⏱️ *Uptime:* ${uptime}\n`;
+    subMenu += `│ 💻 *RAM:* ${ramGB} GB\n`;
+    subMenu += `╰───────────────────╯\n\n`;
+    subMenu += `╭─ • 🍧 *${title}* 🍧 • ─╮\n`;
     
     if (pluginList.length === 0) {
-      subMenu += ` › No hay comandos disponibles.\n`;
+      subMenu += `│ ⚠️ No hay comandos disponibles.\n`;
     } else {
       for (const plugin of pluginList) {
         const helps = Array.isArray(plugin.help) ? plugin.help : [plugin.help];
         for (const h of helps) {
-          subMenu += ` › ${prefixUsed}${h}\n`;
+          subMenu += `│  ✦ ${prefixUsed}${h}\n`;
         }
       }
     }
+    subMenu += `╰───────────────────╯`;
 
     let imageBuffer = null;
     try {
@@ -103,38 +108,41 @@ let handler = async (m, { conn, args, usedPrefix }) => {
     return await conn.sendMessage(m.chat, messagePayload, { quoted: m });
   }
 
-  let fullMenuText = `🤖 *${botName}*\n`;
-  fullMenuText += `👤 *Usuario:* @${userId.split('@')[0]}\n`;
-  fullMenuText += `🔑 *Prefijo usado:* [ ${prefixUsed} ]\n`;
-  fullMenuText += `⭐ Usuarios: ${totalreg.toLocaleString()}\n`;
-  fullMenuText += `🍰 Comandos: ${totalCommands}\n`;
-  fullMenuText += `⏱️ *Uptime:* ${uptime}\n`;
-  fullMenuText += `💻 *RAM:* ${ramGB} GB\n`;
+  let fullMenuText = `╭─ • 🎀 *${botName}* 🎀 • ─╮\n`;
+  fullMenuText += `│ 👤 *Usuario:* @${userId.split('@')[0]}\n`;
+  fullMenuText += `│ 🔑 *Prefijo:* [ ${prefixUsed} ]\n`;
+  fullMenuText += `│ ⭐ *Usuarios:* ${totalreg.toLocaleString()}\n`;
+  fullMenuText += `│ 🍰 *Comandos:* ${totalCommands}\n`;
+  fullMenuText += `│ ⏱️ *Uptime:* ${uptime}\n`;
+  fullMenuText += `│ 💻 *RAM:* ${ramGB} GB\n`;
+  fullMenuText += `╰───────────────────╯\n`;
 
   for (const [tag, categoryTitle] of categoryNames.entries()) {
     if (categorized.has(tag) && !excludedTags.includes(tag)) {
       const pluginList = categorized.get(tag);
-      fullMenuText += `\n*${categoryTitle}*\n`;
+      fullMenuText += `\n╭─ • ${getRandomEmoji()} *${categoryTitle}* ${getRandomEmoji()} • ─╮\n`;
       
       for (const plugin of pluginList) {
         const helps = Array.isArray(plugin.help) ? plugin.help : [plugin.help];
         for (const h of helps) {
-          fullMenuText += ` › ${prefixUsed}${h}\n`;
+          fullMenuText += `│  ✦ ${prefixUsed}${h}\n`;
         }
       }
+      fullMenuText += `╰───────────────────╯`;
     }
   }
 
   for (const [tag, pluginList] of categorized.entries()) {
     if (!categoryNames.has(tag) && !excludedTags.includes(tag)) {
-      fullMenuText += `\n*📁 ${tag.toUpperCase()}*\n`;
+      fullMenuText += `\n╭─ • 📁 *${tag.toUpperCase()}* • ─╮\n`;
       
       for (const plugin of pluginList) {
         const helps = Array.isArray(plugin.help) ? plugin.help : [plugin.help];
         for (const h of helps) {
-          fullMenuText += ` › ${prefixUsed}${h}\n`;
+          fullMenuText += `│  ✦ ${prefixUsed}${h}\n`;
         }
       }
+      fullMenuText += `╰───────────────────╯`;
     }
   }
 

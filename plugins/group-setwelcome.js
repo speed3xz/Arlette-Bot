@@ -35,14 +35,14 @@ const handler = async (m, { conn, command, usedPrefix, text, groupMetadata }) =>
             }
             case 'testwelcome': {
                 if (!chat.sWelcome) return m.reply('👋🏻 *Mensaje de Bienvenida*\nNo hay un mensaje configurado en este grupo.')
-                const { imageUrl, caption, mentions } = await generarBienvenida({ conn, userId: m.sender, groupMetadata, chat, chatJid: m.chat })
-                await conn.sendMessage(m.chat, { image: { url: imageUrl }, caption, mentions }, { quoted: m })
+                const { image, caption, mentions } = await generarBienvenida({ conn, userId: m.sender, groupMetadata, chat, chatJid: m.chat })
+                await conn.sendMessage(m.chat, { image, caption, mentions }, { quoted: m })
                 break
             }
             case 'testbye': {
                 if (!chat.sBye) return m.reply('👋🏻 *Mensaje de Despedida*\nNo hay un mensaje configurado en este grupo.')
-                const { imageUrl, caption, mentions } = await generarDespedida({ conn, userId: m.sender, groupMetadata, chat, chatJid: m.chat })
-                await conn.sendMessage(m.chat, { image: { url: imageUrl }, caption, mentions }, { quoted: m })
+                const { image, caption, mentions } = await generarDespedida({ conn, userId: m.sender, groupMetadata, chat, chatJid: m.chat })
+                await conn.sendMessage(m.chat, { image, caption, mentions }, { quoted: m })
                 break
             }
         }

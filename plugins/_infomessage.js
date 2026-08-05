@@ -95,8 +95,8 @@ handler.before = async function (m, { conn }) {
     const whoTarget = rawTarget ? await resolveLidToPnJid(conn, chatJid, rawTarget) : null
     const whoSender = rawSender ? await resolveLidToPnJid(conn, chatJid, rawSender) : null
 
-    const targetJid = whoTarget ? (whoTarget.includes('@') ? whoTarget : whoTarget + '@s.whatsapp.net') : null
-    const senderJid = whoSender ? (whoSender.includes('@') ? whoSender : whoSender + '@s.whatsapp.net') : null
+    const targetJid = whoTarget ? (whoTarget.includes('@') ? whoTarget.split('@')[0] + '@s.whatsapp.net' : whoTarget + '@s.whatsapp.net') : null
+    const senderJid = whoSender ? (whoSender.includes('@') ? whoSender.split('@')[0] + '@s.whatsapp.net' : whoSender + '@s.whatsapp.net') : null
 
     const targetNum = targetJid ? targetJid.split('@')[0] : ''
     const senderNum = senderJid ? senderJid.split('@')[0] : ''
@@ -122,18 +122,18 @@ handler.before = async function (m, { conn }) {
     } 
 
     if (chat.detect && m.messageStubType == 21) {
-        await this.sendMessage(m.chat, { text: nombre, mentions: [senderJid] })
+        await this.sendMessage(m.chat, { text: nombre, mentions: [senderJid].filter(Boolean) })
     } if (chat.detect && m.messageStubType == 23) {
-        await this.sendMessage(m.chat, { text: newlink, mentions: [senderJid] })
+        await this.sendMessage(m.chat, { text: newlink, mentions: [senderJid].filter(Boolean) })
     } if (chat.detect && m.messageStubType == 25) {
-        await this.sendMessage(m.chat, { text: edit, mentions: [senderJid] })
+        await this.sendMessage(m.chat, { text: edit, mentions: [senderJid].filter(Boolean) })
     } if (chat.detect && m.messageStubType == 26) {
-        await this.sendMessage(m.chat, { text: status, mentions: [senderJid] })
+        await this.sendMessage(m.chat, { text: status, mentions: [senderJid].filter(Boolean) })
     } if (chat.detect && m.messageStubType == 29) {
-        await this.sendMessage(m.chat, { text: admingp, mentions: [targetJid, senderJid] })
+        await this.sendMessage(m.chat, { text: admingp, mentions: [targetJid, senderJid].filter(Boolean) })
         return
     } if (chat.detect && m.messageStubType == 30) {
-        await this.sendMessage(m.chat, { text: noadmingp, mentions: [targetJid, senderJid] })
+        await this.sendMessage(m.chat, { text: noadmingp, mentions: [targetJid, senderJid].filter(Boolean) })
     } else { 
         if (m.messageStubType == 2 || m.messageStubType == 22) return
         console.log({

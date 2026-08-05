@@ -21,7 +21,7 @@ await conn.reply(m.chat, text.trim(), m, { mentions: conn.parseMention(text) })
 
 handler.help = ['lboard']
 handler.tags = ['rpg']
-handler.command = ['lboard', 'top', 'lb']
+handler.command = ['lboard', 'lb']
 handler.group = true
 
 export default handler

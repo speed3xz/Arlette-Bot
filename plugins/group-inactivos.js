@@ -14,26 +14,29 @@ var handler = async (m, { conn, text, participants, command, usedPrefix }) => {
         for (let i = 0; i < sum; i++) {
             let rawJid = member[i]
             let resolved = await resolveLidToPnJid(conn, m.chat, rawJid)
-            let normalized = normalizeNumber(resolved)
-            let userJid = normalized ? normalized + '@s.whatsapp.net' : rawJid
+            let normalized = normalizeNumber(resolved || rawJid)
+            let userJid = normalized ? normalized + '@s.whatsapp.net' : (rawJid.includes('@s.whatsapp.net') ? rawJid : rawJid.replace(/@.+/, '') + '@s.whatsapp.net')
 
             let userGroup = participants.find(u => u.id === rawJid || u.id === userJid) || {}
-            let userDb = global.db.data.users[userJid] || global.db.data.users[rawJid]
-
+            
             if (userGroup.isAdmin || userGroup.isSuperAdmin) continue
+
+            let userDb = global.db.data.users[userJid]
 
             let isGhost = false
             if (!userDb) {
                 isGhost = true
             } else if (userDb.whitelist) {
                 isGhost = false
-            } else if (!userDb.chat || userDb.chat === 0) {
+            } else if (userDb.chat === undefined || userDb.chat === null || userDb.chat === 0) {
                 isGhost = true
             }
 
             if (isGhost) {
-                total++
-                sider.push(userJid)
+                if (!sider.includes(userJid)) {
+                    total++
+                    sider.push(userJid)
+                }
             }
         }
 
@@ -42,14 +45,14 @@ var handler = async (m, { conn, text, participants, command, usedPrefix }) => {
             case 'fantasmas': {
                 if (total === 0) return conn.reply(m.chat, `🌸✨ ¡Qué grupo tan activo! No se encontraron fantasmas 🐾.`, m)
                 
-                m.reply(`❀ *Revisión de inactivos*\n\n✦ *Lista de fantasmas*\n${sider.map(v => '@' + v.replace(/@.+/, '')).join('\n')}\n\n> ✰ NOTA: Esto no es al 100% acertado, el bot inicia el conteo de mensajes a partir del momento que se activa en este grupo.`, null, { mentions: sider })
+                m.reply(`❀ *Revisión de inactivos*\n\n✦ *Lista de fantasmas*\n${sider.map(v => '@' + v.split('@')[0]).join('\n')}\n\n> ✰ NOTA: Esto no es al 100% acertado, el bot inicia el conteo de mensajes a partir del momento que se activa en este grupo.`, null, { mentions: sider })
                 break
             }
             case 'kickinactivos': 
             case 'kickfantasmas': {
                 if (total === 0) return conn.reply(m.chat, `ꕥ Este grupo es activo, no tiene fantasmas.`, m)
                 
-                await m.reply(`❀ *Eliminación de inactivos*\n\n✦ *Lista de fantasmas*\n${sider.map(v => '@' + v.replace(/@.+/, '')).join('\n')}\n\n> ✰ Nota: El bot eliminará a los usuarios de la lista mencionada cada 10 segundos.`, null, { mentions: sider })
+                await m.reply(`❀ *Eliminación de inactivos*\n\n✦ *Lista de fantasmas*\n${sider.map(v => '@' + v.split('@')[0]).join('\n')}\n\n> ✰ Nota: El bot eliminará a los usuarios de la lista mencionada cada 10 segundos.`, null, { mentions: sider })
                 
                 await delay(10000)
                 let chat = global.db.data.chats[m.chat] || {}

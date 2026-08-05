@@ -53,11 +53,14 @@ var handler = async (m, { conn, text, participants, command, usedPrefix }) => {
         switch (command) {
             case 'inactivos': 
             case 'fantasmas': {
-                if (total === 0) return conn.reply(m.chat, `👻 *Revisión de inactivos*\n\n¡Qué grupo tan activo! No se encontraron fantasmas.`, m)
+                if (total === 0) return conn.reply(m.chat, `🌸 *REVISIÓN DE GRUPO*\n\n✨ ¡Grupo 100% activo! No se encontraron usuarios inactivos.`, m)
                 
-                let textGhost = `👻 *Revisión de Inactivos*\n\n`
-                textGhost += `✦ *Fantasmas detectados:* ${total}\n\n`
-                textGhost += sider.map(v => `👤 @${v.split('@')[0]}`).join('\n') + `\n\n`
+                let textGhost = `❀ *Reporte de Inactivos*\n`
+                textGhost += `────────────────────\n`
+                textGhost += `👻 *Total detectados:* [ ${total} ]\n\n`
+                textGhost += `✦ *Lista de integrantes:*\n`
+                textGhost += sider.map(v => `• @${v.split('@')[0]}`).join('\n') + `\n`
+                textGhost += `────────────────────\n`
                 textGhost += `> ✰ NOTA: Esto no es al 100% acertado, el bot inicia el conteo de mensajes a partir del momento que se activa en este grupo.`
 
                 m.reply(textGhost, null, { mentions: sider })
@@ -65,11 +68,14 @@ var handler = async (m, { conn, text, participants, command, usedPrefix }) => {
             }
             case 'kickinactivos': 
             case 'kickfantasmas': {
-                if (total === 0) return conn.reply(m.chat, `🚫 *Eliminación de inactivos*\n\nEste grupo es activo, no hay fantasmas para eliminar.`, m)
+                if (total === 0) return conn.reply(m.chat, `🌸 *DEPURACIÓN DE GRUPO*\n\n✨ No hay inactivos para remover en este grupo.`, m)
                 
-                let textKick = `🚨 *Eliminación de Inactivos*\n\n`
-                textKick += `✦ *Fantasmas a eliminar:* ${total}\n\n`
-                textKick += sider.map(v => `⚠️ @${v.split('@')[0]}`).join('\n') + `\n\n`
+                let textKick = `❀ *Depuración de Inactivos*\n`
+                textKick += `────────────────────\n`
+                textKick += `⚠️ *Total a remover:* [ ${total} ]\n\n`
+                textKick += `✦ *Integrantes marcados:*\n`
+                textKick += sider.map(v => `• @${v.split('@')[0]}`).join('\n') + `\n`
+                textKick += `────────────────────\n`
                 textKick += `> ✰ Nota: El bot eliminará a los usuarios de la lista mencionada cada 10 segundos.`
 
                 await m.reply(textKick, null, { mentions: sider })

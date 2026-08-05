@@ -71,7 +71,7 @@ global.loadDatabase = async function loadDatabase() {
 }
 loadDatabase()
 
-const { state, saveCreds } = await useMultiFileAuthState(global.sessions)
+const { state, saveCreds } = await useMultiFileAuthState(global.sessions || 'Sessions/Principal')
 const msgRetryCounterCache = new NodeCache({ stdTTL: 0, checkperiod: 0 })
 const userDevicesCache = new NodeCache({ stdTTL: 0, checkperiod: 0 })
 const { version } = await fetchLatestBaileysVersion()

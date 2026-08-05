@@ -185,12 +185,17 @@ resolve()
 }, ms))
 
 export async function handler(chatUpdate) {
-this.msgqueque = this.msgqueque || []
-this.uptime = this.uptime || Date.now()
+global.msgqueque = global.msgqueque || []
+global.uptime = global.uptime || Date.now()
 if (!chatUpdate) return
-this.pushMessage(chatUpdate.messages).catch(console.error)
+ el método no existe en el contexto actual
+if (typeof this.pushMessage === 'function') {
+    this.pushMessage(chatUpdate.messages).catch(console.error)
+}
+
 let rawMsg = chatUpdate.messages[chatUpdate.messages.length - 1]
 if (!rawMsg) return
+
 
 if (global.db.data == null)
 await global.loadDatabase()

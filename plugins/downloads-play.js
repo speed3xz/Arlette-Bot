@@ -11,27 +11,25 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
         const result = videoMatch ? search.videos.find(v => v.videoId === videoMatch[1]) || search.all[0] : search.all[0]
         if (!result) throw 'No se encontraron resultados.'
         
-        const { title, thumbnail, timestamp, views, ago, url, author, seconds } = result
+        const { title, thumbnail, timestamp, views, ago, videoId, author, seconds } = result
         if (seconds > 1800) throw 'El contenido supera el límite de duración.'
         
         const vistas = formatViews(views)
         const canal = author.name
-        const info = `🎵 *Detalles de Descarga*
+        const shortUrl = `https://youtu.be/${videoId}`
 
-📌 *Título:* ${title}
+        const info = `📌 *Título:* ${title}
 👤 *Canal:* ${canal}
 👁️ *Vistas:* ${vistas}
 ⏱️ *Duración:* ${timestamp}
 📅 *Publicado:* ${ago}
-🔗 *Enlace:* ${url}
-
-Ejemplo: *${usedPrefix + command} ${text}*`
+🔗 *Enlace:* ${shortUrl}`
         
         const thumb = (await conn.getFile(thumbnail)).data
         
         const [_, mediaResult] = await Promise.all([
             conn.sendMessage(m.chat, { image: thumb, caption: info }, { quoted: m }),
-            getMediaUrl(url)
+            getMediaUrl(shortUrl)
         ])
         
         if (!mediaResult) throw 'No se pudo obtener el contenido.'

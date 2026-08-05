@@ -215,18 +215,7 @@ global.reloadHandler = async function(restatConn) {
     conn.ev.off('creds.update', conn.credsUpdate)
   }
   
-  conn.handler = async function (chatUpdate) {
-    if (!chatUpdate.messages) return
-    try {
-      let messages = chatUpdate.messages.filter(m => m.message && !m.messageStubType)
-      if (messages.length === 0) return
-      chatUpdate.messages = messages
-      await handler.handler.call(this, chatUpdate)
-    } catch (e) {
-      console.error(e)
-    }
-  }
-
+  conn.handler = handler.handler.bind(global.conn)
   conn.connectionUpdate = connectionUpdate.bind(global.conn)
   conn.credsUpdate = saveCreds.bind(global.conn, true)
   

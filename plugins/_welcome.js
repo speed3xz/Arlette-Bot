@@ -1,5 +1,6 @@
 import fetch from 'node-fetch'
 import { WAMessageStubType } from '@whiskeysockets/baileys'
+import { resolveLidToPnJid } from '../handler.js'
 
 async function obtenerImagenUsuario(conn, userId, chatJid) {
     const fallbackUrl = global.icono || 'https://raw.githubusercontent.com/speed3xz/Storage/refs/heads/main/Arlette-Bot/b75b29441bbd967deda4365441497221.jpg'
@@ -81,7 +82,19 @@ handler.before = async function (m, { conn, groupMetadata }) {
     const rawUser = m.messageStubParameters?.[0]
     if (!rawUser) return !0
 
-    const userId = rawUser.split(':')[0] + '@s.whatsapp.net'
+    let candidateJid = ''
+    try {
+        if (typeof rawUser === 'string' && rawUser.startsWith('{')) {
+            const parsed = JSON.parse(rawUser)
+            candidateJid = parsed.phoneNumber || parsed.id || rawUser
+        } else {
+            candidateJid = String(rawUser)
+        }
+    } catch {
+        candidateJid = String(rawUser)
+    }
+
+    const userId = await resolveLidToPnJid(conn, m.chat, candidateJid)
     
     if (chat.welcome && m.messageStubType == WAMessageStubType.GROUP_PARTICIPANT_ADD) {
         const { image, caption, mentions } = await generarBienvenida({ conn, userId, groupMetadata, chat, chatJid: m.chat })

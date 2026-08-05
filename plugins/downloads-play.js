@@ -3,7 +3,7 @@ import yts from 'yt-search'
 
 const handler = async (m, { conn, text, usedPrefix, command }) => {
     try {
-        if (!text.trim()) return await conn.reply(m.chat, '*Ingresa el nombre o enlace de la canción.*', m)
+        if (!text.trim()) return await conn.reply(m.chat, '*⭐ Ingresa el nombre o enlace de la canción.*', m)
         
         const videoMatch = text.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/|v\/))([a-zA-Z0-9_-]{11})/)
         const query = videoMatch ? 'https://youtu.be/' + videoMatch[1] : text

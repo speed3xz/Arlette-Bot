@@ -14,20 +14,17 @@ function getCharacterById(characterId, charactersData) {
 }
 
 let handler = async (m, { conn, usedPrefix, command, quoted }) => {
-    const claimCooldown = 30 * 60 * 1000; // 30 minutos en milisegundos
+    const claimCooldown = 30 * 60 * 1000;
     
     try {
-        // Verificar si los comandos de gacha están activados en el grupo
         const chatData = global.db?.data?.chats?.[m.chat] || {};
         if (!chatData.gacha && m.isGroup) {
-            return m.reply('ꕥ Los comandos de *Gacha* están desactivados en este grupo.\n\nUn *administrador* puede activarlos con el comando:\n» *' + usedPrefix + 'gacha on*');
+            return m.reply('ꕥ Los comandos de *Gacha* estão desactivados en este grupo.\n\nUn *administrador* puede activarlos con el comando:\n» *' + usedPrefix + 'gacha on*');
         }
 
-        // Obtener datos del usuario actual
         const currentUserData = global.db?.data?.users?.[m.sender] || {};
         const currentTime = Date.now();
 
-        // Verificar cooldown de claim
         if (currentUserData.lastClaim && currentTime < currentUserData.lastClaim) {
             const remainingSeconds = Math.ceil((currentUserData.lastClaim - currentTime) / 1000);
             const minutes = Math.floor(remainingSeconds / 60);
@@ -40,10 +37,8 @@ let handler = async (m, { conn, usedPrefix, command, quoted }) => {
             return m.reply('ꕥ Debes esperar *' + timeLeft.trim() + '* para usar *' + (usedPrefix + command) + '* de nuevo.');
         }
 
-        // Obtener el personaje del último roll
         const lastCharacterId = chatData.lastRolledCharacter?.id || '';
         
-        // Verificar si el mensaje citado es válido
         const isValidQuoted = quoted?.id === chatData.lastRolledMsgId || 
                             quoted?.text?.includes(lastCharacterId);
 
@@ -52,8 +47,6 @@ let handler = async (m, { conn, usedPrefix, command, quoted }) => {
         }
 
         const characterId = chatData.lastRolledId;
-
-        // Cargar datos del personaje
         const charactersData = await loadCharacters();
         const characterData = getCharacterById(characterId, charactersData);
 
@@ -61,7 +54,6 @@ let handler = async (m, { conn, usedPrefix, command, quoted }) => {
             return m.reply('ꕥ Personaje no encontrado en characters.json');
         }
 
-        // Inicializar datos del personaje en la base de datos
         if (!global.db.data.characters) global.db.data.characters = {};
         if (!global.db.data.characters[characterId]) {
             global.db.data.characters[characterId] = {};
@@ -69,45 +61,36 @@ let handler = async (m, { conn, usedPrefix, command, quoted }) => {
 
         const dbCharacter = global.db.data.characters[characterId];
         
-        // Actualizar datos del personaje
         dbCharacter.name = dbCharacter.name || characterData.name;
         dbCharacter.value = typeof dbCharacter.value === 'number' ? dbCharacter.value : characterData.value || 0;
         dbCharacter.votes = dbCharacter.votes || 0;
 
-        // Verificar si el personaje está reservado
-        if (dbCharacter.reservedBy && dbCharacter.reservedBy !== m.sender && currentTime < dbCharacter.reservedUntil) {
-            const getReserverName = async (userId) => {
+        const rollTime = chatData.lastRolledTime || 0;
+        const rollUser = chatData.lastRolledUser || '';
+        const protectionTime = 30 * 1000; // 30 segundos
+        const expirationTimeLimit = 3 * 60 * 1000; // 3 minutos
+
+        if (currentTime - rollTime > expirationTimeLimit) {
+            return m.reply('ꕥ El personaje ha expirado porque nadie lo reclamó a tiempo.');
+        }
+
+        if (rollUser && rollUser !== m.sender && (currentTime - rollTime < protectionTime)) {
+            const remainingProt = Math.ceil((rollTime + protectionTime - currentTime) / 1000);
+            const getRollerName = async (userId) => {
                 try {
-                    const userData = global.db?.data?.users?.[userId] || {};
-                    return userData.name?.trim() || 
-                           (await conn.getName(userId)) || 
-                           userId.split('@')[0];
+                    return global.db?.data?.users?.[userId]?.name?.trim() || (await conn.getName(userId)) || userId.split('@')[0];
                 } catch {
                     return userId.split('@')[0];
                 }
             };
-
-            const reserverName = await getReserverName(dbCharacter.reservedBy);
-            const remainingTime = Math.ceil((dbCharacter.reservedUntil - currentTime) / 1000);
-            
-            return m.reply('ꕥ Este personaje está protegido por *' + reserverName + '* durante *' + remainingTime + 's*');
+            const rollerName = await getRollerName(rollUser);
+            return m.reply(`ꕥ Este personaje está protegido por *${rollerName}* durante *${remainingProt}s* más.`);
         }
 
-        // Verificar si el personaje ha expirado
-        if (dbCharacter.expiresAt && currentTime > dbCharacter.expiresAt && 
-            !dbCharacter.user && 
-            !(dbCharacter.reservedBy && currentTime < dbCharacter.reservedUntil)) {
-            
-            const expiredTime = Math.ceil((currentTime - dbCharacter.expiresAt) / 1000);
-            return m.reply('ꕥ El personaje ha expirado » *' + expiredTime + 's*');
-        }
-
-        // Verificar si el personaje ya está reclamado
         if (dbCharacter.user) {
             const getClaimantName = async (userId) => {
                 try {
-                    const userData = global.db?.data?.users?.[userId] || {};
-                    return userData.name?.trim() || 
+                    return global.db?.data?.users?.[userId]?.name?.trim() || 
                            (await conn.getName(userId)) || 
                            userId.split('@')[0];
                 } catch {
@@ -119,18 +102,11 @@ let handler = async (m, { conn, usedPrefix, command, quoted }) => {
             return m.reply('ꕥ El personaje *' + dbCharacter.name + '* ya ha sido reclamado por *' + claimantName + '*');
         }
 
-        // Reclamar el personaje
         dbCharacter.user = m.sender;
         dbCharacter.claimedAt = currentTime;
         
-        // Limpiar reservas
-        delete dbCharacter.reservedBy;
-        delete dbCharacter.reservedUntil;
-
-        // Actualizar cooldown del usuario
         currentUserData.lastClaim = currentTime + claimCooldown;
 
-        // Agregar a la lista de personajes del usuario
         if (!Array.isArray(currentUserData.characters)) {
             currentUserData.characters = [];
         }
@@ -138,7 +114,6 @@ let handler = async (m, { conn, usedPrefix, command, quoted }) => {
             currentUserData.characters.push(characterId);
         }
 
-        // Obtener nombre del usuario actual
         const getCurrentUsername = async () => {
             try {
                 return currentUserData.name?.trim() || 
@@ -151,21 +126,15 @@ let handler = async (m, { conn, usedPrefix, command, quoted }) => {
 
         const currentUsername = await getCurrentUsername();
 
-        // Calcular tiempo de expiración si existe
-        const expirationTime = typeof dbCharacter.expiresAt === 'number' ? 
-            Math.ceil((currentTime - dbCharacter.expiresAt + 60000) / 1000) : '∞';
-
-        // Crear mensaje de confirmación
         const claimMessage = chatData.claimMessage ? 
             chatData.claimMessage
                 .replace(/€user/g, '*' + currentUsername + '*')
                 .replace(/€character/g, '*' + dbCharacter.name + '*') :
             '*' + dbCharacter.name + '* ha sido reclamado por *' + currentUsername + '*';
 
-        // Enviar mensaje de confirmación
         await conn.reply(
             m.chat, 
-            '❀ ' + claimMessage + ' (' + expirationTime + 's)', 
+            '❀ ' + claimMessage, 
             m
         );
 
@@ -179,10 +148,9 @@ let handler = async (m, { conn, usedPrefix, command, quoted }) => {
     }
 };
 
-// Configuración del handler
 handler.help = ['claim'];
 handler.tags = ['gacha'];
 handler.command = ['claim', 'c', 'reclamar'];
 handler.group = true;
 
-export default handler;
+export default handler

@@ -487,7 +487,7 @@ let imageBuffer = null;
 
   await conn.sendMessage(m.chat, {
     image: imageBuffer || { url: global.banner },
-    caption: fullMenuText.trim(),
+    caption: txt.trim(),
     mentions: [userId]
   }, { quoted: m });
 }

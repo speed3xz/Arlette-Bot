@@ -92,20 +92,17 @@ handler.before = async function (m, { conn }) {
     const rawTarget = parseCleanJid(m.messageStubParameters?.[0])
     const rawSender = parseCleanJid(m.sender)
 
-    const targetJid = await resolveLidToPnJid(conn, chatJid, rawTarget)
-    const senderJid = await resolveLidToPnJid(conn, chatJid, rawSender)
+    const user = await resolveLidToPnJid(conn, chatJid, rawTarget)
+    const sender = await resolveLidToPnJid(conn, chatJid, rawSender)
 
-    const targetNum = targetJid.split('@')[0]
-    const senderNum = senderJid.split('@')[0]
-
-    const nombre = `📝 *Nombre actualizado*\n@${senderNum} cambió el nombre a: *${m.messageStubParameters[0]}*`
-    const edit = `⚙️ *Ajustes del grupo*\n@${senderNum} cambió la configuración: ${m.messageStubParameters[0] == 'on' ? 'Solo administradores pueden editar los datos del grupo.' : 'Todos los miembros pueden editar los datos del grupo.'}`
-    const newlink = `🔗 *Enlace restablecido*\n@${senderNum} ha restablecido el enlace de invitación.`
+    const nombre = `📝 *Nombre actualizado*\n@${sender.split('@')[0]} cambió el nombre a: *${m.messageStubParameters[0]}*`
+    const edit = `⚙️ *Ajustes del grupo*\n@${sender.split('@')[0]} cambió la configuración: ${m.messageStubParameters[0] == 'on' ? 'Solo administradores pueden editar los datos del grupo.' : 'Todos los miembros pueden editar los datos del grupo.'}`
+    const newlink = `🔗 *Enlace restablecido*\n@${sender.split('@')[0]} ha restablecido el enlace de invitación.`
     const status = m.messageStubParameters[0] == 'on' 
-        ? `🔒 *El grupo ha sido cerrado.*\nAcción por @${senderNum}. Solo los administradores pueden enviar mensajes.`
-        : `🔓 *El grupo ha sido abierto.*\nAcción por @${senderNum}. Todos los participantes pueden enviar mensajes.`
-    const admingp = `👑 *Nuevo administrador*\n@${targetNum} ahora es admin. Otorgado por @${senderNum}`
-    const noadmingp = `👤 *Admin removido*\n@${targetNum} ya no es admin. Removido por @${senderNum}`
+        ? `🔒 *El grupo ha sido cerrado.*\nAcción por @${sender.split('@')[0]}. Solo los administradores pueden enviar mensajes.`
+        : `🔓 *El grupo ha sido abierto.*\nAcción por @${sender.split('@')[0]}. Todos los participantes pueden enviar mensajes.`
+    const admingp = `👑 *Nuevo administrador*\n@${user.split('@')[0]} ahora es admin. Otorgado por @${sender.split('@')[0]}`
+    const noadmingp = `👤 *Admin removido*\n@${user.split('@')[0]} ya no es admin. Removido por @${sender.split('@')[0]}`
 
     if (chat.detect && m.messageStubType == 2) {
         const uniqid = (m.isGroup ? m.chat : m.sender).split('@')[0]
@@ -119,18 +116,18 @@ handler.before = async function (m, { conn }) {
     } 
 
     if (chat.detect && m.messageStubType == 21) {
-        await this.sendMessage(m.chat, { text: nombre, mentions: [senderJid] })
+        await this.sendMessage(m.chat, { text: nombre, mentions: [sender] })
     } if (chat.detect && m.messageStubType == 23) {
-        await this.sendMessage(m.chat, { text: newlink, mentions: [senderJid] })
+        await this.sendMessage(m.chat, { text: newlink, mentions: [sender] })
     } if (chat.detect && m.messageStubType == 25) {
-        await this.sendMessage(m.chat, { text: edit, mentions: [senderJid] })
+        await this.sendMessage(m.chat, { text: edit, mentions: [sender] })
     } if (chat.detect && m.messageStubType == 26) {
-        await this.sendMessage(m.chat, { text: status, mentions: [senderJid] })
+        await this.sendMessage(m.chat, { text: status, mentions: [sender] })
     } if (chat.detect && m.messageStubType == 29) {
-        await this.sendMessage(m.chat, { text: admingp, mentions: [senderJid, targetJid] })
+        await this.sendMessage(m.chat, { text: admingp, mentions: [sender, user] })
         return
     } if (chat.detect && m.messageStubType == 30) {
-        await this.sendMessage(m.chat, { text: noadmingp, mentions: [senderJid, targetJid] })
+        await this.sendMessage(m.chat, { text: noadmingp, mentions: [sender, user] })
     } else { 
         if (m.messageStubType == 2 || m.messageStubType == 22) return
         console.log({

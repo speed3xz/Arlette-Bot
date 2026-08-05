@@ -3,32 +3,109 @@ import chalk from 'chalk'
 import fs from 'fs'
 import path from 'path'
 
+const groupMetadataCache = new Map()
 const lidCache = new Map()
+const metadataTTL = 5000
+
+function decodeJid(jid) {
+    if (!jid) return ''
+    if (/:\d+@/gi.test(jid)) {
+        const decode = jid.match(/(\d+)(:\d+)?@(.+)/)
+        return decode ? `${decode[1]}@${decode[3]}` : jid
+    }
+    return jid
+}
+
+async function resolveLidToPnJid(conn, chatJid, candidateJid) {
+    const jid = decodeJid(candidateJid)
+    if (!jid) return jid
+    if (jid.endsWith('@s.whatsapp.net')) return jid.split(':')[0] + '@s.whatsapp.net'
+    if (!jid.endsWith('@lid') || !chatJid?.endsWith('@g.us')) return jid
+    
+    if (lidCache.has(jid)) return lidCache.get(jid)
+
+    try {
+        let cached = groupMetadataCache.get(chatJid)
+        let meta = (cached && (Date.now() - cached.timestamp < metadataTTL)) ? cached.metadata : null
+
+        if (!meta) {
+            meta = await conn.groupMetadata(chatJid)
+            groupMetadataCache.set(chatJid, { metadata: meta, timestamp: Date.now() })
+        }
+
+        const participants = Array.isArray(meta?.participants) ? meta.participants : []
+
+        const found = participants.find(p => {
+            const pid = decodeJid(p?.id || '')
+            const plid = decodeJid(p?.lid || '')
+            return pid === jid || plid === jid
+        })
+
+        if (found) {
+            let realNumber = found.phoneNumber || (found.id.endsWith('@s.whatsapp.net') ? found.id : null)
+            if (realNumber) {
+                const finalPn = decodeJid(realNumber.includes('@') ? realNumber : `${realNumber}@s.whatsapp.net`).split(':')[0] + '@s.whatsapp.net'
+                lidCache.set(jid, finalPn)
+                return finalPn
+            }
+        }
+        
+        const [onWa] = await conn.onWhatsApp(jid.split('@')[0])
+        if (onWa && onWa.exists) {
+            const fixed = decodeJid(onWa.jid).split(':')[0] + '@s.whatsapp.net'
+            lidCache.set(jid, fixed)
+            return fixed
+        }
+    } catch (e) {}
+
+    if (jid.endsWith('@lid')) {
+        return jid.split('@')[0] + '@s.whatsapp.net'
+    }
+
+    return jid
+}
+
+function parseCleanJid(raw) {
+    if (!raw) return ''
+    let str = typeof raw === 'object' ? JSON.stringify(raw) : String(raw)
+    
+    let match = str.match(/\d+(?::\d+)?@(?:s\.whatsapp\.net|lid)/)
+    if (match) return decodeJid(match[0])
+
+    let digits = str.match(/\d+/g)
+    if (digits) {
+        return digits.join('') + '@s.whatsapp.net'
+    }
+    return ''
+}
+
 const handler = m => m
 
-handler.before = async function (m, { conn, participants }) {
+handler.before = async function (m, { conn }) {
     if (!m.messageStubType || !m.isGroup) return
     const primaryBot = global.db.data.chats[m.chat]?.primaryBot
     if (primaryBot && conn.user.jid !== primaryBot) throw !1
 
     const chat = global.db.data.chats[m.chat]
-    let rawUser = m.messageStubParameters[0]
-    
-    if (typeof rawUser === 'object' && rawUser !== null) {
-        rawUser = rawUser.id || rawUser.jid || JSON.stringify(rawUser)
-    }
-    
-    const users = typeof rawUser === 'string' ? rawUser.split('@')[0] : ''
-    const usuario = await resolveLidToRealJid(m?.sender, conn, m?.chat)
+    const chatJid = decodeJid(m.chat)
 
-    const nombre = `📝 *Nombre actualizado*\n@${usuario.split('@')[0]} cambió el nombre a: *${m.messageStubParameters[0]}*`
-    const edit = `⚙️ *Ajustes del grupo*\n@${usuario.split('@')[0]} cambió la configuración: ${m.messageStubParameters[0] == 'on' ? 'Solo administradores pueden editar los datos del grupo.' : 'Todos los miembros pueden editar los datos del grupo.'}`
-    const newlink = `🔗 *Enlace restablecido*\n@${usuario.split('@')[0]} ha restablecido el enlace de invitación.`
+    const rawTarget = parseCleanJid(m.messageStubParameters?.[0])
+    const rawSender = parseCleanJid(m.sender)
+
+    const targetJid = await resolveLidToPnJid(conn, chatJid, rawTarget)
+    const senderJid = await resolveLidToPnJid(conn, chatJid, rawSender)
+
+    const targetNum = targetJid.split('@')[0]
+    const senderNum = senderJid.split('@')[0]
+
+    const nombre = `📝 *Nombre actualizado*\n@${senderNum} cambió el nombre a: *${m.messageStubParameters[0]}*`
+    const edit = `⚙️ *Ajustes del grupo*\n@${senderNum} cambió la configuración: ${m.messageStubParameters[0] == 'on' ? 'Solo administradores pueden editar los datos del grupo.' : 'Todos los miembros pueden editar los datos del grupo.'}`
+    const newlink = `🔗 *Enlace restablecido*\n@${senderNum} ha restablecido el enlace de invitación.`
     const status = m.messageStubParameters[0] == 'on' 
-        ? `🔒 *El grupo ha sido cerrado.*\nAcción por @${usuario.split('@')[0]}. Solo los administradores pueden enviar mensajes.`
-        : `🔓 *El grupo ha sido abierto.*\nAcción por @${usuario.split('@')[0]}. Todos los participantes pueden enviar mensajes.`
-    const admingp = `👑 *Nuevo administrador*\n@${users} ahora es admin. Otorgado por @${usuario.split('@')[0]}`
-    const noadmingp = `👤 *Admin removido*\n@${users} ya no es admin. Removido por @${usuario.split('@')[0]}`
+        ? `🔒 *El grupo ha sido cerrado.*\nAcción por @${senderNum}. Solo los administradores pueden enviar mensajes.`
+        : `🔓 *El grupo ha sido abierto.*\nAcción por @${senderNum}. Todos los participantes pueden enviar mensajes.`
+    const admingp = `👑 *Nuevo administrador*\n@${targetNum} ahora es admin. Otorgado por @${senderNum}`
+    const noadmingp = `👤 *Admin removido*\n@${targetNum} ya no es admin. Removido por @${senderNum}`
 
     if (chat.detect && m.messageStubType == 2) {
         const uniqid = (m.isGroup ? m.chat : m.sender).split('@')[0]
@@ -42,20 +119,18 @@ handler.before = async function (m, { conn, participants }) {
     } 
 
     if (chat.detect && m.messageStubType == 21) {
-        await this.sendMessage(m.chat, { text: nombre, mentions: [usuario] })
+        await this.sendMessage(m.chat, { text: nombre, mentions: [senderJid] })
     } if (chat.detect && m.messageStubType == 23) {
-        await this.sendMessage(m.chat, { text: newlink, mentions: [usuario] })
+        await this.sendMessage(m.chat, { text: newlink, mentions: [senderJid] })
     } if (chat.detect && m.messageStubType == 25) {
-        await this.sendMessage(m.chat, { text: edit, mentions: [usuario] })
+        await this.sendMessage(m.chat, { text: edit, mentions: [senderJid] })
     } if (chat.detect && m.messageStubType == 26) {
-        await this.sendMessage(m.chat, { text: status, mentions: [usuario] })
+        await this.sendMessage(m.chat, { text: status, mentions: [senderJid] })
     } if (chat.detect && m.messageStubType == 29) {
-        const targetJid = rawUser.includes('@') ? rawUser : `${users}@s.whatsapp.net`
-        await this.sendMessage(m.chat, { text: admingp, mentions: [usuario, targetJid] })
+        await this.sendMessage(m.chat, { text: admingp, mentions: [senderJid, targetJid] })
         return
     } if (chat.detect && m.messageStubType == 30) {
-        const targetJid = rawUser.includes('@') ? rawUser : `${users}@s.whatsapp.net`
-        await this.sendMessage(m.chat, { text: noadmingp, mentions: [usuario, targetJid] })
+        await this.sendMessage(m.chat, { text: noadmingp, mentions: [senderJid, targetJid] })
     } else { 
         if (m.messageStubType == 2 || m.messageStubType == 22) return
         console.log({
@@ -67,42 +142,3 @@ handler.before = async function (m, { conn, participants }) {
 }
 
 export default handler
-
-async function resolveLidToRealJid(lid, conn, groupChatId, maxRetries = 3, retryDelay = 60000) {
-    const inputJid = lid ? lid.toString() : ''
-    if (!inputJid.endsWith("@lid") || !groupChatId?.endsWith("@g.us")) { 
-        return inputJid.includes("@") ? inputJid : `${inputJid}@s.whatsapp.net` 
-    }
-    if (lidCache.has(inputJid)) { return lidCache.get(inputJid) }
-    
-    const lidToFind = inputJid.split("@")[0]
-    let attempts = 0
-    
-    while (attempts < maxRetries) {
-        try {
-            const metadata = await conn?.groupMetadata(groupChatId)
-            if (!metadata?.participants) { throw new Error("No se obtuvieron participantes") }
-            for (const participant of metadata.participants) {
-                try {
-                    if (!participant?.jid) continue
-                    const contactDetails = await conn?.onWhatsApp(participant.jid)
-                    if (!contactDetails?.[0]?.lid) continue
-                    const possibleLid = contactDetails[0].lid.split("@")[0]
-                    if (possibleLid === lidToFind) {
-                        lidCache.set(inputJid, participant.jid)
-                        return participant.jid
-                    }
-                } catch (e) { continue }
-            }
-            lidCache.set(inputJid, inputJid)
-            return inputJid
-        } catch (e) {
-            if (++attempts >= maxRetries) {
-                lidCache.set(inputJid, inputJid)
-                return inputJid
-            }
-            await new Promise((resolve) => setTimeout(resolve, retryDelay))
-        }
-    }
-    return inputJid
-}

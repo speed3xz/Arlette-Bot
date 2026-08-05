@@ -108,7 +108,7 @@ const handler = async (m, { isOwner, isAdmin, conn, text, participants, args, co
         mentions.push(userJid)
     }
     
-    teks += `╰⸼ ┄ ┄ ┄ ─  ꒰  ׅ୭ ୧ ׅ ꒱  ┄  ─ ┄⸼`
+    teks += `╰⸼ ┄ ┄ ┄ ─  ꒰  ׅ୭ *2026* ୧ ׅ ꒱  ┄  ─ ┄⸼`
     conn.sendMessage(m.chat, { text: teks, mentions: mentions })
 }
 

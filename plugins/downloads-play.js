@@ -3,7 +3,7 @@ import yts from 'yt-search'
 
 const handler = async (m, { conn, text, usedPrefix, command }) => {
     try {
-        if (!text.trim()) return await conn.reply(m.chat, '*Ingresa el nombre o enlace del video a descargar.*', m)
+        if (!text.trim()) return await conn.reply(m.chat, '*Ingresa el nombre o enlace de la canción.*', m)
         
         const videoMatch = text.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/|v\/))([a-zA-Z0-9_-]{11})/)
         const query = videoMatch ? 'https://youtu.be/' + videoMatch[1] : text
@@ -11,8 +11,8 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
         const result = videoMatch ? search.videos.find(v => v.videoId === videoMatch[1]) || search.all[0] : search.all[0]
         if (!result) throw 'No se encontraron resultados.'
         
-        const { title, thumbnail, timestamp, views, ago, videoId, author, seconds } = result
-        if (seconds > 1800) throw 'El contenido supera el límite de duración.'
+        const { title, thumbnail, timestamp, views, videoId, author, seconds } = result
+        if (seconds > 1800) throw 'El contenido supera el límite de duración (30 minutos).'
         
         const vistas = formatViews(views)
         const canal = author.name
@@ -22,27 +22,22 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
 👤 *Canal:* ${canal}
 👁️ *Vistas:* ${vistas}
 ⏱️ *Duración:* ${timestamp}
-📅 *Publicado:* ${ago}
 🔗 *Enlace:* ${shortUrl}`
         
         const thumb = (await conn.getFile(thumbnail)).data
         
-        const [_, mediaResult] = await Promise.all([
+        const [_, mediaUrl] = await Promise.all([
             conn.sendMessage(m.chat, { image: thumb, caption: info }, { quoted: m }),
             getMediaUrl(shortUrl)
         ])
         
-        if (!mediaResult) throw 'No se pudo obtener el contenido.'
+        if (!mediaUrl) throw 'No se pudo obtener el audio.'
         
-        if (['play', 'yta', 'ytmp3', 'playaudio', 'ytaudio'].includes(command)) {
-            await conn.sendMessage(m.chat, { 
-                audio: { url: mediaResult }, 
-                fileName: `${title}.mp3`, 
-                mimetype: 'audio/mpeg' 
-            }, { quoted: m })
-        } else if (['play2', 'ytv', 'ytmp4', 'mp4'].includes(command)) {
-            await conn.sendFile(m.chat, mediaResult, `${title}.mp4`, title, m)
-        }
+        await conn.sendMessage(m.chat, { 
+            audio: { url: mediaUrl }, 
+            fileName: `${title}.mp3`, 
+            mimetype: 'audio/mpeg' 
+        }, { quoted: m })
         
     } catch (e) {
         return await conn.reply(m.chat, typeof e === 'string' ? e : 'Ocurrió un error: ' + e.message, m)
@@ -60,13 +55,13 @@ async function getMediaUrl(url) {
 
 function formatViews(views) {
     if (views === undefined) return "No disponible"
-    if (views >= 1_000_000_000) return `${(views / 1_000_000_000).toFixed(1)}B (${views.toLocaleString()})`
-    if (views >= 1_000_000) return `${(views / 1_000_000).toFixed(1)}M (${views.toLocaleString()})`
-    if (views >= 1_000) return `${(views / 1_000).toFixed(1)}k (${views.toLocaleString()})`
+    if (views >= 1_000_000_000) return `${(views / 1_000_000_000).toFixed(1)}B`
+    if (views >= 1_000_000) return `${(views / 1_000_000).toFixed(1)}M`
+    if (views >= 1_000) return `${(views / 1_000).toFixed(1)}k`
     return views.toString()
 }
 
-handler.command = handler.help = ['play', 'yta', 'ytmp3', 'play2', 'ytv', 'ytmp4', 'playaudio', 'mp4', 'ytaudio']
+handler.command = handler.help = ['play', 'yta', 'ytmp3', 'playaudio', 'ytaudio']
 handler.tags = ['descargas']
 handler.group = true
 

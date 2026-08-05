@@ -53,16 +53,26 @@ var handler = async (m, { conn, text, participants, command, usedPrefix }) => {
         switch (command) {
             case 'inactivos': 
             case 'fantasmas': {
-                if (total === 0) return conn.reply(m.chat, `🌸✨ ¡Qué grupo tan activo! No se encontraron fantasmas 🐾.`, m)
+                if (total === 0) return conn.reply(m.chat, `👻 *Revisión de inactivos*\n\n¡Qué grupo tan activo! No se encontraron fantasmas.`, m)
                 
-                m.reply(`❀ *Revisión de inactivos*\n\n✦ *Lista de fantasmas*\n${sider.map(v => '@' + v.split('@')[0]).join('\n')}\n\n> ✰ NOTA: Esto no es al 100% acertado, el bot inicia el conteo de mensajes a partir del momento que se activa en este grupo.`, null, { mentions: sider })
+                let textGhost = `👻 *Revisión de Inactivos*\n\n`
+                textGhost += `✦ *Fantasmas detectados:* ${total}\n\n`
+                textGhost += sider.map(v => `👤 @${v.split('@')[0]}`).join('\n') + `\n\n`
+                textGhost += `> ✰ NOTA: Esto no es al 100% acertado, el bot inicia el conteo de mensajes a partir del momento que se activa en este grupo.`
+
+                m.reply(textGhost, null, { mentions: sider })
                 break
             }
             case 'kickinactivos': 
             case 'kickfantasmas': {
-                if (total === 0) return conn.reply(m.chat, `ꕥ Este grupo es activo, no tiene fantasmas.`, m)
+                if (total === 0) return conn.reply(m.chat, `🚫 *Eliminación de inactivos*\n\nEste grupo es activo, no hay fantasmas para eliminar.`, m)
                 
-                await m.reply(`❀ *Eliminación de inactivos*\n\n✦ *Lista de fantasmas*\n${sider.map(v => '@' + v.split('@')[0]).join('\n')}\n\n> ✰ Nota: El bot eliminará a los usuarios de la lista mencionada cada 10 segundos.`, null, { mentions: sider })
+                let textKick = `🚨 *Eliminación de Inactivos*\n\n`
+                textKick += `✦ *Fantasmas a eliminar:* ${total}\n\n`
+                textKick += sider.map(v => `⚠️ @${v.split('@')[0]}`).join('\n') + `\n\n`
+                textKick += `> ✰ Nota: El bot eliminará a los usuarios de la lista mencionada cada 10 segundos.`
+
+                await m.reply(textKick, null, { mentions: sider })
                 
                 await delay(10000)
                 let chat = global.db.data.chats[m.chat] || {}

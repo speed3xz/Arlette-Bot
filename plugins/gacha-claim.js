@@ -13,13 +13,13 @@ function getCharacterById(characterId, charactersData) {
         .find(character => character.id === characterId);
 }
 
-let handler = async (m, { conn, usedPrefix, command, quoted }) => {
+let handler = async (m, { conn, usedPrefix, command }) => {
     const claimCooldown = 30 * 60 * 1000;
     
     try {
         const chatData = global.db?.data?.chats?.[m.chat] || {};
         if (!chatData.gacha && m.isGroup) {
-            return m.reply('ꕥ Los comandos de *Gacha* estão desactivados en este grupo.\n\nUn *administrador* puede activarlos con el comando:\n» *' + usedPrefix + 'gacha on*');
+            return m.reply('ꕥ Los comandos de *Gacha* están desactivados en este grupo.\n\nUn *administrador* puede activarlos con el comando:\n» *' + usedPrefix + 'gacha on*');
         }
 
         const currentUserData = global.db?.data?.users?.[m.sender] || {};
@@ -37,16 +37,25 @@ let handler = async (m, { conn, usedPrefix, command, quoted }) => {
             return m.reply('ꕥ Debes esperar *' + timeLeft.trim() + '* para usar *' + (usedPrefix + command) + '* de nuevo.');
         }
 
-        const lastCharacterId = chatData.lastRolledCharacter?.id || '';
-        
-        const isValidQuoted = quoted?.id === chatData.lastRolledMsgId || 
-                            quoted?.text?.includes(lastCharacterId);
+        // Obtener el mensaje citado de forma segura desde m
+        const quoted = m.quoted ? m.quoted : null;
+        const contextInfo = m.message?.extendedTextMessage?.contextInfo || m.msg?.contextInfo;
+        const quotedId = quoted?.id || contextInfo?.stanzaId;
 
-        if (!isValidQuoted) {
+        const lastCharacterId = chatData.lastRolledId || '';
+        const lastMsgId = chatData.lastRolledMsgId || '';
+        
+        // Validación flexible: comprueba si el ID del mensaje citado coincide o si el texto incluye el ID del último personaje
+        const quotedText = quoted?.text || quoted?.caption || contextInfo?.quotedMessage?.conversation || '';
+        
+        const isValidQuoted = (quotedId && lastMsgId && quotedId === lastMsgId) || 
+                            (lastCharacterId && quotedText.includes(String(lastCharacterId)));
+
+        if (!isValidQuoted || !lastCharacterId) {
             return m.reply('❀ Debes citar un personaje válido para reclamar.');
         }
 
-        const characterId = chatData.lastRolledId;
+        const characterId = lastCharacterId;
         const charactersData = await loadCharacters();
         const characterData = getCharacterById(characterId, charactersData);
 
@@ -70,7 +79,7 @@ let handler = async (m, { conn, usedPrefix, command, quoted }) => {
         const protectionTime = 30 * 1000; // 30 segundos
         const expirationTimeLimit = 3 * 60 * 1000; // 3 minutos
 
-        if (currentTime - rollTime > expirationTimeLimit) {
+        if (rollTime && (currentTime - rollTime > expirationTimeLimit)) {
             return m.reply('ꕥ El personaje ha expirado porque nadie lo reclamó a tiempo.');
         }
 
@@ -153,4 +162,4 @@ handler.tags = ['gacha'];
 handler.command = ['claim', 'c', 'reclamar'];
 handler.group = true;
 
-export default handler
+export default handler;

@@ -15,6 +15,6 @@ export async function before(m, { conn, isAdmin, isBotAdmin, isROwner }) {
 
         await conn.groupParticipantsUpdate(m.chat, [m.key.participant], 'remove');
 
-        await conn.reply(m.chat, `🔗❌ @${m.key.participant.split('@')[0]} ha sido expulsado por enviar enlaces (Anti-Link).`, null, { mentions: [m.key.participant] });
+        await conn.reply(m.chat, `⚠️ @${m.key.participant.split('@')[0]} fue eliminado por enviar enlaces.`, null, { mentions: [m.key.participant] });
     }
 }

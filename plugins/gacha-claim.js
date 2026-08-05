@@ -34,10 +34,9 @@ let handler = async (m, { conn, usedPrefix, command }) => {
             if (minutes > 0) timeLeft += minutes + ' minuto' + (minutes !== 1 ? 's' : '') + ' ';
             if (seconds > 0 || timeLeft === '') timeLeft += seconds + ' segundo' + (seconds !== 1 ? 's' : '');
             
-            return m.reply('ꕥ Debes esperar *' + timeLeft.trim() + '* para usar *' + (usedPrefix + command) + '* de nuevo.');
+            return m.reply(`⭐ Debes esperar *${timeLeft.trim()}* para usar *${usedPrefix + command}* de nuevo.`);
         }
 
-        // Obtener el mensaje citado de forma segura desde m
         const quoted = m.quoted ? m.quoted : null;
         const contextInfo = m.message?.extendedTextMessage?.contextInfo || m.msg?.contextInfo;
         const quotedId = quoted?.id || contextInfo?.stanzaId;
@@ -45,14 +44,13 @@ let handler = async (m, { conn, usedPrefix, command }) => {
         const lastCharacterId = chatData.lastRolledId || '';
         const lastMsgId = chatData.lastRolledMsgId || '';
         
-        // Validación flexible: comprueba si el ID del mensaje citado coincide o si el texto incluye el ID del último personaje
         const quotedText = quoted?.text || quoted?.caption || contextInfo?.quotedMessage?.conversation || '';
         
         const isValidQuoted = (quotedId && lastMsgId && quotedId === lastMsgId) || 
                             (lastCharacterId && quotedText.includes(String(lastCharacterId)));
 
         if (!isValidQuoted || !lastCharacterId) {
-            return m.reply('❀ Debes citar un personaje válido para reclamar.');
+            return m.reply(`⭐ Debes citar un personaje válido para reclamar.`);
         }
 
         const characterId = lastCharacterId;
@@ -60,7 +58,7 @@ let handler = async (m, { conn, usedPrefix, command }) => {
         const characterData = getCharacterById(characterId, charactersData);
 
         if (!characterData) {
-            return m.reply('ꕥ Personaje no encontrado en characters.json');
+            return m.reply(`ꕥ Personaje no encontrado en characters.json`);
         }
 
         if (!global.db.data.characters) global.db.data.characters = {};
@@ -76,11 +74,11 @@ let handler = async (m, { conn, usedPrefix, command }) => {
 
         const rollTime = chatData.lastRolledTime || 0;
         const rollUser = chatData.lastRolledUser || '';
-        const protectionTime = 30 * 1000; // 30 segundos
-        const expirationTimeLimit = 3 * 60 * 1000; // 3 minutos
+        const protectionTime = 30 * 1000;
+        const expirationTimeLimit = 3 * 60 * 1000;
 
         if (rollTime && (currentTime - rollTime > expirationTimeLimit)) {
-            return m.reply('ꕥ El personaje ha expirado porque nadie lo reclamó a tiempo.');
+            return m.reply(`ꕥ El personaje ha expirado porque nadie lo reclamó a tiempo.`);
         }
 
         if (rollUser && rollUser !== m.sender && (currentTime - rollTime < protectionTime)) {
@@ -108,7 +106,7 @@ let handler = async (m, { conn, usedPrefix, command }) => {
             };
 
             const claimantName = await getClaimantName(dbCharacter.user);
-            return m.reply('ꕥ El personaje *' + dbCharacter.name + '* ya ha sido reclamado por *' + claimantName + '*');
+            return m.reply(`ꕥ El personaje *${dbCharacter.name}* ya ha sido reclamado por *${claimantName}*`);
         }
 
         dbCharacter.user = m.sender;
@@ -139,11 +137,11 @@ let handler = async (m, { conn, usedPrefix, command }) => {
             chatData.claimMessage
                 .replace(/€user/g, '*' + currentUsername + '*')
                 .replace(/€character/g, '*' + dbCharacter.name + '*') :
-            '*' + dbCharacter.name + '* ha sido reclamado por *' + currentUsername + '*';
+            `🍒 *${dbCharacter.name}* ha sido reclamado por *${currentUsername}*`;
 
         await conn.reply(
             m.chat, 
-            '❀ ' + claimMessage, 
+            claimMessage, 
             m
         );
 
@@ -151,7 +149,7 @@ let handler = async (m, { conn, usedPrefix, command }) => {
         console.error('Error en handler de claim:', error);
         await conn.reply(
             m.chat, 
-            '⚠︎ Se ha producido un problema.\n> Usa *' + usedPrefix + 'report* para informarlo.\n\n' + error.message, 
+            `⚠︎ Se ha producido un problema.\n> Usa *${usedPrefix}report* para informarlo.\n\n${error.message}`, 
             m
         );
     }
@@ -162,4 +160,4 @@ handler.tags = ['gacha'];
 handler.command = ['claim', 'c', 'reclamar'];
 handler.group = true;
 
-export default handler;
+export default handler

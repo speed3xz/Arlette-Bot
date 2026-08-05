@@ -1,15 +1,22 @@
+import fetch from 'node-fetch'
 import { WAMessageStubType } from '@whiskeysockets/baileys'
 
 async function obtenerImagenUsuario(conn, userId, chatJid) {
     try {
-        return await conn.profilePictureUrl(userId, 'image')
-    } catch {
-        try {
-            return await conn.profilePictureUrl(chatJid, 'image')
-        } catch {
-            return global.icono || 'https://raw.githubusercontent.com/speed3xz/Storage/refs/heads/main/Arlette-Bot/b75b29441bbd967deda4365441497221.jpg'
-        }
-    }
+        const url = await conn.profilePictureUrl(userId, 'image')
+        const res = await fetch(url)
+        if (res.ok) return await res.buffer()
+    } catch {}
+
+    try {
+        const url = await conn.profilePictureUrl(chatJid, 'image')
+        const res = await fetch(url)
+        if (res.ok) return await res.buffer()
+    } catch {}
+
+    const fallbackUrl = global.icono || 'https://raw.githubusercontent.com/speed3xz/Storage/refs/heads/main/Arlette-Bot/b75b29441bbd967deda4365441497221.jpg'
+    const res = await fetch(fallbackUrl)
+    return await res.buffer()
 }
 
 function formatearMensaje(plantilla, userNum, grupo, desc) {
@@ -23,7 +30,7 @@ function formatearMensaje(plantilla, userNum, grupo, desc) {
 async function generarBienvenida({ conn, userId, groupMetadata, chat, chatJid }) {
     const userNum = userId.split('@')[0]
     const userJid = userNum + '@s.whatsapp.net'
-    const imageUrl = await obtenerImagenUsuario(conn, userId, chatJid)
+    const imageBuffer = await obtenerImagenUsuario(conn, userId, chatJid)
     
     const desc = groupMetadata?.desc ? String(groupMetadata.desc) : 'Sin descripción'
     const grupo = groupMetadata?.subject || 'el grupo'
@@ -34,13 +41,13 @@ async function generarBienvenida({ conn, userId, groupMetadata, chat, chatJid })
 
     const caption = `👋🏻 @${userNum}\n\n${mensajeCustom}`
 
-    return { imageUrl, caption, mentions: [userJid] }
+    return { image: imageBuffer, caption, mentions: [userJid] }
 }
 
 async function generarDespedida({ conn, userId, groupMetadata, chat, chatJid }) {
     const userNum = userId.split('@')[0]
     const userJid = userNum + '@s.whatsapp.net'
-    const imageUrl = await obtenerImagenUsuario(conn, userId, chatJid)
+    const imageBuffer = await obtenerImagenUsuario(conn, userId, chatJid)
     
     const desc = groupMetadata?.desc ? String(groupMetadata.desc) : 'Sin descripción'
     const grupo = groupMetadata?.subject || 'el grupo'
@@ -51,7 +58,7 @@ async function generarDespedida({ conn, userId, groupMetadata, chat, chatJid }) 
 
     const caption = `👋🏻 @${userNum}\n\n${mensajeCustom}`
 
-    return { imageUrl, caption, mentions: [userJid] }
+    return { image: imageBuffer, caption, mentions: [userJid] }
 }
 
 let handler = m => m
@@ -68,13 +75,13 @@ handler.before = async function (m, { conn, groupMetadata }) {
     const userId = rawUser.split(':')[0] + '@s.whatsapp.net'
     
     if (chat.welcome && m.messageStubType == WAMessageStubType.GROUP_PARTICIPANT_ADD) {
-        const { imageUrl, caption, mentions } = await generarBienvenida({ conn, userId, groupMetadata, chat, chatJid: m.chat })
-        await conn.sendMessage(m.chat, { image: { url: imageUrl }, caption, mentions }, { quoted: null })
+        const { image, caption, mentions } = await generarBienvenida({ conn, userId, groupMetadata, chat, chatJid: m.chat })
+        await conn.sendMessage(m.chat, { image, caption, mentions }, { quoted: null })
     }
     
     if (chat.welcome && (m.messageStubType == WAMessageStubType.GROUP_PARTICIPANT_REMOVE || m.messageStubType == WAMessageStubType.GROUP_PARTICIPANT_LEAVE)) {
-        const { imageUrl, caption, mentions } = await generarDespedida({ conn, userId, groupMetadata, chat, chatJid: m.chat })
-        await conn.sendMessage(m.chat, { image: { url: imageUrl }, caption, mentions }, { quoted: null })
+        const { image, caption, mentions } = await generarDespedida({ conn, userId, groupMetadata, chat, chatJid: m.chat })
+        await conn.sendMessage(m.chat, { image, caption, mentions }, { quoted: null })
     }
 }
 

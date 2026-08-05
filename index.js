@@ -215,16 +215,15 @@ global.reloadHandler = async function(restatConn) {
     conn.ev.off('creds.update', conn.credsUpdate)
   }
   
-  // FIX: Envoltorio seguro para evitar el error de "Esperando mensaje"
-  conn.handler = async (chatUpdate) => {
-    if (!chatUpdate.messages || chatUpdate.type !== 'notify') return
-    for (let m of chatUpdate.messages) {
-      if (!m.message || m.messageStubType) continue
-      try {
-        await handler.handler(chatUpdate)
-      } catch (e) {
-        console.error('Error en el handler:', e)
-      }
+  conn.handler = async function (chatUpdate) {
+    if (!chatUpdate.messages) return
+    try {
+      let messages = chatUpdate.messages.filter(m => m.message && !m.messageStubType)
+      if (messages.length === 0) return
+      chatUpdate.messages = messages
+      await handler.handler.call(this, chatUpdate)
+    } catch (e) {
+      console.error(e)
     }
   }
 
